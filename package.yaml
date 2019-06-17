@@ -1,0 +1,45 @@
+name:                hookmark
+version:             0.1.0.0
+github:              "github.com/neosimsim/hookmark"
+license:             BSD3
+author:              "Alexander Ben Nasrallah"
+maintainer:          "me@abn.sh"
+copyright:           "22:35:38 Alexander Ben Nasrallah"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+description:         Please see the README on GitHub at <https://github.com/neosimsim/hookmark#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  hookmark:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - hookmark
+
+tests:
+  test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - hookmark
