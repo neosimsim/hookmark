@@ -18,6 +18,9 @@ description:         Please see the README on GitHub at <https://github.com/neos
 
 dependencies:
 - base >= 4.7 && < 5
+- text
+- protolude
+- filepath
 
 library:
   source-dirs: src
@@ -43,3 +46,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hookmark
+    - hspec
+    - QuickCheck
