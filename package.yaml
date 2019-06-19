@@ -21,6 +21,8 @@ dependencies:
 - text
 - protolude
 - filepath
+- template-haskell
+- process
 
 library:
   source-dirs: src
@@ -35,6 +37,8 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - hookmark
+    - optparse-applicative
+    - raw-strings-qq
 
 tests:
   test:
