@@ -51,17 +51,4 @@ then
 	exit 1
 fi
 
-unformatted=$(hfmt -l)
-if [ -n "$unformatted" ]
-then
-	echo "Haskell files must be formatted with hfmt. Please run:"
-	for fn in $unformatted; do
-		echo "  hfmt -w $fn"
-	done
-	exit 1
-fi
-
-if ! (stack clean && stack build --pedantic && stack test --pedantic); then
-	echo "Project can't be build. Please fix before committing."
-	exit 1
-fi
+make -j4 all
