@@ -1,0 +1,11 @@
+hookmark — browser independent bookmarking
+
+Usage: hookmark [COMMAND]
+  Store, edit and search bookmarks.
+
+Available options:
+  -v,--version             Show version
+  -h,--help                Show this help text
+
+Available commands:
+  version                  Show version
