@@ -10,9 +10,10 @@ module Lib
   , Bookmark(..)
   ) where
 
-import           Data.Text       as T
-import           Data.Text.IO    as T
+import           Data.Text        as T
+import           Data.Text.IO     as T
 import           Protolude
+import           System.Directory
 import           System.FilePath
 import           Text.Read
 
@@ -39,6 +40,7 @@ renderBookmark = pack . show
 writeBookmark :: FilePath -> Bookmark -> IO ()
 writeBookmark baseDir bm = do
   let path = joinPath [baseDir, name bm]
+  createDirectoryIfMissing True $ takeDirectory path
   writeFile path $ renderBookmark bm
 
 readBookmark :: FilePath -> FilePath -> IO Bookmark
