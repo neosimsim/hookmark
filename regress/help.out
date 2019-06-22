@@ -8,4 +8,5 @@ Available options:
   -h,--help                Show this help text
 
 Available commands:
+  add                      Add bookmark
   version                  Show version
