@@ -5,7 +5,9 @@ CMD=stack run --
 all: \
 	test_help \
 	test_help_add \
+	test_help_show \
 	test_add \
+	test_show \
 	test_version \
 
 test_help: phony
@@ -15,6 +17,10 @@ test_help: phony
 test_help_add: phony
 	$(CMD) add --help | diff - help_add.out
 	$(CMD) add -h | diff - help_add.out
+
+test_help_show: phony
+	$(CMD) show --help | diff - help_show.out
+	$(CMD) show -h | diff - help_show.out
 
 test_version: phony
 	$(CMD) --version >/dev/null
@@ -44,6 +50,21 @@ test_add: phony
 			&& test -d "$$base/haskell"\
 			&& test -f "$$base/haskell/hoogle";\
 		rm -rf "$$base"
+
+test_show: phony
+	@echo "test if show list directories from the correct place"
+	export HOOKMARKHOME="`pwd`/testmarks"; $(CMD) show | diff - show_all.out
+	@echo "option shall overwrite environment"
+	export HOOKMARKHOME=/tmp; base="`pwd`/testmarks"; $(CMD) show -b $$base | diff - show_all.out
+	export HOOKMARKHOME="`pwd`/testmarks"; $(CMD) show -t search | diff - show_tag_search.out
+	export HOOKMARKHOME="`pwd`/testmarks"; $(CMD) show -t search --tag haskell | diff - testmarks/haskell/hoogle
+	export HOOKMARKHOME="`pwd`/testmarks"; $(CMD) show haskell/hoogle | diff - testmarks/haskell/hoogle
+	@echo "returns non successful, if bookmark not found"
+	export HOOKMARKHOME="`pwd`/testmarks"; if $(CMD) show missing/bookmark 2>&1 >/dev/null; then exit 1; fi | diff - show_not_found.out
+	@echo "returns non successful, if tag is not found"
+	export HOOKMARKHOME="`pwd`/testmarks"; if $(CMD) show -t missingtag 2>&1 >/dev/null; then exit 1; fi | diff - show_not_found.out
+	@echo "returns non successful, if tag is missing in bookamrk, like not found"
+	export HOOKMARKHOME="`pwd`/testmarks"; if $(CMD) show -t missingtag haskell/hoogle 2>&1 >/dev/null; then exit 1; fi | diff - show_not_found.out
 
 phony: this_file_should_not_exist
 

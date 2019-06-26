@@ -4,9 +4,11 @@
 module Lib
   ( someFunc
   , writeBookmark
+  , Criteria(..)
   , readBookmarkEntry
   , parseBookmarkEntry
   , renderBookmarkEntry
+  , lookupBookmark
   , Bookmark
   , BookmarkEntry(..)
   ) where
@@ -21,6 +23,7 @@ import           Data.Tuple
 import           Protolude
 import           System.Directory
 import           System.FilePath
+import           System.Posix.Files
 import           Text.Megaparsec         as MP hiding (empty, many)
 import           Text.Megaparsec.Char    as MP
 
@@ -82,3 +85,38 @@ readBookmarkEntry baseDir bmName =
           Right bm -> return $ Right bm
           Left s   -> fail $ unpack s
       else return $ Left "not found"
+
+data Criteria =
+  Criteria (Maybe FilePath) [Tag]
+
+lookupBookmark :: FilePath -> Criteria -> IO [FilePath]
+lookupBookmark baseDir (Criteria criteriaName []) = do
+  createDirectoryIfMissing True baseDir
+  withCurrentDirectory baseDir $ listDirectories (fromMaybe mempty criteriaName)
+lookupBookmark baseDir (Criteria criteriaName criteriaTags) = do
+  names <- lookupBookmark baseDir (Criteria criteriaName [])
+  marks <- zip names <$> mapM (readBookmarkEntry baseDir) names
+  let x = filter (markIsTagged . snd) marks
+  return $ fmap fst x
+  where
+    markIsTagged :: Either Text BookmarkEntry -> Bool
+    markIsTagged (Left _)  = False
+    markIsTagged (Right x) = criteriaTags `sublist` tags x
+
+sublist :: (Traversable t, Eq a) => t a -> t a -> Bool
+sublist xs ys = all (`elem` ys) xs
+
+listDirectories :: FilePath -> IO [FilePath]
+listDirectories "" = fmap (drop 2) <$> listDirectories "."
+listDirectories path = do
+  exists <- doesPathExist path
+  if exists
+    then do
+      isDir <- isDirectory <$> getFileStatus path
+      if isDir
+        then do
+          files <- listDirectory path
+          x <- mapM listDirectories $ fmap (\x -> joinPath [path, x]) files
+          return $ join x
+        else return [path]
+    else return []

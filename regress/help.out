@@ -9,4 +9,5 @@ Available options:
 
 Available commands:
   add                      Add bookmark
+  show                     Show or search bookmark
   version                  Show version

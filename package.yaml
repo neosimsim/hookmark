@@ -24,6 +24,7 @@ dependencies:
 - template-haskell
 - process
 - directory
+- unix
 - either
 - non-empty-text
 - megaparsec
@@ -43,6 +44,7 @@ executables:
     - hookmark
     - optparse-applicative
     - raw-strings-qq
+    - bytestring
 
 tests:
   test:
