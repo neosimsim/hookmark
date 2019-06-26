@@ -24,6 +24,9 @@ dependencies:
 - template-haskell
 - process
 - directory
+- either
+- non-empty-text
+- megaparsec
 
 library:
   source-dirs: src

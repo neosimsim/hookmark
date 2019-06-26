@@ -7,6 +7,7 @@ module Main
 
 import           Control.Applicative
 import           Data.Maybe
+import           Data.NonEmptyText
 import           Data.Text           as T
 import qualified Data.Text.IO        as T
 import           Data.Version        (showVersion)
@@ -78,4 +79,4 @@ main = do
       baseFromEnv <- lookupEnv "HOOKMARKHOME"
       writeBookmark
         (fromMaybe "$HOME/.hookmark" $ dir <|> baseFromEnv)
-        (Bookmark u n t d)
+        (n, BookmarkEntry u (fmap (fromJust . fromText) t) d)

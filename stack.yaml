@@ -1,1 +1,4 @@
 resolver: lts-13.17
+
+extra-deps:
+- non-empty-text-0.1.1@sha256:5c757d9b27c3ef61f1620613a5e105a870801ad1addef7ade62a2ca1798fea9f
