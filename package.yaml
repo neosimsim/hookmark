@@ -45,6 +45,7 @@ executables:
     - optparse-applicative
     - raw-strings-qq
     - bytestring
+    - typed-process
 
 tests:
   test:

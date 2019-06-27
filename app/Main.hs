@@ -7,23 +7,24 @@ module Main
   ) where
 
 import           Control.Applicative
-import qualified Data.ByteString     as BS
+import qualified Data.ByteString      as BS
 import           Data.List
 import           Data.Maybe
 import           Data.NonEmptyText
-import           Data.Text           as T
-import           Data.Text.Encoding  as T
-import qualified Data.Text.IO        as T
-import           Data.Version        (showVersion)
+import           Data.Text            as T
+import           Data.Text.Encoding   as T
+import qualified Data.Text.IO         as T
+import           Data.Version         (showVersion)
 import           Distribution.Git
 import           Lib
 import           Options.Applicative
 import           Paths_hookmark
 import           System.Directory
-import           System.Environment  (lookupEnv)
+import           System.Environment   (lookupEnv)
 import           System.Exit
 import           System.FilePath
-import           System.IO           (stderr)
+import           System.IO            (stderr)
+import           System.Process.Typed
 import           Text.RawString.QQ
 
 programDescription :: String
@@ -46,6 +47,10 @@ data Command
       , showTags    :: [Text]
       , showName    :: Maybe FilePath
       }
+  | EditBookmark
+      { editBaseDir :: Maybe FilePath
+      , editName    :: FilePath
+      }
   deriving (Show)
 
 optionParser :: Parser Command
@@ -55,6 +60,7 @@ optionParser =
   hsubparser
     (command "add" (info addParser (progDesc "Add bookmark")) <>
      command "show" (info showParser (progDesc "Show or search bookmark")) <>
+     command "edit" (info editParser (progDesc "Edit bookmark")) <>
      command "version" (info (pure Version) (progDesc "Show version")))
 
 addParser :: Parser Command
@@ -92,6 +98,18 @@ showParser =
        (metavar "name" <>
         help "Name of the bookmark, can contain '/' to build hierarchies"))
 
+editParser :: Parser Command
+editParser =
+  EditBookmark <$>
+  optional
+    (strOption
+       (short 'b' <>
+        help
+          "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
+  strArgument
+    (metavar "name" <>
+     help "Name of the bookmark, can contain '/' to build hierarchies")
+
 main :: IO ()
 main = do
   opt <-
@@ -124,6 +142,24 @@ main = do
               BS.putStr . T.encodeUtf8 $ err
               exitWith $ ExitFailure 1
         xs -> mapM_ putStrLn $ sort xs
+    EditBookmark dir n -> do
+      base <- fromMaybeBaseDir dir
+      lu <- lookupBookmark base (Criteria (Just n) [])
+      case lu of
+        [] -> do
+          T.hPutStrLn stderr "not found"
+          exitWith $ ExitFailure 1
+        [_] -> do
+          editor <- fromMaybe "vi" <$> lookupEnv "EDITOR"
+          code <- runProcess $ proc editor [base </> n]
+          case code of
+            ExitFailure c -> do
+              T.hPutStrLn stderr $ "editor failed: " `mappend` pack (show c)
+              exitWith $ ExitFailure 1
+            ExitSuccess -> return ()
+        _ -> do
+          T.hPutStrLn stderr "name is not unique"
+          exitWith $ ExitFailure 1
 
 fromMaybeBaseDir :: Maybe FilePath -> IO FilePath
 fromMaybeBaseDir dir = do

@@ -1,0 +1,9 @@
+Usage: hookmark edit [-b ARG] name
+  Edit bookmark
+
+Available options:
+  -b ARG                   Base directory to lookup bookmarks in. Default
+                           $HOOKMARKHOME or $HOME/.hookmarkhome if unset
+  name                     Name of the bookmark, can contain '/' to build
+                           hierarchies
+  -h,--help                Show this help text

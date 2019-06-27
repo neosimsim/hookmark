@@ -6,8 +6,10 @@ all: \
 	test_help \
 	test_help_add \
 	test_help_show \
+	test_help_edit \
 	test_add \
 	test_show \
+	test_edit \
 	test_version \
 
 test_help: phony
@@ -21,6 +23,10 @@ test_help_add: phony
 test_help_show: phony
 	$(CMD) show --help | diff - help_show.out
 	$(CMD) show -h | diff - help_show.out
+
+test_help_edit: phony
+	$(CMD) edit --help | diff - help_edit.out
+	$(CMD) edit -h | diff - help_edit.out
 
 test_version: phony
 	$(CMD) --version >/dev/null
@@ -65,6 +71,15 @@ test_show: phony
 	export HOOKMARKHOME="`pwd`/testmarks"; if $(CMD) show -t missingtag 2>&1 >/dev/null; then exit 1; fi | diff - show_not_found.out
 	@echo "returns non successful, if tag is missing in bookamrk, like not found"
 	export HOOKMARKHOME="`pwd`/testmarks"; if $(CMD) show -t missingtag haskell/hoogle 2>&1 >/dev/null; then exit 1; fi | diff - show_not_found.out
+
+test_edit: phony
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME";\
+		export EDITOR=ed;\
+		$(CMD) edit haskell/hoogle <edit.in >/dev/null;\
+		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out;\
+		rm -rf "$$HOOKMARKHOME"
 
 phony: this_file_should_not_exist
 

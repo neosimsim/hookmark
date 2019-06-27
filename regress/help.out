@@ -10,4 +10,5 @@ Available options:
 Available commands:
   add                      Add bookmark
   show                     Show or search bookmark
+  edit                     Edit bookmark
   version                  Show version
