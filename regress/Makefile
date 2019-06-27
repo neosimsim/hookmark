@@ -56,10 +56,20 @@ test_add: phony
 			&& test -d "$$base/haskell"\
 			&& test -f "$$base/haskell/hoogle";\
 		rm -rf "$$base"
+	@echo "add shall use hookmark root, not file system root"
+	export HOOKMARKHOME=/tmp;\
+		base="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		$(CMD) add -t search --tag haskell /haskell/hoogle https://hoogle.haskell.org/\
+			&& test -d "$$base/haskell"\
+			&& test -f "$$base/haskell/hoogle";\
+		rm -rf "$$base"
 
 test_show: phony
 	@echo "test if show list directories from the correct place"
 	export HOOKMARKHOME="`pwd`/testmarks"; $(CMD) show | diff - show_all.out
+	@echo "test if show list hookmark root, not file system root"
+	export HOOKMARKHOME="`pwd`/testmarks"; $(CMD) show / | diff - show_all.out
+	export HOOKMARKHOME="`pwd`/testmarks"; $(CMD) show /haskell/hoogle | diff - testmarks/haskell/hoogle
 	@echo "option shall overwrite environment"
 	export HOOKMARKHOME=/tmp; base="`pwd`/testmarks"; $(CMD) show -b $$base | diff - show_all.out
 	export HOOKMARKHOME="`pwd`/testmarks"; $(CMD) show -t search | diff - show_tag_search.out
@@ -78,6 +88,14 @@ test_edit: phony
 		cp -r testmarks/* "$$HOOKMARKHOME";\
 		export EDITOR=ed;\
 		$(CMD) edit haskell/hoogle <edit.in >/dev/null;\
+		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out;\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "edti shall use hookmark root, not file system root"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME";\
+		export EDITOR=ed;\
+		$(CMD) edit /haskell/hoogle <edit.in >/dev/null;\
 		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out;\
 		rm -rf "$$HOOKMARKHOME"
 

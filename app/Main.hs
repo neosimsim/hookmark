@@ -149,9 +149,9 @@ main = do
         [] -> do
           T.hPutStrLn stderr "not found"
           exitWith $ ExitFailure 1
-        [_] -> do
+        [x] -> do
           editor <- fromMaybe "vi" <$> lookupEnv "EDITOR"
-          code <- runProcess $ proc editor [base </> n]
+          code <- runProcess $ proc editor [base </> x]
           case code of
             ExitFailure c -> do
               T.hPutStrLn stderr $ "editor failed: " `mappend` pack (show c)

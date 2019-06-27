@@ -92,7 +92,8 @@ data Criteria =
 lookupBookmark :: FilePath -> Criteria -> IO [FilePath]
 lookupBookmark baseDir (Criteria criteriaName []) = do
   createDirectoryIfMissing True baseDir
-  withCurrentDirectory baseDir $ listDirectories (fromMaybe mempty criteriaName)
+  withCurrentDirectory baseDir . listDirectories . snd $
+    splitDrive (fromMaybe mempty criteriaName)
 lookupBookmark baseDir (Criteria criteriaName criteriaTags) = do
   names <- lookupBookmark baseDir (Criteria criteriaName [])
   marks <- zip names <$> mapM (readBookmarkEntry baseDir) names
