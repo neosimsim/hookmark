@@ -90,7 +90,7 @@ test_edit: phony
 		$(CMD) edit haskell/hoogle <edit.in >/dev/null;\
 		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out;\
 		rm -rf "$$HOOKMARKHOME"
-	@echo "edti shall use hookmark root, not file system root"
+	@echo "edit shall use hookmark root, not file system root"
 	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
 		cp -r testmarks/* "$$HOOKMARKHOME";\
