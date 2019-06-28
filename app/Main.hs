@@ -108,7 +108,7 @@ editParser =
           "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
   strArgument
     (metavar "name" <>
-     help "Name of the bookmark, can contain '/' to build hierarchies")
+     help "Name of the bookmark to edit, can contain '/' to build hierarchies")
 
 main :: IO ()
 main = do
