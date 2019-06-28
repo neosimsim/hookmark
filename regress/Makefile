@@ -7,9 +7,11 @@ all: \
 	test_help_add \
 	test_help_show \
 	test_help_edit \
+	test_help_rm \
 	test_add \
 	test_show \
 	test_edit \
+	test_rm \
 	test_version \
 
 test_help: phony
@@ -27,6 +29,10 @@ test_help_show: phony
 test_help_edit: phony
 	$(CMD) edit --help | diff - help_edit.out
 	$(CMD) edit -h | diff - help_edit.out
+
+test_help_rm: phony
+	$(CMD) rm --help | diff - help_rm.out
+	$(CMD) rm -h | diff - help_rm.out
 
 test_version: phony
 	$(CMD) --version >/dev/null
@@ -97,6 +103,38 @@ test_edit: phony
 		export EDITOR=ed;\
 		$(CMD) edit /haskell/hoogle <edit.in >/dev/null;\
 		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out;\
+		rm -rf "$$HOOKMARKHOME"
+
+test_rm: phony
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) rm haskell/hoogle &&\
+		if [ -e "$$HOOKMARKHOME/haskell/hoogle" ]; then echo "expected bookmark to be removed" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "rm shall remove empty folders"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) rm haskell/hoogle &&\
+		$(CMD) rm haskell/haskell &&\
+		if [ -e "$$HOOKMARKHOME/haskell" ]; then echo "expected folder to be removed" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "rm shall not remove empty base"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) rm haskell/hoogle &&\
+		$(CMD) rm haskell/haskell &&\
+		$(CMD) rm duckduckgo &&\
+		if ! [ -e "$$HOOKMARKHOME/" ]; then echo "expected root not to be removed" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "rm shall use hookmark root, not file system root"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) rm duckduckgo &&\
+		if [ -e "$$HOOKMARKHOME/duckduckgo" ]; then echo "expected folder to be removed" >&2; exit 1; fi;\
 		rm -rf "$$HOOKMARKHOME"
 
 phony: this_file_should_not_exist

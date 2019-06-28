@@ -11,4 +11,5 @@ Available commands:
   add                      Add bookmark
   show                     Show or search bookmark
   edit                     Edit bookmark
+  rm                       Remove bookmark
   version                  Show version

@@ -7,11 +7,12 @@ module Main
   ) where
 
 import           Control.Applicative
+import           Control.Monad
 import qualified Data.ByteString      as BS
 import           Data.List
 import           Data.Maybe
 import           Data.NonEmptyText
-import           Data.Text            as T
+import           Data.Text            as T hiding (null)
 import           Data.Text.Encoding   as T
 import qualified Data.Text.IO         as T
 import           Data.Version         (showVersion)
@@ -24,6 +25,7 @@ import           System.Environment   (lookupEnv)
 import           System.Exit
 import           System.FilePath
 import           System.IO            (stderr)
+import           System.Posix.Files
 import           System.Process.Typed
 import           Text.RawString.QQ
 
@@ -51,6 +53,10 @@ data Command
       { editBaseDir :: Maybe FilePath
       , editName    :: FilePath
       }
+  | RemoveBookmark
+      { removeBaseDir :: Maybe FilePath
+      , removeName    :: FilePath
+      }
   deriving (Show)
 
 optionParser :: Parser Command
@@ -61,6 +67,7 @@ optionParser =
     (command "add" (info addParser (progDesc "Add bookmark")) <>
      command "show" (info showParser (progDesc "Show or search bookmark")) <>
      command "edit" (info editParser (progDesc "Edit bookmark")) <>
+     command "rm" (info removeParser (progDesc "Remove bookmark")) <>
      command "version" (info (pure Version) (progDesc "Show version")))
 
 addParser :: Parser Command
@@ -109,6 +116,16 @@ editParser =
   strArgument
     (metavar "name" <>
      help "Name of the bookmark to edit, can contain '/' to build hierarchies")
+
+removeParser :: Parser Command
+removeParser =
+  RemoveBookmark <$>
+  optional
+    (strOption
+       (short 'b' <>
+        help
+          "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
+  strArgument (metavar "name" <> help "Name of the bookmark to delete")
 
 main :: IO ()
 main = do
@@ -160,6 +177,27 @@ main = do
         _ -> do
           T.hPutStrLn stderr "name is not unique"
           exitWith $ ExitFailure 1
+    RemoveBookmark dir n -> do
+      base <- fromMaybeBaseDir dir
+      lu <- lookupBookmark base (Criteria (Just n) [])
+      case lu of
+        [] -> do
+          T.hPutStrLn stderr "not found"
+          exitWith $ ExitFailure 1
+        [x] -> do
+          removeFile $ base </> x
+          withCurrentDirectory base . cleanDirectory $ takeDirectory x
+        _ -> do
+          T.hPutStrLn stderr "name is not unique"
+          exitWith $ ExitFailure 1
+
+cleanDirectory :: FilePath -> IO ()
+cleanDirectory "." = return ()
+cleanDirectory path = do
+  isDir <- isDirectory <$> getFileStatus path
+  when isDir $ do
+    isEmpty <- null <$> listDirectory path
+    when isEmpty $ removeDirectory path >> cleanDirectory (takeDirectory path)
 
 fromMaybeBaseDir :: Maybe FilePath -> IO FilePath
 fromMaybeBaseDir dir = do
