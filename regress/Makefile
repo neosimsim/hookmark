@@ -109,16 +109,16 @@ test_rm: phony
 	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
 		cp -r testmarks/* "$$HOOKMARKHOME" &&\
-		$(CMD) rm haskell/hoogle &&\
-		if [ -e "$$HOOKMARKHOME/haskell/hoogle" ]; then echo "expected bookmark to be removed" >&2; exit 1; fi &&\
+		$(CMD) rm haskell/packages/warp &&\
+		if [ -e "$$HOOKMARKHOME/haskell/package/warp" ]; then echo "expected bookmark to be removed" >&2; exit 1; fi &&\
 		rm -rf "$$HOOKMARKHOME"
 	@echo "rm shall remove empty folders"
 	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
 		cp -r testmarks/* "$$HOOKMARKHOME" &&\
-		$(CMD) rm haskell/hoogle &&\
-		$(CMD) rm haskell/haskell &&\
-		if [ -e "$$HOOKMARKHOME/haskell" ]; then echo "expected folder to be removed" >&2; exit 1; fi &&\
+		$(CMD) rm haskell/packages/warp &&\
+		$(CMD) rm haskell/packages/base64-bytestring &&\
+		if [ -e "$$HOOKMARKHOME/haskell/package" ]; then echo "expected folder to be removed" >&2; exit 1; fi &&\
 		rm -rf "$$HOOKMARKHOME"
 	@echo "rm shall not remove empty base"
 	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
@@ -126,6 +126,8 @@ test_rm: phony
 		cp -r testmarks/* "$$HOOKMARKHOME" &&\
 		$(CMD) rm haskell/hoogle &&\
 		$(CMD) rm haskell/haskell &&\
+		$(CMD) rm haskell/packages/warp &&\
+		$(CMD) rm haskell/packages/base64-bytestring &&\
 		$(CMD) rm duckduckgo &&\
 		if ! [ -e "$$HOOKMARKHOME/" ]; then echo "expected root not to be removed" >&2; exit 1; fi &&\
 		rm -rf "$$HOOKMARKHOME"
