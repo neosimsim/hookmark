@@ -8,10 +8,12 @@ all: \
 	test_help_show \
 	test_help_edit \
 	test_help_rm \
+	test_help_rm \
 	test_add \
 	test_show \
 	test_edit \
 	test_rm \
+	test_mv \
 	test_version \
 
 test_help: phony
@@ -110,7 +112,7 @@ test_rm: phony
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
 		cp -r testmarks/* "$$HOOKMARKHOME" &&\
 		$(CMD) rm haskell/packages/warp &&\
-		if [ -e "$$HOOKMARKHOME/haskell/package/warp" ]; then echo "expected bookmark to be removed" >&2; exit 1; fi &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages/warp" ]; then echo "expected bookmark to be removed" >&2; exit 1; fi &&\
 		rm -rf "$$HOOKMARKHOME"
 	@echo "rm shall remove empty folders"
 	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
@@ -137,6 +139,100 @@ test_rm: phony
 		cp -r testmarks/* "$$HOOKMARKHOME" &&\
 		$(CMD) rm /duckduckgo &&\
 		if [ -e "$$HOOKMARKHOME/duckduckgo" ]; then echo "expected folder to be removed" >&2; exit 1; fi;\
+		rm -rf "$$HOOKMARKHOME"
+
+test_mv: phony
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) mv haskell/packages/warp haskell &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -e "$$HOOKMARKHOME/haskell/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) mv haskell/packages/warp haskell/packages/warp2 &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -e "$$HOOKMARKHOME/haskell/packages/warp2" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) mv haskell/packages/warp haskell/packages/base64-bytestring &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages/warp" ]; then echo "expected bookmark to be removed" >&2; exit 1; fi &&\
+		if ! [ -e "$$HOOKMARKHOME/haskell/packages/base64-bytestring" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "mv shall remove empty folders"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) mv haskell/packages/warp haskell &&\
+		$(CMD) mv haskell/packages/base64-bytestring haskell &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages" ]; then echo "expected folder to be removed" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "mv shall use hookmark root, not file system root"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) mv haskell/packages/warp /haskell &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -e "$$HOOKMARKHOME/haskell/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) mv haskell/packages/warp / &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -e "$$HOOKMARKHOME/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "mv shall move folders"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) mv haskell/packages/ / &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -d "$$HOOKMARKHOME/packages" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "mv shall move list of files simultanously"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		$(CMD) mv haskell/packages/warp haskell/packages/base64-bytestring / &&\
+		if ! [ -f "$$HOOKMARKHOME/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -f "$$HOOKMARKHOME/base64-bytestring" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if [ -e "$$HOOKMARKHOME/haskell/packages" ]; then echo "expected empty folder to be removed" >&2; exit 1; fi &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "mv shall report missing arguments"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		if $(CMD) mv; then exit 1; fi 2>&1 | diff - mv_missing_arg.out &&\
+		if $(CMD) mv haskell/packages/warp; then exit 1; fi 2>&1 | diff - mv_missing_arg.out &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "mv shall report missing folder when list of files shall be moved"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		if $(CMD) mv haskell/packages/warp duckduckgo haskell/packages/base64-bytestring; then exit 1; fi 2>&1 | diff - mv_missing_folder.out &&\
+		rm -rf "$$HOOKMARKHOME"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		if $(CMD) mv haskell/packages/warp duckduckgo haskell/packages/base64-bytestring /not-existing; then exit 1; fi 2>&1 | diff - mv_missing_folder_2.out &&\
+		rm -rf "$$HOOKMARKHOME"
+	@echo "mv shall report missing files if content and folder are moved at the same time"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_mv_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		if $(CMD) mv haskell/packages/warp haskell/packages haskell/packages/base64-bytestring haskell/hoogle / 2>&1;\
+		then\
+			exit 1;\
+		fi | diff - mv_missing_file.out &&\
+		if ! [ -f "$$HOOKMARKHOME/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -d "$$HOOKMARKHOME/packages" ]; then echo "expected empty folder to be moved" >&2; exit 1; fi &&\
+		if ! [ -f "$$HOOKMARKHOME/packages/base64-bytestring" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -f "$$HOOKMARKHOME/hoogle" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
 		rm -rf "$$HOOKMARKHOME"
 
 phony: this_file_should_not_exist

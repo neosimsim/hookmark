@@ -8,23 +8,24 @@ module Main
 
 import           Control.Applicative
 import           Control.Monad
-import qualified Data.ByteString      as BS
+import qualified Data.ByteString           as BS
 import           Data.List
 import           Data.Maybe
 import           Data.NonEmptyText
-import           Data.Text            as T hiding (null)
-import           Data.Text.Encoding   as T
-import qualified Data.Text.IO         as T
-import           Data.Version         (showVersion)
+import           Data.Text                 as T hiding (null)
+import           Data.Text.Encoding        as T
+import qualified Data.Text.IO              as T
+import           Data.Version              (showVersion)
 import           Distribution.Git
 import           Lib
 import           Options.Applicative
+import           Options.Applicative.Types
 import           Paths_hookmark
 import           System.Directory
-import           System.Environment   (lookupEnv)
+import           System.Environment
 import           System.Exit
 import           System.FilePath
-import           System.IO            (stderr)
+import           System.IO                 (stderr)
 import           System.Posix.Files
 import           System.Process.Typed
 import           Text.RawString.QQ
@@ -57,6 +58,11 @@ data Command
       { removeBaseDir :: Maybe FilePath
       , removeName    :: FilePath
       }
+  | MoveBookmark
+      { moveBaseDir     :: Maybe FilePath
+      , moveSources     :: [FilePath] -- TODO NonEmptyList
+      , moveDestination :: FilePath
+      }
   deriving (Show)
 
 optionParser :: Parser Command
@@ -68,6 +74,7 @@ optionParser =
      command "show" (info showParser (progDesc "Show or search bookmark")) <>
      command "edit" (info editParser (progDesc "Edit bookmark")) <>
      command "rm" (info removeParser (progDesc "Remove bookmark")) <>
+     command "mv" (info moveParser (progDesc "Move bookmark")) <>
      command "version" (info (pure Version) (progDesc "Show version")))
 
 addParser :: Parser Command
@@ -127,10 +134,49 @@ removeParser =
           "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
   strArgument (metavar "name" <> help "Name of the bookmark to delete")
 
+moveParser :: Parser Command
+moveParser = applyInit <$> p <*> some (strArgument (metavar "source... dest"))
+  where
+    p :: Parser ([String] -> String -> Command)
+    p =
+      MoveBookmark <$>
+      optional
+        (strOption
+           (short 'b' <>
+            help
+              "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"))
+
+applyInit :: ([a] -> a -> b) -> [a] -> b
+applyInit f list =
+  let i = Data.List.init list
+      l = Data.List.last list
+   in f i l
+
+eP :: ParserInfo Command -> IO Command
+eP pinfo = wrapper pinfo <$> getArgs >>= handleParseResult
+
+wrapper :: ParserInfo Command -> [String] -> ParserResult Command
+wrapper pinfo args = do
+  cmd <- execParserPure defaultPrefs pinfo args
+  case cmd of
+    MoveBookmark {moveSources = sources} ->
+      if Data.List.null sources
+        then Failure $
+             parserFailure
+               defaultPrefs
+               pinfo
+               (MissingError CmdCont (SomeParser moveParser))
+               [ Context
+                   "mv"
+                   (info (moveParser <**> helper) (progDesc "Move bookmark"))
+               ]
+        else return cmd
+    _ -> return cmd
+
 main :: IO ()
 main = do
   opt <-
-    execParser $
+    eP $
     info
       (optionParser <**> helper)
       (fullDesc <> progDesc programDescription <>
@@ -190,6 +236,44 @@ main = do
         _ -> do
           T.hPutStrLn stderr "name is not unique"
           exitWith $ ExitFailure 1
+    (MoveBookmark dir marks dest) -> do
+      base <- fromMaybeBaseDir dir
+      case marks of
+        [x] -> moveBookmark base x dest
+        _ -> do
+          destExists <- fileExist $ base </> dest
+          destIsDir <-
+            if destExists
+              then isDirectory <$> getFileStatus (base </> dest)
+              else return False
+          if destIsDir
+            then mapM_ (\x -> moveBookmark base x dest) marks
+            else do
+              T.hPutStrLn stderr $ pack dest `mappend` " is not a directory"
+              exitWith $ ExitFailure 1
+
+moveBookmark :: FilePath -> FilePath -> FilePath -> IO ()
+moveBookmark base f "/" = moveBookmark base f "."
+moveBookmark base f d = do
+  let dest = normalizePath d
+  let file = normalizePath f
+  withCurrentDirectory base $ do
+    exists <- fileExist file
+    if not exists
+      then T.hPutStrLn stderr $ "not found " `mappend` pack file
+      else do
+        destExists <- fileExist dest
+        isDir <-
+          if destExists
+            then isDirectory <$> getFileStatus dest
+            else return False
+        let destName =
+              if isDir
+                then dest </> takeFileName file
+                else dest
+        createDirectoryIfMissing True $ takeDirectory destName
+        renamePath file destName
+        cleanDirectory $ takeDirectory file
 
 cleanDirectory :: FilePath -> IO ()
 cleanDirectory "." = return ()

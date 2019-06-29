@@ -11,6 +11,7 @@ module Lib
   , lookupBookmark
   , Bookmark
   , BookmarkEntry(..)
+  , normalizePath
   ) where
 
 import           Control.Monad
@@ -89,11 +90,14 @@ readBookmarkEntry baseDir bmName =
 data Criteria =
   Criteria (Maybe FilePath) [Tag]
 
+normalizePath :: FilePath -> FilePath
+normalizePath = dropTrailingPathSeparator . snd . splitDrive
+
 lookupBookmark :: FilePath -> Criteria -> IO [FilePath]
 lookupBookmark baseDir (Criteria criteriaName []) = do
   createDirectoryIfMissing True baseDir
-  withCurrentDirectory baseDir . listDirectories . snd $
-    splitDrive (fromMaybe mempty criteriaName)
+  withCurrentDirectory baseDir . listDirectories $
+    normalizePath (fromMaybe mempty criteriaName)
 lookupBookmark baseDir (Criteria criteriaName criteriaTags) = do
   names <- lookupBookmark baseDir (Criteria criteriaName [])
   marks <- zip names <$> mapM (readBookmarkEntry baseDir) names

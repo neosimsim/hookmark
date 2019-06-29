@@ -12,4 +12,5 @@ Available commands:
   show                     Show or search bookmark
   edit                     Edit bookmark
   rm                       Remove bookmark
+  mv                       Move bookmark
   version                  Show version
