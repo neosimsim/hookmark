@@ -135,7 +135,7 @@ test_rm: phony
 	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_rm_XXXXXX`";\
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
 		cp -r testmarks/* "$$HOOKMARKHOME" &&\
-		$(CMD) rm duckduckgo &&\
+		$(CMD) rm /duckduckgo &&\
 		if [ -e "$$HOOKMARKHOME/duckduckgo" ]; then echo "expected folder to be removed" >&2; exit 1; fi;\
 		rm -rf "$$HOOKMARKHOME"
 
