@@ -9,11 +9,13 @@ all: \
 	test_help_edit \
 	test_help_rm \
 	test_help_mv \
+	test_help_git \
 	test_add \
 	test_show \
 	test_edit \
 	test_rm \
 	test_mv \
+	test_git \
 	test_version \
 
 test_help: phony
@@ -39,6 +41,10 @@ test_help_rm: phony
 test_help_mv: phony
 	$(CMD) mv --help | diff - help_mv.out
 	$(CMD) mv -h | diff - help_mv.out
+
+test_help_git: phony
+	$(CMD) git --help | diff - help_git.out
+	$(CMD) git -h | diff - help_git.out
 
 test_version: phony
 	$(CMD) --version >/dev/null
@@ -238,6 +244,11 @@ test_mv: phony
 		if ! [ -f "$$HOOKMARKHOME/packages/base64-bytestring" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
 		if ! [ -f "$$HOOKMARKHOME/hoogle" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
 		rm -rf "$$HOOKMARKHOME"
+
+test_git:
+	@echo "git shall execute git from PATH"
+	export PATH="`pwd`:$$PATH"; which git
+	export PATH="`pwd`:$$PATH"; $(CMD) git push | diff - git.out
 
 phony: this_file_should_not_exist
 

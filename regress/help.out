@@ -13,4 +13,5 @@ Available commands:
   edit                     Edit bookmark
   rm                       Remove bookmark
   mv                       Move bookmark
+  git                      Invoke git within hookmark directory
   version                  Show version

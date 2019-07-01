@@ -1,0 +1,5 @@
+#!/bin/sh
+# pseudo git command to which just prints the argument
+# can be used to check, if git gets invoked.
+
+echo "execute git with $@"

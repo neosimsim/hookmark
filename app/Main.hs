@@ -63,6 +63,11 @@ data Command
       , moveSources     :: [FilePath] -- TODO NonEmptyList
       , moveDestination :: FilePath
       }
+  | ExecBookmark
+      { execBaseDir    :: Maybe FilePath
+      , execCmdSources :: String
+      , execArgs       :: [String]
+      }
   deriving (Show)
 
 optionParser :: Parser Command
@@ -75,6 +80,9 @@ optionParser =
      command "edit" (info editParser (progDesc "Edit bookmark")) <>
      command "rm" (info removeParser (progDesc "Remove bookmark")) <>
      command "mv" (info moveParser (progDesc "Move bookmark")) <>
+     command
+       "git"
+       (info gitParser (progDesc "Invoke git within hookmark directory")) <>
      command "version" (info (pure Version) (progDesc "Show version")))
 
 addParser :: Parser Command
@@ -145,6 +153,19 @@ moveParser = applyInit <$> p <*> some (strArgument (metavar "source... dest"))
            (short 'b' <>
             help
               "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"))
+
+gitParser :: Parser Command
+gitParser =
+  ExecBookmark <$>
+  optional
+    (strOption
+       (short 'b' <>
+        help
+          "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
+  pure "git" <*>
+  ((:) <$> strArgument (metavar "GITCMD" <> help "git subcommand to invoke") <*>
+   many
+     (strArgument (metavar "GITARGS" <> help "Arguments to be passed to GITCMD")))
 
 applyInit :: ([a] -> a -> b) -> [a] -> b
 applyInit f list =
@@ -251,6 +272,16 @@ main = do
             else do
               T.hPutStrLn stderr $ pack dest `mappend` " is not a directory"
               exitWith $ ExitFailure 1
+    (ExecBookmark dir cmd args) -> do
+      base <- fromMaybeBaseDir dir
+      withCurrentDirectory base $ do
+        code <- runProcess $ proc cmd args
+        case code of
+          ExitFailure c -> do
+            T.hPutStrLn stderr . pack $
+              Data.List.concat [cmd, " failed (", show c, ")"]
+            exitWith $ ExitFailure 1
+          ExitSuccess -> return ()
 
 moveBookmark :: FilePath -> FilePath -> FilePath -> IO ()
 moveBookmark base f "/" = moveBookmark base f "."

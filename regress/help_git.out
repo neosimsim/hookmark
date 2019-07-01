@@ -1,0 +1,9 @@
+Usage: hookmark git [-b ARG] GITCMD [GITARGS]
+  Invoke git within hookmark directory
+
+Available options:
+  -b ARG                   Base directory to lookup bookmarks in. Default
+                           $HOOKMARKHOME or $HOME/.hookmarkhome if unset
+  GITCMD                   git subcommand to invoke
+  GITARGS                  Arguments to be passed to GITCMD
+  -h,--help                Show this help text
