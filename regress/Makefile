@@ -8,7 +8,7 @@ all: \
 	test_help_show \
 	test_help_edit \
 	test_help_rm \
-	test_help_rm \
+	test_help_mv \
 	test_add \
 	test_show \
 	test_edit \
@@ -35,6 +35,10 @@ test_help_edit: phony
 test_help_rm: phony
 	$(CMD) rm --help | diff - help_rm.out
 	$(CMD) rm -h | diff - help_rm.out
+
+test_help_mv: phony
+	$(CMD) mv --help | diff - help_mv.out
+	$(CMD) mv -h | diff - help_mv.out
 
 test_version: phony
 	$(CMD) --version >/dev/null
