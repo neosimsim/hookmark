@@ -71,7 +71,7 @@ renderBookmarkEntry bm =
 
 writeBookmark :: FilePath -> Bookmark -> IO ()
 writeBookmark baseDir bm = do
-  let path = joinPath [baseDir, bookmarkName bm]
+  let path = joinPath [baseDir, normalizePath $ bookmarkName bm]
   createDirectoryIfMissing True $ takeDirectory path
   writeFile path . renderBookmarkEntry $ snd bm
 

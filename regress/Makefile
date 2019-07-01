@@ -54,33 +54,33 @@ test_version: phony
 test_add: phony
 	@echo "test if add create files and the correct place"
 	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
-		echo HOOKMARKHOME=$$HOOKMARKHOME;\
-		$(CMD) add -t search\ --tag haskell\ haskell/hoogle https://hoogle.haskell.org/\
-			&& test -d "$$HOOKMARKHOME/haskell"\
-			&& test -f "$$HOOKMARKHOME/haskell/hoogle";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
+		$(CMD) add -t search --tag haskell haskell/hoogle https://hoogle.haskell.org/ &&\
+		test -d "$$HOOKMARKHOME/haskell" &&\
+		test -f "$$HOOKMARKHOME/haskell/hoogle" &&\
 		rm -rf "$$HOOKMARKHOME"
 	@echo "base dir shall be created"
 	export HOOKMARKHOME="`mktemp -ud /tmp/hookmark_test_add_XXXXXX`";\
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
-		$(CMD) add -t search --tag haskell haskell/hoogle https://hoogle.haskell.org/\
-			&& test -d "$$HOOKMARKHOME/haskell"\
-			&& test -f "$$HOOKMARKHOME/haskell/hoogle";\
+		$(CMD) add -t search --tag haskell haskell/hoogle https://hoogle.haskell.org/ &&\
+		test -d "$$HOOKMARKHOME/haskell" &&\
+		test -f "$$HOOKMARKHOME/haskell/hoogle" &&\
 		rm -rf "$$HOOKMARKHOME"
 	@echo "option shall overwrite environment"
 	export HOOKMARKHOME=/tmp;\
-		base="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		export base="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
 		echo base=$$base;\
-		$(CMD) add -b "$$base" -t search --tag haskell haskell/hoogle https://hoogle.haskell.org/\
-			&& test -d "$$base/haskell"\
-			&& test -f "$$base/haskell/hoogle";\
+		$(CMD) add -b "$$base" -t search --tag haskell haskell/hoogle https://hoogle.haskell.org/ &&\
+		test -d "$$base/haskell" &&\
+		test -f "$$base/haskell/hoogle" &&\
 		rm -rf "$$base"
 	@echo "add shall use hookmark root, not file system root"
-	export HOOKMARKHOME=/tmp;\
-		base="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
-		$(CMD) add -t search --tag haskell /haskell/hoogle https://hoogle.haskell.org/\
-			&& test -d "$$base/haskell"\
-			&& test -f "$$base/haskell/hoogle";\
-		rm -rf "$$base"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME;\
+		$(CMD) add -t search --tag haskell /haskell/hoogle https://hoogle.haskell.org/ &&\
+		test -d "$$HOOKMARKHOME/haskell" &&\
+		test -f "$$HOOKMARKHOME/haskell/hoogle" &&\
+		rm -rf "$$HOOKMARKHOME"
 
 test_show: phony
 	@echo "test if show list directories from the correct place"
@@ -105,16 +105,16 @@ test_edit: phony
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
 		cp -r testmarks/* "$$HOOKMARKHOME";\
 		export EDITOR=ed;\
-		$(CMD) edit haskell/hoogle <edit.in >/dev/null;\
-		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out;\
+		$(CMD) edit haskell/hoogle <edit.in >/dev/null &&\
+		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out &&\
 		rm -rf "$$HOOKMARKHOME"
 	@echo "edit shall use hookmark root, not file system root"
 	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
 		cp -r testmarks/* "$$HOOKMARKHOME";\
 		export EDITOR=ed;\
-		$(CMD) edit /haskell/hoogle <edit.in >/dev/null;\
-		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out;\
+		$(CMD) edit /haskell/hoogle <edit.in >/dev/null &&\
+		diff "$$HOOKMARKHOME"/haskell/hoogle edit.out &&\
 		rm -rf "$$HOOKMARKHOME"
 
 test_rm: phony
@@ -148,7 +148,7 @@ test_rm: phony
 		echo HOOKMARKHOME=$$HOOKMARKHOME;\
 		cp -r testmarks/* "$$HOOKMARKHOME" &&\
 		$(CMD) rm /duckduckgo &&\
-		if [ -e "$$HOOKMARKHOME/duckduckgo" ]; then echo "expected folder to be removed" >&2; exit 1; fi;\
+		if [ -e "$$HOOKMARKHOME/duckduckgo" ]; then echo "expected folder to be removed" >&2; exit 1; fi &&\
 		rm -rf "$$HOOKMARKHOME"
 
 test_mv: phony
