@@ -19,6 +19,7 @@ import           Data.Version              (showVersion)
 import           Distribution.Git
 import           Lib
 import           Options.Applicative
+import           Options.Applicative.Help  (indent, line, text, (.$.))
 import           Options.Applicative.Types
 import           Paths_hookmark
 import           System.Directory
@@ -82,7 +83,18 @@ optionParser =
      command "mv" (info moveParser (progDesc "Move bookmark")) <>
      command
        "git"
-       (info gitParser (progDesc "Invoke git within hookmark directory")) <>
+       (info
+          gitParser
+          (progDesc "Invoke git within hookmark directory" <>
+           footerDoc
+             (Just $
+              text "Once git is setup, e.g. by" .$.
+              indent 2 "hookmark git -- init" .$.
+              "followed by" .$.
+              indent 2 "hookmark git -- add ." .$.
+              "and" .$.
+              indent 2 "hookmark git -- commit -m 'initial commit'" .$.
+              "hookmark will automatically track changes to bookmarks using git."))) <>
      command "version" (info (pure Version) (progDesc "Show version")))
 
 addParser :: Parser Command

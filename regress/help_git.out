@@ -7,3 +7,11 @@ Available options:
   GITCMD                   git subcommand to invoke
   GITARGS                  Arguments to be passed to GITCMD
   -h,--help                Show this help text
+
+Once git is setup, e.g. by
+  hookmark git -- init
+followed by
+  hookmark git -- add .
+and
+  hookmark git -- commit -m 'initial commit'
+hookmark will automatically track changes to bookmarks using git.
