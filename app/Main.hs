@@ -211,6 +211,8 @@ main = do
           else return mempty
       base <- fromMaybeBaseDir dir
       writeBookmark base (n, BookmarkEntry u (fmap (fromJust . fromText) t) d)
+      git <- isGit base
+      when git (commitAll base $ "add " ++ n)
     ShowBookmark dir t n -> do
       base <- fromMaybeBaseDir dir
       lu <- lookupBookmark base (Criteria n (fmap (fromJust . fromText) t))
@@ -240,7 +242,9 @@ main = do
             ExitFailure c -> do
               T.hPutStrLn stderr $ "editor failed: " `mappend` pack (show c)
               exitWith $ ExitFailure 1
-            ExitSuccess -> return ()
+            ExitSuccess -> do
+              git <- isGit base
+              when git (commitAll base $ "edit " ++ x)
         _ -> do
           T.hPutStrLn stderr "name is not unique"
           exitWith $ ExitFailure 1
@@ -254,13 +258,18 @@ main = do
         [x] -> do
           removeFile $ base </> x
           withCurrentDirectory base . cleanDirectory $ takeDirectory x
+          git <- isGit base
+          when git (commitAll base $ "remove " ++ x)
         _ -> do
           T.hPutStrLn stderr "name is not unique"
           exitWith $ ExitFailure 1
     (MoveBookmark dir marks dest) -> do
       base <- fromMaybeBaseDir dir
       case marks of
-        [x] -> moveBookmark base x dest
+        [x] -> do
+          moveBookmark base x dest
+          git <- isGit base
+          when git (commitAll base $ "move " ++ x ++ " to " ++ dest)
         _ -> do
           destExists <- fileExist $ base </> dest
           destIsDir <-
@@ -268,7 +277,10 @@ main = do
               then isDirectory <$> getFileStatus (base </> dest)
               else return False
           if destIsDir
-            then mapM_ (\x -> moveBookmark base x dest) marks
+            then do
+              mapM_ (\x -> moveBookmark base x dest) marks
+              git <- isGit base
+              when git (commitAll base $ "move to " ++ dest)
             else do
               T.hPutStrLn stderr $ pack dest `mappend` " is not a directory"
               exitWith $ ExitFailure 1
@@ -282,6 +294,32 @@ main = do
               Data.List.concat [cmd, " failed (", show c, ")"]
             exitWith $ ExitFailure 1
           ExitSuccess -> return ()
+
+commitAll :: FilePath -> String -> IO ()
+commitAll base msg =
+  withCurrentDirectory base $ do
+    addCode <- runProcess $ proc "git" ["add", "."]
+    case addCode of
+      ExitFailure cadd -> do
+        T.hPutStrLn stderr . pack $
+          Data.List.concat ["auto add failed (", show cadd, ")"]
+        exitWith $ ExitFailure 1
+      ExitSuccess -> do
+        commitCode <- runProcess $ proc "git" ["commit", "-m", msg]
+        case commitCode of
+          ExitFailure ccommit -> do
+            T.hPutStrLn stderr . pack $
+              Data.List.concat ["auto commit failed (", show ccommit, ")"]
+            exitWith $ ExitFailure 1
+          ExitSuccess -> return ()
+
+isGit :: FilePath -> IO Bool
+isGit base = do
+  let gitDir = base </> ".git"
+  destExists <- fileExist gitDir
+  if destExists
+    then isDirectory <$> getFileStatus gitDir
+    else return False
 
 moveBookmark :: FilePath -> FilePath -> FilePath -> IO ()
 moveBookmark base f "/" = moveBookmark base f "."

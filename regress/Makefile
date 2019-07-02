@@ -249,6 +249,36 @@ test_git:
 	@echo "git shall execute git from PATH"
 	export PATH="`pwd`:$$PATH"; which git
 	export PATH="`pwd`:$$PATH"; $(CMD) git push | diff - git.out
+	@echo "test auto commit"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
+		export PATH="`pwd`:$$PATH";\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		mkdir "$$HOOKMARKHOME/.git" &&\
+		$(CMD) add --tag haskell haskell/fpcomplete https://haskell.fpcomplete.com | diff - git_add.out &&\
+		rm -rf "$$HOOKMARKHOME"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
+		export PATH="`pwd`:$$PATH";\
+		export EDITOR=ed;\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		mkdir "$$HOOKMARKHOME/.git" &&\
+		$(CMD) edit haskell/hoogle <edit.in | diff - git_edit.out &&\
+		rm -rf "$$HOOKMARKHOME"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
+		export PATH="`pwd`:$$PATH";\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		mkdir "$$HOOKMARKHOME/.git" &&\
+		$(CMD) rm duckduckgo | diff - git_rm.out &&\
+		rm -rf "$$HOOKMARKHOME"
+	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
+		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
+		export PATH="`pwd`:$$PATH";\
+		cp -r testmarks/* "$$HOOKMARKHOME" &&\
+		mkdir "$$HOOKMARKHOME/.git" &&\
+		$(CMD) mv duckduckgo duck | diff - git_mv.out &&\
+		rm -rf "$$HOOKMARKHOME"
 
 phony: this_file_should_not_exist
 
