@@ -19,7 +19,7 @@ import           Data.Version              (showVersion)
 import           Distribution.Git
 import           Lib
 import           Options.Applicative
-import           Options.Applicative.Help  (indent, line, text, (.$.))
+import           Options.Applicative.Help  (indent, text, (.$.))
 import           Options.Applicative.Types
 import           Paths_hookmark
 import           System.Directory
