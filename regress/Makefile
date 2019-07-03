@@ -277,7 +277,10 @@ test_git:
 		export PATH="`pwd`:$$PATH";\
 		cp -r testmarks/* "$$HOOKMARKHOME" &&\
 		mkdir "$$HOOKMARKHOME/.git" &&\
-		$(CMD) mv duckduckgo duck | diff - git_mv.out &&\
+		touch "$$HOOKMARKHOME/.git/phony-git-file" &&\
+		mkdir "$$HOOKMARKHOME/haskell/.git" &&\
+		touch "$$HOOKMARKHOME/haskell/.git/phony-git-file" &&\
+		$(CMD) show | diff - git_show.out &&\
 		rm -rf "$$HOOKMARKHOME"
 
 phony: this_file_should_not_exist

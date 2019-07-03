@@ -96,8 +96,9 @@ normalizePath = dropTrailingPathSeparator . snd . splitDrive
 lookupBookmark :: FilePath -> Criteria -> IO [FilePath]
 lookupBookmark baseDir (Criteria criteriaName []) = do
   createDirectoryIfMissing True baseDir
-  withCurrentDirectory baseDir . listDirectories $
-    normalizePath (fromMaybe mempty criteriaName)
+  withCurrentDirectory baseDir $
+    filter ((/= ".git") . Protolude.take 4) <$>
+    listDirectories (normalizePath (fromMaybe mempty criteriaName))
 lookupBookmark baseDir (Criteria criteriaName criteriaTags) = do
   names <- lookupBookmark baseDir (Criteria criteriaName [])
   marks <- zip names <$> mapM (readBookmarkEntry baseDir) names
