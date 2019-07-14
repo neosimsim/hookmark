@@ -1,5 +1,9 @@
 # Changelog for stack-template
 
+## v1.0.0.1
+
+Remove git files from show output.
+
 ## v1.0.0
 
 Implementation of git auto commits after applying changes to bookmarks.
