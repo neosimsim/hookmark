@@ -1,5 +1,5 @@
 name:                hookmark
-version:             1.0.0.1
+version:             1.0.1
 github:              "github.com/neosimsim/hookmark"
 license:             BSD3
 author:              "Alexander Ben Nasrallah"
@@ -18,16 +18,18 @@ description:         Please see the README on GitHub at <https://github.com/neos
 
 dependencies:
 - base >= 4.7 && < 5
-- text
-- protolude
-- filepath
-- template-haskell
-- process
+- bytestring
 - directory
-- unix
 - either
-- non-empty-text
+- filepath
 - megaparsec
+- non-empty-text
+- process
+- protolude
+- template-haskell
+- text
+- typed-process
+- unix
 
 library:
   source-dirs: src
@@ -44,8 +46,6 @@ executables:
     - hookmark
     - optparse-applicative
     - raw-strings-qq
-    - bytestring
-    - typed-process
 
 tests:
   test:

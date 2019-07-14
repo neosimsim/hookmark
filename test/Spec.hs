@@ -3,7 +3,8 @@
 import           Data.NonEmptyText
 import           Data.Text         as T (Text)
 import qualified Data.Text         as T
-import           Lib
+import           Hookmark.Parser
+import           Hookmark.Types
 import           Test.Hspec
 import           Test.QuickCheck
 
@@ -40,5 +41,6 @@ prop_renderAndParserAreInverse x =
 main :: IO ()
 main =
   hspec $
-  describe "Lib.parse/renderBookmark" $
+  describe
+    "Hookmark.Parser.parseBookmarkEntry/Hookmark.Types.renderBookmarkEntry" $
   it "parses rendered data the same" $ property prop_renderAndParserAreInverse
