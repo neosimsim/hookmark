@@ -34,6 +34,12 @@ dependencies:
 library:
   source-dirs: src
 
+flags:
+    static:
+        default: False
+        manual: True
+        description: "Statically link the application"
+
 executables:
   hookmark:
     main:                Main.hs
@@ -42,6 +48,11 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    when:
+      - condition: flag(static)
+        ld-options:
+        - -static
+        - -pthread
     dependencies:
     - hookmark
     - optparse-applicative
