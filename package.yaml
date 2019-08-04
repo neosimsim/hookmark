@@ -73,3 +73,22 @@ tests:
     - hookmark
     - hspec
     - QuickCheck
+  regression:
+    main:                Regression.hs
+    source-dirs:         regression
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - hspec
+    - HUnit
+    - hspec-contrib
+    - QuickCheck
+    - typed-process
+    - file-embed
+    - hspec-expectations
+    - Diff
+    - nicify-lib
+    - utf8-string
+    - unliftio

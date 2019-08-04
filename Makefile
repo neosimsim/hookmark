@@ -1,7 +1,7 @@
 .POSIX:
 
 all: lint test
-	$(MAKE) regress
+	$(MAKE) regression
 
 lint: phony
 	hfmt
@@ -10,10 +10,10 @@ build: phony
 	stack build --pedantic
 
 test: build
-	stack test --pedantic
+	stack test --pedantic :test
 
-regress: build
-	$(MAKE) -C regress all
+regression: build
+	stack test --pedantic :regression
 
 clean:
 	stack clean
