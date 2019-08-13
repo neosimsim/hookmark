@@ -1,6 +1,8 @@
 name:                hookmark
 version:             1.0.1
-github:              "github.com/neosimsim/hookmark"
+homepage:            "https://gitlab.com/neosimsim/hookmark"
+git:                 "https://gitlab.com/neosimsim/hookmark.git"
+bug-reports:         "https://gitlab.com/neosimsim/hookmark/issues"
 license:             BSD3
 author:              "Alexander Ben Nasrallah"
 maintainer:          "me@abn.sh"
