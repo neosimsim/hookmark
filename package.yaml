@@ -6,7 +6,7 @@ bug-reports:         "https://gitlab.com/neosimsim/hookmark/issues"
 license:             BSD3
 author:              "Alexander Ben Nasrallah"
 maintainer:          "me@abn.sh"
-copyright:           "22:35:38 Alexander Ben Nasrallah"
+copyright:           "2019 © Alexander Ben Nasrallah"
 
 extra-source-files:
 - README.md
