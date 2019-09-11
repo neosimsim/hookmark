@@ -1,23 +1,21 @@
-{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-import           Control.Monad.IO.Class
-import qualified Data.ByteString              as BS
-import           Data.ByteString.Lazy         (toStrict)
-import qualified Data.ByteString.Lazy.UTF8    as BLU
-import qualified Data.ByteString.UTF8         as BU
+import qualified Data.ByteString                       as BS
+import qualified Data.ByteString.Lazy.UTF8             as BLU
+import qualified Data.ByteString.UTF8                  as BU
 import           Data.FileEmbed
-import qualified Data.String                  as String (fromString)
+import qualified Data.String                           as String (fromString)
 import           System.Directory
 import           System.Directory.Recursive
-import           System.Environment           as Env
+import           System.Environment                    as Env
 import           System.Exit
 import           System.FilePath
 import           System.Process.Typed
 import           Test.Hspec
 import           Test.Hspec.Expectations.Diff
-import           UnliftIO.Temporary           (withSystemTempDirectory)
+import           Test.Hspec.Expectations.Process.Typed
+import           UnliftIO.Temporary                    (withSystemTempDirectory)
 
 lookupExecutable :: IO FilePath
 lookupExecutable =
@@ -26,17 +24,6 @@ lookupExecutable =
 
 dropTrailingNewLine :: String -> String
 dropTrailingNewLine = reverse . dropWhile (== '\n') . reverse
-
-shouldExit ::
-     HasCallStack
-  => ProcessConfig stdin stdoutIgnored stderrIgnored
-  -> (ExitCode, BS.ByteString, BS.ByteString)
-  -> Expectation
-shouldExit p (expectedExitCode, expectedOut, expectedErr) = do
-  (exitCode, out, err) <- readProcess' p
-  exitCode `shouldBe` expectedExitCode
-  out `shouldNotDiffer` expectedOut
-  err `shouldNotDiffer` expectedErr
 
 main :: IO ()
 main =
@@ -366,15 +353,6 @@ withTempHookmarks nameTemplate action =
     Env.setEnv "GITLOG" gitlog
     action testmarksPath gitlog
     Env.setEnv "EDITOR" "ed"
-
-readProcess' ::
-     MonadIO m
-  => ProcessConfig stdin stdoutIgnored stderrIgnored
-  -> m (ExitCode, BS.ByteString, BS.ByteString)
-readProcess' p = map2_3 toStrict <$> readProcess p
-  where
-    map2_3 :: (b -> c) -> (a, b, b) -> (a, c, c)
-    map2_3 f (x, y, z) = (x, f y, f z)
 
 editBookmark :: FilePath -> ProcessConfig () () ()
 editBookmark cmd =
