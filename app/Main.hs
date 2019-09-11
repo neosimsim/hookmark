@@ -51,8 +51,8 @@ addParser =
           "Base directory to store bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
   many
     (strOption
-       (long "tag" <> short 't' <>
-        help "Bookmark tag, can be used multiple times")) <*>
+       (long "tag" <>
+        short 't' <> help "Bookmark tag, can be used multiple times")) <*>
   switch (short 'd' <> help "Prompt for description") <*>
   strArgument
     (metavar "name" <>
@@ -69,8 +69,8 @@ showParser =
           "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
   many
     (strOption
-       (long "tag" <> short 't' <>
-        help "Bookmark tag, can be used multiple times")) <*>
+       (long "tag" <>
+        short 't' <> help "Bookmark tag, can be used multiple times")) <*>
   optional
     (strArgument
        (metavar "name" <>
@@ -156,6 +156,7 @@ main = do
     eP $
     info
       (optionParser <**> helper)
-      (fullDesc <> progDesc programDescription <>
+      (fullDesc <>
+       progDesc programDescription <>
        header "hookmark — browser independent bookmarking")
   executeCommand opt
