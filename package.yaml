@@ -32,6 +32,7 @@ dependencies:
 - text
 - typed-process
 - unix
+- utf8-string
 
 library:
   source-dirs: src

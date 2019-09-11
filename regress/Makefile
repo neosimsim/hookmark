@@ -15,7 +15,6 @@ all: \
 	test_edit \
 	test_rm \
 	test_mv \
-	test_git \
 	test_version \
 
 test_help: phony
@@ -243,44 +242,6 @@ test_mv: phony
 		if ! [ -d "$$HOOKMARKHOME/packages" ]; then echo "expected folder to be moved" >&2; exit 1; fi &&\
 		if ! [ -f "$$HOOKMARKHOME/packages/base64-bytestring" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
 		if ! [ -f "$$HOOKMARKHOME/haskell/hoogle" ]; then echo "expected bookmark not to be moved" >&2; exit 1; fi &&\
-		rm -rf "$$HOOKMARKHOME"
-
-test_git:
-	@echo "git shall execute git from PATH"
-	export PATH="`pwd`:$$PATH"; which git
-	export PATH="`pwd`:$$PATH"; $(CMD) git push | diff - git.out
-	@echo "test auto commit"
-	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
-		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
-		export PATH="`pwd`:$$PATH";\
-		cp -r testmarks/* "$$HOOKMARKHOME" &&\
-		mkdir "$$HOOKMARKHOME/.git" &&\
-		$(CMD) add --tag haskell haskell/fpcomplete https://haskell.fpcomplete.com | diff - git_add.out &&\
-		rm -rf "$$HOOKMARKHOME"
-	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
-		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
-		export PATH="`pwd`:$$PATH";\
-		export EDITOR=ed;\
-		cp -r testmarks/* "$$HOOKMARKHOME" &&\
-		mkdir "$$HOOKMARKHOME/.git" &&\
-		$(CMD) edit haskell/hoogle <edit.in | diff - git_edit.out &&\
-		rm -rf "$$HOOKMARKHOME"
-	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
-		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
-		export PATH="`pwd`:$$PATH";\
-		cp -r testmarks/* "$$HOOKMARKHOME" &&\
-		mkdir "$$HOOKMARKHOME/.git" &&\
-		$(CMD) rm duckduckgo | diff - git_rm.out &&\
-		rm -rf "$$HOOKMARKHOME"
-	export HOOKMARKHOME="`mktemp -d /tmp/hookmark_test_add_XXXXXX`";\
-		echo HOOKMARKHOME=$$HOOKMARKHOME &&\
-		export PATH="`pwd`:$$PATH";\
-		cp -r testmarks/* "$$HOOKMARKHOME" &&\
-		mkdir "$$HOOKMARKHOME/.git" &&\
-		touch "$$HOOKMARKHOME/.git/phony-git-file" &&\
-		mkdir "$$HOOKMARKHOME/haskell/.git" &&\
-		touch "$$HOOKMARKHOME/haskell/.git/phony-git-file" &&\
-		$(CMD) show | diff - git_show.out &&\
 		rm -rf "$$HOOKMARKHOME"
 
 phony: this_file_should_not_exist

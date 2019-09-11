@@ -9,15 +9,16 @@ module Hookmark.Command
   ) where
 
 import           Control.Monad
-import qualified Data.ByteString      as BS
+import qualified Data.ByteString           as BS
+import qualified Data.ByteString.Lazy.UTF8 as BLU
 import           Data.Maybe
-import qualified Data.NonEmptyText    as T
+import qualified Data.NonEmptyText         as T
 import           Data.Path
-import           Data.String          (String)
-import qualified Data.Text            as T
-import qualified Data.Text.Encoding   as T
-import qualified Data.Text.IO         as T
-import           Data.Version         (showVersion)
+import           Data.String               (String)
+import qualified Data.Text                 as T
+import qualified Data.Text.Encoding        as T
+import qualified Data.Text.IO              as T
+import           Data.Version              (showVersion)
 import           Distribution.Git
 import           Hookmark.Parser
 import           Hookmark.Types
@@ -170,18 +171,26 @@ fromMaybeBaseDir dir = do
 commitAll :: FilePath -> String -> IO ()
 commitAll base msg =
   withCurrentDirectory base $ do
-    addCode <- runProcess $ proc "git" ["add", "."]
+    (addCode, _, addErr) <- readProcess $ proc "git" ["add", "."]
     case addCode of
       ExitFailure cadd -> do
         T.hPutStrLn stderr . T.pack $
-          concat ["auto add failed (", show cadd, ")"]
+          concat
+            ["auto add failed (", show cadd, ")", ": ", BLU.toString addErr]
         exitWith $ ExitFailure 1
       ExitSuccess -> do
-        commitCode <- runProcess $ proc "git" ["commit", "-m", msg]
+        (commitCode, _, commitErr) <-
+          readProcess $ proc "git" ["commit", "-m", msg]
         case commitCode of
           ExitFailure ccommit -> do
             T.hPutStrLn stderr . T.pack $
-              concat ["auto commit failed (", show ccommit, ")"]
+              concat
+                [ "auto commit failed ("
+                , show ccommit
+                , ")"
+                , ": "
+                , BLU.toString commitErr
+                ]
             exitWith $ ExitFailure 1
           ExitSuccess -> return ()
 
