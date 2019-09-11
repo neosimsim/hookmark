@@ -85,7 +85,7 @@ executeCommand (ShowBookmark dir t n) = do
   lu <- lookupBookmark base (Criteria n (fmap (fromJust . T.fromText) t))
   case lu of
     [] -> do
-      T.hPutStrLn stderr "not found"
+      T.hPutStrLn stderr "no bookmark found"
       exitWith $ ExitFailure 1
     [x] -> do
       bs <- readBookmarkEntry base x
