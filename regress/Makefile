@@ -240,9 +240,9 @@ test_mv: phony
 			exit 1;\
 		fi | diff - mv_missing_file.out &&\
 		if ! [ -f "$$HOOKMARKHOME/warp" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
-		if ! [ -d "$$HOOKMARKHOME/packages" ]; then echo "expected empty folder to be moved" >&2; exit 1; fi &&\
+		if ! [ -d "$$HOOKMARKHOME/packages" ]; then echo "expected folder to be moved" >&2; exit 1; fi &&\
 		if ! [ -f "$$HOOKMARKHOME/packages/base64-bytestring" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
-		if ! [ -f "$$HOOKMARKHOME/hoogle" ]; then echo "expected bookmark to be moved" >&2; exit 1; fi &&\
+		if ! [ -f "$$HOOKMARKHOME/haskell/hoogle" ]; then echo "expected bookmark not to be moved" >&2; exit 1; fi &&\
 		rm -rf "$$HOOKMARKHOME"
 
 test_git:

@@ -201,7 +201,9 @@ moveBookmark base f d = do
   withCurrentDirectory base $ do
     exists <- fileExist file
     if not exists
-      then T.hPutStrLn stderr $ "not found " `mappend` T.pack file
+      then do
+        T.hPutStrLn stderr $ "not found " `mappend` T.pack file
+        exitWith $ ExitFailure 1
       else do
         destExists <- fileExist dest
         isDir <-
