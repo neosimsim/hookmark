@@ -1,0 +1,24 @@
+language: haskell
+ghc:
+- 8.6.5
+- 8.6.4
+cache:
+  directories:
+  - .cabal-sandbox
+before_install:
+- cabal sandbox init
+script:
+- cabal build
+- cabal test test
+- cabal install --bindir "`pwd`/build" --libdir "`pwd`/build"
+- cabal test regression
+deploy:
+  provider: releases
+  api_key:
+    secure: lZ51IfqjDLgAMEjlApXp8nlWU6je8eCDGmfrgXYk3D3Ame+xrcswt2kDSjw9CDJhcQDkUjLPKLdsmea785wmbUFPXFnrmf87To/GybcOaJNq+BvSGLvCEfCYohF379NN5yxOnV5d04KyGHDjfx1Dww7E2+UwYMf9mNBgAYYT470g27EgNFLomzVl94x8gJoXfjdldyM8kzTzKhJ6ioBXUqomYj4IUhytHAAClmJkiBq+YcpDIYVexLKXw00mEGB73hAJZVjgZ1Y1OMi6uvLAnAuebaM+uG/Mki3EUO4EszNREHmrFZM/CZCmnlOzTkBAC5Pa0094Hx4cwJMseS7bodpLdkLB/NkuZRjvyVqR/vJFbGoGu1ckdPNslhiyOCgQAyzt/e/X89FUp2qlZHjonx0qOepgGwPxp9+wAKBXjo9nOxPujL60ueVsLUnpLEO3o91bgEPArHNmbTjFL4pw4ecj1htLBibRrik/dbiZKIHMlppmc40KQDWKpUtqywoV8nPzpy4GH7bKonE1lzK3tFpj/Q/lTIQO1SPf8wlUCrC1O+S6IWL44Ej0CUrLqkXToCS3zXnrSC0W2tf3OqukpAZBdDg58Q7psn2EKtwup0msdLZyHDX7qZKmD6PaZXAO+J8B+BU+qAvd6QUN+kf8eIU3uLbjNY1aLADFa3dGRjk=
+  skip_cleanup: true
+  file: build/hookmark
+  on:
+    tag: true
+    condition:
+      - $TRAVIS_HASKELL_VERSION = 8.6.5
