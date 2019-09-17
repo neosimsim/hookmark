@@ -13,9 +13,11 @@ test: build
 	stack test --pedantic :test
 
 regression: build
+	stack --local-bin-path build --verbosity silent install
 	stack test --pedantic :regression
 
 clean:
+	rm -rf build
 	stack clean
 
 check:

@@ -2,7 +2,6 @@
 {-# LANGUAGE TemplateHaskell   #-}
 
 import qualified Data.ByteString                       as BS
-import qualified Data.ByteString.Lazy.UTF8             as BLU
 import qualified Data.ByteString.UTF8                  as BU
 import           Data.FileEmbed
 import qualified Data.String                           as String (fromString)
@@ -18,12 +17,7 @@ import           Test.Hspec.Expectations.Process.Typed
 import           UnliftIO.Temporary                    (withSystemTempDirectory)
 
 lookupExecutable :: IO FilePath
-lookupExecutable =
-  dropTrailingNewLine . BLU.toString . fst <$>
-  readProcess_ "stack exec -- which hookmark"
-
-dropTrailingNewLine :: String -> String
-dropTrailingNewLine = reverse . dropWhile (== '\n') . reverse
+lookupExecutable = return "build/hookmark"
 
 main :: IO ()
 main =
