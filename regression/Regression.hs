@@ -347,6 +347,8 @@ withTempHookmarks nameTemplate action =
     let testmarksPath = baseDir </> "testmarks"
     copyDir "regression/testmarks" testmarksPath
     Env.setEnv "HOOKMARKHOME" testmarksPath
+    createDirectory $ testmarksPath </> ".git"
+    writeFile (testmarksPath </> ".git" </> "phony-git-file") ""
     cwd <- getCurrentDirectory
     Env.setEnv "PATH" $ (cwd </> "regression") ++ ":/bin:/usr/bin"
     let gitlog = baseDir </> "git.log"
