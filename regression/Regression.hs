@@ -144,13 +144,14 @@ main =
         withTempHookmarks "hookmark_test" $ \baseDir _ -> do
           let editing = editBookmark cmd
           editing `shouldExit`
-            (ExitSuccess, $(embedFile "regression/ed.out"), "")
+            (ExitSuccess, $(embedFile "regression/editor.out"), "")
           newContent <- BS.readFile (baseDir </> "haskell/hoogle")
           newContent `shouldNotDiffer` $(embedFile "regression/edit.out")
       it "should use hookmark root, not file system root" $ \cmd ->
         withTempHookmarks "hookmark_test" $ \baseDir _ -> do
           let editing = editBookmark cmd
-          editing `shouldExit` (ExitSuccess, "214\n219\n", "")
+          editing `shouldExit`
+            (ExitSuccess, $(embedFile "regression/edit.out"), "")
           newContent <- BS.readFile (baseDir </> "haskell/hoogle")
           newContent `shouldNotDiffer` $(embedFile "regression/edit.out")
     describe "rm" $ do
@@ -313,7 +314,7 @@ main =
           withTempHookmarks "testmarks" $ \_ gitLog -> do
             let editing = editBookmark cmd
             editing `shouldExit`
-              (ExitSuccess, $(embedFile "regression/ed.out"), "")
+              (ExitSuccess, $(embedFile "regression/editor.out"), "")
             gitOut <- BS.readFile gitLog
             gitOut `shouldNotDiffer` $(embedFile "regression/git_edit.out")
         it "rm" $ \cmd ->
@@ -347,7 +348,7 @@ withTempHookmarks nameTemplate action =
     Env.setEnv "PATH" $ (cwd </> "regression") ++ ":/bin:/usr/bin"
     let gitlog = baseDir </> "git.log"
     Env.setEnv "GITLOG" gitlog
-    Env.setEnv "EDITOR" "ed"
+    Env.setEnv "EDITOR" "tee"
     action testmarksPath gitlog
 
 editBookmark :: FilePath -> ProcessConfig () () ()
