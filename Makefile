@@ -1,6 +1,9 @@
 .POSIX:
 
-all: lint test
+all:
+	$(MAKE) lint
+	$(MAKE) test
+	$(MAKE) build
 	$(MAKE) regression
 
 lint: phony
@@ -9,18 +12,18 @@ lint: phony
 build: phony
 	stack build --pedantic
 
-test: build
+test: phony
 	stack test --pedantic :test
 
-regression: build
+regression: phony
 	stack --local-bin-path build --verbosity silent install
 	stack test --pedantic :regression
 
-clean:
+clean: phony
 	rm -rf build
 	stack clean
 
-check:
+check: phony
 	./misc/git/pre-commit
 
 phony: this_file_should_not_exists
