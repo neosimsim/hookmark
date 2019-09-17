@@ -1,5 +1,9 @@
 # Changelog for stack-template
 
+## v1.1
+
+Remove git output from auto commit.
+
 ## v1.0.0.1
 
 Remove git files from show output.

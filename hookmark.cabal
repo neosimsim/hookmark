@@ -7,7 +7,7 @@ cabal-version:      1.12
 -- hash: 74a5c6644e95d0556e2d82ca8f5a370876274fd09d208b28a083ae05d5275110
 
 name:               hookmark
-version:            1.0.1
+version:            1.1
 description:
   Please see the README on GitHub at <https://github.com/neosimsim/hookmark#readme>
 
