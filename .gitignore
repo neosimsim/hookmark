@@ -1,5 +1,7 @@
 *.cabal
 *.lock
+.cabal-sandbox/
 .stack-work/
 build/
-
+dist-newstyle/
+dist/

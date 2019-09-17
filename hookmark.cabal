@@ -1,0 +1,156 @@
+cabal-version:      1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 74a5c6644e95d0556e2d82ca8f5a370876274fd09d208b28a083ae05d5275110
+
+name:               hookmark
+version:            1.0.1
+description:
+  Please see the README on GitHub at <https://github.com/neosimsim/hookmark#readme>
+
+homepage:           https://gitlab.com/neosimsim/hookmark
+bug-reports:        https://gitlab.com/neosimsim/hookmark/issues
+author:             Alexander Ben Nasrallah
+maintainer:         me@abn.sh
+copyright:          2019 © Alexander Ben Nasrallah
+license:            BSD3
+license-file:       LICENSE
+build-type:         Simple
+extra-source-files:
+  README.md
+  ChangeLog.md
+
+source-repository head
+  type:     git
+  location: https://gitlab.com/neosimsim/hookmark.git
+
+flag static
+  description: Statically link the application
+  manual:      True
+  default:     False
+
+library
+  exposed-modules:
+    Data.Path
+    Distribution.Git
+    Hookmark.Command
+    Hookmark.Parser
+    Hookmark.Types
+
+  other-modules:    Paths_hookmark
+  hs-source-dirs:   src
+  build-depends:
+      base              >=4.7      && <5
+    , bytestring
+    , directory
+    , either
+    , filepath
+    , megaparsec
+    , non-empty-text
+    , process
+    , protolude
+    , template-haskell
+    , text
+    , typed-process
+    , unix
+    , utf8-string
+
+  default-language: Haskell2010
+
+executable hookmark
+  main-is:          Main.hs
+  other-modules:    Paths_hookmark
+  hs-source-dirs:   app
+  ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base                  >=4.7 && <5
+    , bytestring
+    , directory
+    , either
+    , filepath
+    , hookmark
+    , megaparsec
+    , non-empty-text
+    , optparse-applicative
+    , process
+    , protolude
+    , raw-strings-qq
+    , template-haskell
+    , text
+    , typed-process
+    , unix
+    , utf8-string
+
+  if flag(static)
+    ld-options: -static -pthread
+
+  default-language: Haskell2010
+
+test-suite regression
+  type:             exitcode-stdio-1.0
+  main-is:          Regression.hs
+  other-modules:
+    Paths_hookmark
+    System.Directory.Recursive
+    Test.Hspec.Expectations.Diff
+    Test.Hspec.Expectations.Internal
+    Test.Hspec.Expectations.Process.Typed
+
+  hs-source-dirs:   regression
+  ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base                >=4.7 && <5
+    , bytestring
+    , Diff
+    , directory
+    , either
+    , file-embed
+    , filepath
+    , hspec
+    , hspec-contrib
+    , hspec-expectations
+    , HUnit
+    , megaparsec
+    , nicify-lib
+    , non-empty-text
+    , process
+    , protolude
+    , QuickCheck
+    , template-haskell
+    , text
+    , typed-process
+    , unix
+    , unliftio
+    , utf8-string
+
+  default-language: Haskell2010
+
+test-suite test
+  type:             exitcode-stdio-1.0
+  main-is:          Spec.hs
+  other-modules:    Paths_hookmark
+  hs-source-dirs:   test
+  ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base              >=4.7 && <5
+    , bytestring
+    , directory
+    , either
+    , filepath
+    , hookmark
+    , hspec
+    , megaparsec
+    , non-empty-text
+    , process
+    , protolude
+    , QuickCheck
+    , template-haskell
+    , text
+    , typed-process
+    , unix
+    , utf8-string
+
+  default-language: Haskell2010
