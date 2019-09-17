@@ -347,8 +347,8 @@ withTempHookmarks nameTemplate action =
     Env.setEnv "PATH" $ (cwd </> "regression") ++ ":/bin:/usr/bin"
     let gitlog = baseDir </> "git.log"
     Env.setEnv "GITLOG" gitlog
-    action testmarksPath gitlog
     Env.setEnv "EDITOR" "ed"
+    action testmarksPath gitlog
 
 editBookmark :: FilePath -> ProcessConfig () () ()
 editBookmark cmd =
