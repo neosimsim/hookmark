@@ -22,6 +22,9 @@ regression: phony
 	stack $(STACK_ARGS) --local-bin-path build --verbosity silent install
 	stack $(STACK_ARGS) test --ta '$(HUNIT_ARGS)' --pedantic :regression
 
+yesod:
+	stack exec --package yesod-bin yesod -- devel
+
 clean: phony
 	rm -rf build
 	stack $(STACK_ARGS) clean
