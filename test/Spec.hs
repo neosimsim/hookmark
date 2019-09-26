@@ -1,4 +1,6 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DerivingStrategies         #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings          #-}
 
 import           Data.NonEmptyText
 import           Data.Text         as T (Text)
@@ -12,7 +14,7 @@ newtype TBookmarkEntry =
   TBookmarkEntry
     { fromTBookmarkEntry :: BookmarkEntry
     }
-  deriving (Eq, Show)
+  deriving newtype (Eq, Show)
 
 instance Arbitrary TBookmarkEntry where
   arbitrary =

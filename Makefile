@@ -7,7 +7,7 @@ all:
 	$(MAKE) regression
 
 lint: phony
-	hfmt
+	stack exec --package hfmt hfmt
 
 build: phony
 	stack build --pedantic
