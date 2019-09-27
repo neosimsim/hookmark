@@ -1,16 +1,11 @@
 cabal-version:      1.12
-
--- This file has been generated from package.yaml by hpack version 0.31.1.
---
--- see: https://github.com/sol/hpack
---
--- hash: 74a5c6644e95d0556e2d82ca8f5a370876274fd09d208b28a083ae05d5275110
-
 name:               hookmark
 version:            1.1
+synopsis:           Browser independent bookmark manager
 description:
   Please see the README on GitHub at <https://github.com/neosimsim/hookmark#readme>
 
+category:           cli-tool
 homepage:           https://gitlab.com/neosimsim/hookmark
 bug-reports:        https://gitlab.com/neosimsim/hookmark/issues
 author:             Alexander Ben Nasrallah
@@ -43,7 +38,7 @@ library
   other-modules:    Paths_hookmark
   hs-source-dirs:   src
   build-depends:
-      base              >=4.7      && <5
+      base              >=4.7 && <5
     , bytestring
     , directory
     , either
