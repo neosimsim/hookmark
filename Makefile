@@ -1,5 +1,7 @@
 .POSIX:
 
+STACK_ARGS=
+
 all:
 	$(MAKE) build
 	$(MAKE) lint
@@ -7,21 +9,21 @@ all:
 	$(MAKE) regression
 
 lint: phony
-	stack exec --package hfmt hfmt
+	stack $(STACK_ARGS) exec --package hfmt hfmt
 
 build: phony
-	stack build --pedantic
+	stack $(STACK_ARGS) build --pedantic
 
 test: phony
-	stack test --pedantic :test
+	stack $(STACK_ARGS) test --pedantic :test
 
 regression: phony
-	stack --local-bin-path build --verbosity silent install
-	stack test --pedantic :regression
+	stack $(STACK_ARGS) --local-bin-path build --verbosity silent install
+	stack $(STACK_ARGS) test --pedantic :regression
 
 clean: phony
 	rm -rf build
-	stack clean
+	stack $(STACK_ARGS) clean
 
 check: phony
 	./misc/git/pre-commit
