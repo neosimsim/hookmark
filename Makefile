@@ -1,9 +1,9 @@
 .POSIX:
 
 all:
+	$(MAKE) build
 	$(MAKE) lint
 	$(MAKE) test
-	$(MAKE) build
 	$(MAKE) regression
 
 lint: phony
