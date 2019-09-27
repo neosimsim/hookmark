@@ -1,0 +1,48 @@
+image: haskell:8.6.5
+
+stages:
+- build
+
+stack:
+  stage: build
+  script:
+  - make all
+
+stack-latest:
+  image: fpco/stack-build:lts
+  allow_failure: true
+  stage: build
+  script:
+  - make STACK_ARGS='--resolver lts' all
+
+stack-14.6:
+  image: fpco/stack-build:lts-14.6
+  stage: build
+  script:
+  - make STACK_ARGS='--stack-yaml stack-lts-14.6.yaml' all
+
+.cabal: &cabal_job
+  image: haskell:latest
+  stage: build
+  script:
+  - cabal v2-update
+  - cabal v2-build
+  - cabal v2-test test
+  - cabal v2-install --help
+  - cabal v2-install --installdir build exe:hookmark
+  - cabal v2-test regression
+
+cabal-latest:
+  <<: *cabal_job
+  image: haskell:latest
+  allow_failure: true
+
+cabal-8.6.5:
+  <<: *cabal_job
+  image: haskell:8.6.5
+  script:
+  - cabal v2-update
+  - cabal v2-build
+  - cabal v2-test test
+  - cabal v2-install --symlink-bindir build exe:hookmark
+  - cabal v2-test regression
