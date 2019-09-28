@@ -9,6 +9,7 @@ all:
 	$(MAKE) regression
 
 check: phony
+	stack --stack-yaml stack-build.yaml exec --package cabal-fmt cabal-fmt hookmark.cabal | diff hookmark.cabal -
 	stack --stack-yaml stack-build.yaml exec --package hfmt hfmt
 
 build: phony
