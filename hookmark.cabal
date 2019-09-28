@@ -46,7 +46,6 @@ library
     , megaparsec
     , non-empty-text
     , process
-    , protolude
     , template-haskell
     , text
     , typed-process
@@ -71,7 +70,6 @@ executable hookmark
     , non-empty-text
     , optparse-applicative
     , process
-    , protolude
     , raw-strings-qq
     , template-haskell
     , text
@@ -112,7 +110,6 @@ test-suite regression
     , nicify-lib
     , non-empty-text
     , process
-    , protolude
     , QuickCheck
     , template-haskell
     , text
@@ -140,7 +137,6 @@ test-suite test
     , megaparsec
     , non-empty-text
     , process
-    , protolude
     , QuickCheck
     , template-haskell
     , text

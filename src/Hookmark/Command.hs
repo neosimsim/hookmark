@@ -1,4 +1,3 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE TemplateHaskell   #-}
@@ -8,13 +7,16 @@ module Hookmark.Command
   , executeCommand
   ) where
 
+import           Control.Applicative
 import           Control.Monad
 import qualified Data.ByteString           as BS
 import qualified Data.ByteString.Lazy.UTF8 as BLU
+import           Data.List
 import           Data.Maybe
 import qualified Data.NonEmptyText         as T
 import           Data.Path
 import           Data.String               (String)
+import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.Encoding        as T
 import qualified Data.Text.IO              as T
@@ -23,10 +25,11 @@ import           Distribution.Git
 import           Hookmark.Parser
 import           Hookmark.Types
 import           Paths_hookmark
-import           Protolude
 import           System.Directory
 import           System.Environment
+import           System.Exit
 import           System.FilePath
+import           System.IO
 import           System.Posix.Files
 import           System.Process.Typed
 
@@ -242,7 +245,7 @@ lookupBookmark :: FilePath -> Criteria -> IO [FilePath]
 lookupBookmark baseDir (Criteria criteriaName []) = do
   createDirectoryIfMissing True baseDir
   withCurrentDirectory baseDir $
-    filter ((/= ".git") . Protolude.take 4) <$>
+    filter ((/= ".git") . take 4) <$>
     listDirectories (normalizePath (fromMaybe mempty criteriaName))
 lookupBookmark baseDir (Criteria criteriaName criteriaTags) = do
   names <- lookupBookmark baseDir (Criteria criteriaName [])
@@ -278,7 +281,7 @@ readBookmarkEntry baseDir bmName =
     exists <- doesFileExist bmName
     if exists
       then do
-        parsed <- parseBookmarkEntry <$> readFile bmName
+        parsed <- parseBookmarkEntry <$> T.readFile bmName
         case parsed of
           Right bm -> return $ Right bm
           Left s   -> fail $ T.unpack s
@@ -288,4 +291,4 @@ writeBookmark :: FilePath -> Bookmark -> IO ()
 writeBookmark baseDir bm = do
   let path = joinPath [baseDir, normalizePath $ bookmarkName bm]
   createDirectoryIfMissing True $ takeDirectory path
-  writeFile path . renderBookmarkEntry $ snd bm
+  T.writeFile path . renderBookmarkEntry $ snd bm
