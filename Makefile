@@ -9,7 +9,7 @@ all:
 	$(MAKE) regression
 
 check: phony
-	stack $(STACK_ARGS) exec --package hfmt hfmt
+	stack --stack-yaml stack-build.yaml exec --package hfmt hfmt
 
 build: phony
 	stack $(STACK_ARGS) build --pedantic
