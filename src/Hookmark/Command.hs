@@ -34,7 +34,10 @@ data Criteria =
   Criteria (Maybe FilePath) [Tag]
 
 programVersion :: String
-programVersion = showVersion version ++ "-" ++ $(compileAbbrHash)
+programVersion =
+  case $(compileAbbrHash) of
+    Nothing      -> showVersion version
+    Just gitHash -> showVersion version ++ "-" ++ gitHash
 
 data Command
   = Version
