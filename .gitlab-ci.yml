@@ -37,6 +37,10 @@ cabal-latest:
   image: haskell:latest
   allow_failure: true
 
+cabal-8.8.1:
+  <<: *cabal_job
+  image: haskell:8.8.1
+
 cabal-8.6.5:
   <<: *cabal_job
   image: haskell:8.6.5
