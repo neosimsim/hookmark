@@ -4,11 +4,11 @@ STACK_ARGS=
 
 all:
 	$(MAKE) build
-	$(MAKE) lint
+	$(MAKE) check
 	$(MAKE) test
 	$(MAKE) regression
 
-lint: phony
+check: phony
 	stack $(STACK_ARGS) exec --package hfmt hfmt
 
 build: phony
@@ -24,9 +24,6 @@ regression: phony
 clean: phony
 	rm -rf build
 	stack $(STACK_ARGS) clean
-
-check: phony
-	./misc/git/pre-commit
 
 phony: this_file_should_not_exists
 
