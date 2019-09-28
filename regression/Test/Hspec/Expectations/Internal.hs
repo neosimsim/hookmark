@@ -2,7 +2,7 @@ module Test.Hspec.Expectations.Internal
   ( diff
   ) where
 
-import           Data.Algorithm.Diff (Diff (..), getDiff)
+import           Data.Algorithm.Diff
 import           Data.Function       (on)
 
 diff :: String -> String -> String
