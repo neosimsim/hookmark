@@ -3,10 +3,17 @@ image: haskell:8.6.5
 stages:
 - build
 
+variables:
+  STACK_ROOT: "$CI_PROJECT_DIR/.cache/stack"
+
 stack: &stack_build
   stage: build
   script:
   - make all
+  cache:
+    key: "$CI_JOB_NAME"
+    paths:
+    - .cache/stack
 
 stack-latest:
   <<: *stack_build
