@@ -9,8 +9,8 @@ all:
 	$(MAKE) regression
 
 check: phony
-	stack --stack-yaml stack-build.yaml exec --package cabal-fmt cabal-fmt hookmark.cabal | diff hookmark.cabal -
-	stack --stack-yaml stack-build.yaml exec --package hfmt hfmt
+	stack $(STACK_ARGS) --stack-yaml stack-build.yaml exec --package cabal-fmt cabal-fmt hookmark.cabal | diff hookmark.cabal -
+	stack $(STACK_ARGS) --stack-yaml stack-build.yaml exec --package hfmt hfmt
 
 build: phony
 	stack $(STACK_ARGS) build --pedantic
