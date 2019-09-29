@@ -3,23 +3,23 @@ image: haskell:8.6.5
 stages:
 - build
 
-stack:
+stack: &stack_build
   stage: build
   script:
   - make all
 
 stack-latest:
+  <<: *stack_build
   image: fpco/stack-build:lts
   allow_failure: true
-  stage: build
   script:
   - make STACK_ARGS='--resolver lts' all
 
 stack-14.6:
+  <<: *stack_build
   image: fpco/stack-build:lts-14.6
-  stage: build
-  script:
-  - make STACK_ARGS='--stack-yaml stack-lts-14.6.yaml' all
+  variables:
+    STACK_YAML: stack-lts-14.6.yaml
 
 .cabal: &cabal_job
   image: haskell:latest
