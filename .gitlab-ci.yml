@@ -17,14 +17,14 @@ stack: &stack_build
 
 stack-latest:
   <<: *stack_build
-  image: fpco/stack-build:lts
+  image: fpco/stack-build-small:lts
   allow_failure: true
   script:
   - make STACK_ARGS='--resolver lts' all
 
 stack-14.6:
   <<: *stack_build
-  image: fpco/stack-build:lts-14.6
+  image: fpco/stack-build-small:lts-14.6
   variables:
     STACK_YAML: stack-lts-14.6.yaml
 
