@@ -1,5 +1,3 @@
-image: haskell:8.6.5
-
 stages:
 - build
 
@@ -29,7 +27,6 @@ stack-14.6:
     STACK_YAML: stack-lts-14.6.yaml
 
 .cabal: &cabal_job
-  image: haskell:latest
   stage: build
   script:
   - cabal v2-update
