@@ -3,7 +3,11 @@ module Main
   ) where
 
 import           Hookmark.Web
+import           System.Environment (getEnv)
+import           System.FilePath    ((</>))
 import           Yesod
 
 main :: IO ()
-main = warp 3001 HookmarkWeb
+main = do
+  home <- getEnv "HOME"
+  warp 3001 HookmarkWeb {hookmarkWebBaseDir = home </> ".hookmarks"}

@@ -1,0 +1,4 @@
+<ul>
+  $forall path <- filePaths
+    <li>
+      <a href="@{ViewR $ splitDirectories path}">#{path}

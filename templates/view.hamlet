@@ -1,0 +1,13 @@
+$doctype 5
+<p>
+  <h2> #{bookmarkName bookmark}
+  $with BookmarkEntry { .. } <- snd bookmark
+    <a href=#{url}>#{url}
+    <p>
+      $forall tag <- tags
+        $with tagText <- NonEmptyText.toText tag
+          <a href=@?{(ListR [], [("tag", tagText)])}>#{tagText}
+    <p>
+      #{description}
+<p>
+ <a href=@{EditR $ splitDirectories (bookmarkName bookmark)}>edit

@@ -1,4 +1,5 @@
-{-# LANGUAGE PackageImports #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PackageImports    #-}
 
 import           Control.Concurrent                   (threadDelay)
 import           Control.Concurrent.Async             (race_)
@@ -9,19 +10,20 @@ import           Network.Wai.Handler.Warp
 import           Network.Wai.Middleware.RequestLogger
 import           System.Directory                     (doesFileExist)
 import           System.Environment
+import           System.FilePath
 import           Yesod
 
 main :: IO ()
 main = develMain
 
 develMain :: IO ()
-develMain =
+develMain = do
   race_ watchTermFile $ do
     port <- read <$> getEnv "PORT"
     displayPort <- getEnv "DISPLAY_PORT"
     putStrLn $ "Running in development mode on port " ++ show port
     putStrLn $ "But you should connect to port " ++ displayPort
-    app <- toWaiApp HookmarkWeb
+    app <- toWaiApp HookmarkWeb {hookmarkWebBaseDir = "regression/testmarks"}
     run port $ logStdoutDev app
 
 -- | Would certainly be more efficient to use fsnotify, but this is

@@ -1,0 +1,3 @@
+<h1>Hookmark Web
+<a href=@{ListR []}>Home
+<a href=@{EditR []}>New

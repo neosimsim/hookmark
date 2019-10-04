@@ -1,0 +1,12 @@
+<p>
+  <p>
+    Name
+    ^{fvInput nameView}
+  <p>
+    Url
+    ^{fvInput urlView}
+  <p>
+    Description
+  <p>
+    ^{fvInput descriptionView}
+<input type=submit value=Save>
