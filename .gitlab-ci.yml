@@ -4,14 +4,15 @@ stages:
 variables:
   STACK_ROOT: "$CI_PROJECT_DIR/.cache/stack"
 
+cache:
+  key: "$CI_JOB_NAME"
+  paths:
+  - .cache
+
 .stack: &stack_build
   stage: build
   script:
   - make all
-  cache:
-    key: "$CI_JOB_NAME"
-    paths:
-    - .cache/stack
 
 stack-latest:
   <<: *stack_build
@@ -35,6 +36,9 @@ stack-14.6:
 
 .cabal: &cabal_job
   stage: build
+  before_script:
+  - mkdir -p "$HOME/.cabal"
+  - (test -d .cache/cabal && cp -r .cache/cabal/* "$HOME/.cabal") || true
   script:
   - cabal v2-update
   - cabal v2-build
@@ -42,6 +46,9 @@ stack-14.6:
   - cabal v2-install --help
   - cabal v2-install --installdir build exe:hookmark
   - cabal v2-test regression
+  after_script:
+  - mkdir -p .cache/cabal
+  - cp -r "$HOME/.cabal/"* .cache/cabal
 
 cabal-latest:
   <<: *cabal_job
