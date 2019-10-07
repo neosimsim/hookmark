@@ -15,7 +15,6 @@ import           Data.List
 import           Data.Maybe
 import qualified Data.NonEmptyText         as T
 import           Data.Path
-import           Data.String               (String)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.Encoding        as T
