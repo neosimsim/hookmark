@@ -5,8 +5,8 @@ module Distribution.Git
   ) where
 
 import           Control.Exception
+import           Git
 import           Language.Haskell.TH
-import           System.Directory
 import           System.Process
 
 compileAbbrHash :: Q Exp
@@ -26,19 +26,3 @@ safeGetGitHash =
   where
     handleEverything :: SomeException -> IO (Maybe String)
     handleEverything _ = return Nothing
-
-gitFiles :: [FilePath]
-gitFiles = ["HEAD"]
-
-gitDirectories :: [FilePath]
-gitDirectories = ["refs", "objects"]
-
-isGitRepo :: FilePath -> IO Bool
-isGitRepo repo = do
-  repoExists <- doesDirectoryExist repo
-  if repoExists
-    then withCurrentDirectory repo $
-         and <$>
-         mconcat
-           [mapM doesDirectoryExist gitDirectories, mapM doesFileExist gitFiles]
-    else return False

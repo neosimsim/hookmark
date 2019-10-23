@@ -5,12 +5,17 @@ module Main
   ( main
   ) where
 
-import           Hookmark.Command
+import           System.Exit               (ExitCode (..), exitWith)
+import           System.IO                 (hPutStrLn, stderr)
+
+import           Control.Exception         (catch)
+import           Hookmark.Command          (Command (..), executeCommand)
+import           Hookmark.IO               (HookmarkException (..))
 import           Options.Applicative
 import           Options.Applicative.Help  hiding (fullDesc)
 import           Options.Applicative.Types
 import           System.Environment
-import           Text.RawString.QQ
+import           Text.RawString.QQ         (r)
 
 programDescription :: String
 programDescription = [r|Store, edit and search bookmarks.|]
@@ -159,4 +164,9 @@ main = do
       (fullDesc <>
        progDesc programDescription <>
        header "hookmark — browser independent bookmarking")
-  executeCommand opt
+  catch (executeCommand opt) handleExceptions
+  where
+    handleExceptions :: HookmarkException -> IO a
+    handleExceptions HookmarkException {fromHookmarkException = msg} = do
+      hPutStrLn stderr msg
+      exitWith $ ExitFailure 1

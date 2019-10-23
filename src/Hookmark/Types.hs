@@ -3,6 +3,7 @@ module Hookmark.Types
   , Bookmark
   , BookmarkEntry(..)
   , bookmarkName
+  , BookmarkName
   , renderBookmarkEntry
   ) where
 
@@ -11,6 +12,8 @@ import           Data.Text         (Text)
 import qualified Data.Text         as T
 
 type Tag = NonEmptyText
+
+type BookmarkName = FilePath
 
 type Bookmark = (FilePath, BookmarkEntry)
 

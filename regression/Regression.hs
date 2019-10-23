@@ -174,7 +174,9 @@ main =
           doesPathExist (baseDir </> "haskell/packages") `shouldReturn` False
       it "should not remove empty base" $ \cmd ->
         withTempHookmarks "testmarks" $ \baseDir _ -> do
-          removeFile $ baseDir </> ".git" </> "phony-git-file"
+          removeFile $ baseDir </> ".git" </> "HEAD"
+          removeDirectory $ baseDir </> ".git" </> "refs"
+          removeDirectory $ baseDir </> ".git" </> "objects"
           removeDirectory $ baseDir </> ".git"
           (proc cmd . words $ "rm duckduckgo") `shouldExit`
             (ExitSuccess, mempty, mempty)
@@ -346,8 +348,7 @@ withTempHookmarks nameTemplate action =
     let testmarksPath = baseDir </> "testmarks"
     copyDir "regression/testmarks" testmarksPath
     Env.setEnv "HOOKMARKHOME" testmarksPath
-    createDirectory $ testmarksPath </> ".git"
-    writeFile (testmarksPath </> ".git" </> "phony-git-file") ""
+    createPhonyGitRepo testmarksPath
     cwd <- getCurrentDirectory
     Env.setEnv "PATH" $ (cwd </> "regression") ++ ":/bin:/usr/bin"
     let gitlog = baseDir </> "git.log"
@@ -360,3 +361,12 @@ editBookmark cmd =
   setStdin
     (String.fromString $ BU.toString $(embedFile "regression/edit.in"))
     (proc cmd . words $ "edit haskell/hoogle")
+
+-- | We cannot commit the phony git repo in a real git, therefor we have to
+-- create it as part of the setup.
+createPhonyGitRepo :: FilePath -> IO ()
+createPhonyGitRepo dir = do
+  createDirectory $ dir </> ".git"
+  createDirectory $ dir </> ".git" </> "objects"
+  createDirectory $ dir </> ".git" </> "refs"
+  writeFile (dir </> ".git" </> "HEAD") ""

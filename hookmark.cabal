@@ -31,11 +31,19 @@ library
   exposed-modules:
     Data.Path
     Distribution.Git
+    Git
     Hookmark.Command
+    Hookmark.IO
     Hookmark.Parser
     Hookmark.Types
 
-  other-modules:    Paths_hookmark
+  other-modules:
+    Control.Monad.Extra
+    Debug.Trace.Phony
+    Paths_hookmark
+    System.Directory.Extra
+    System.Editor
+
   hs-source-dirs:   src
   build-depends:
       base              >=4.7 && <5
@@ -47,6 +55,7 @@ library
     , non-empty-text
     , process
     , template-haskell
+    , temporary
     , text
     , typed-process
     , unix
@@ -123,7 +132,12 @@ test-suite regression
 test-suite test
   type:             exitcode-stdio-1.0
   main-is:          Spec.hs
-  other-modules:    Paths_hookmark
+  other-modules:
+    Hookmark.IO.Arbitrary
+    Hookmark.Types.Arbitrary
+    Paths_hookmark
+    Test.QuickCheck.Gen.Extra
+
   hs-source-dirs:   test
   ghc-options:      -threaded -rtsopts -with-rtsopts=-N
   build-depends:
