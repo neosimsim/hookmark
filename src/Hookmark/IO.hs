@@ -18,7 +18,7 @@ module Hookmark.IO
 import           Control.Exception      (Exception (..), throw)
 import           Control.Monad.Extra    (ifM, whenM)
 import           Data.List              (isPrefixOf)
-import           Data.Path              (normalizePath)
+import           Data.Path              (toRelativeFilePath)
 import qualified Data.Text              as Text (unpack)
 import qualified Data.Text.IO           as Text (readFile, writeFile)
 import           Git                    (commitAll, isGitRepo)
@@ -38,7 +38,7 @@ saveBookmark :: FilePath -> Bookmark -> IO ()
 saveBookmark baseDir bookmark = do
   createDirectoryIfMissing True baseDir
   withCurrentDirectory baseDir $ do
-    let path = normalizePath $ bookmarkName bookmark
+    let path = toRelativeFilePath $ bookmarkName bookmark
     bookmarksExists <- doesPathExist path
     createDirectoryIfMissing True $ takeDirectory path
     Text.writeFile path . renderBookmarkEntry $ snd bookmark
@@ -85,8 +85,8 @@ matchesCriteria BookmarkCriteria {..} (name, BookmarkEntry {..}) =
 -- path will be created if not present.
 renameBookmark :: FilePath -> BookmarkName -> BookmarkName -> IO ()
 renameBookmark baseDir oldName' newName' = do
-  let oldName = normalizePath oldName'
-  let newName = normalizePath newName'
+  let oldName = toRelativeFilePath oldName'
+  let newName = toRelativeFilePath newName'
   withCurrentDirectory baseDir $
     -- TODO error message if destination is an existing directory
    do
@@ -104,8 +104,8 @@ renameBookmark baseDir oldName' newName' = do
 -- will be created if not present already.
 moveBookmark :: FilePath -> BookmarkName -> BookmarkName -> IO ()
 moveBookmark baseDir oldName' newParent' = do
-  let oldName = normalizePath oldName'
-  let newParent = normalizePath newParent'
+  let oldName = toRelativeFilePath oldName'
+  let newParent = toRelativeFilePath newParent'
   withCurrentDirectory baseDir $ do
     whenM (not <$> doesPathExist oldName) $
       throw (HookmarkException $ "not found " ++ oldName)
@@ -119,8 +119,8 @@ moveBookmark baseDir oldName' newParent' = do
 
 movePath :: FilePath -> FilePath -> IO ()
 movePath oldName' directory' = do
-  let oldName = normalizePath oldName'
-  let directory = normalizePath directory'
+  let oldName = toRelativeFilePath oldName'
+  let directory = toRelativeFilePath directory'
   ifM
     (not <$> doesDirectoryExist directory)
     (fail $ directory ++ " is no directory")
@@ -150,7 +150,7 @@ loadBookmarks baseDir =
 
 loadBookmark :: FilePath -> BookmarkName -> IO Bookmark
 loadBookmark baseDir name' = do
-  let name = normalizePath name'
+  let name = toRelativeFilePath name'
   let criteria =
         BookmarkCriteria
           {criteriaBookmarkName = Just name, criteriaTags = Nothing}

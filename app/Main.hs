@@ -13,7 +13,7 @@ import qualified Data.ByteString      as BS (putStr)
 import           Data.List            (sort)
 import           Data.Maybe           (fromJust, fromMaybe)
 import qualified Data.NonEmptyText    as NonEmptyText (fromText)
-import           Data.Path            (normalizePath)
+import           Data.Path            (toRelativeFilePath)
 import qualified Data.Text            as Text (pack)
 import qualified Data.Text.Encoding   as Text (encodeUtf8)
 import qualified Data.Text.IO         as Text (getContents, hPutStrLn)
@@ -66,12 +66,12 @@ runWithOptions (AddBookmark dir t promptDesc n u) = do
   saveBookmark base bookmark
 runWithOptions (ShowBookmark dir t n') = do
   base <- fromMaybeBaseDir dir
-  let n = normalizePath <$> n'
+  let n = toRelativeFilePath <$> n'
   let criteria =
         BookmarkCriteria
           { criteriaBookmarkName =
               n >>= \x ->
-                if null x
+                if null x || x == "."
                   then Nothing
                   else Just x
           , criteriaTags =
@@ -88,7 +88,7 @@ runWithOptions (ShowBookmark dir t n') = do
     _ -> mapM_ putStrLn . sort $ fst <$> lu
 runWithOptions (EditBookmark base fileName') = do
   baseDir <- fromMaybeBaseDir base
-  let fileName = normalizePath fileName'
+  let fileName = toRelativeFilePath fileName'
   bookmark <- loadBookmark baseDir fileName
   bookmark' <-
     withSystemTempDirectory "hookmark" $ \tempBase ->
@@ -98,13 +98,13 @@ runWithOptions (EditBookmark base fileName') = do
         loadBookmark "." fileName
   saveBookmark baseDir bookmark'
 runWithOptions (RemoveBookmark dir n') = do
-  let n = normalizePath n'
+  let n = toRelativeFilePath n'
   base <- fromMaybeBaseDir dir
   removeBookmark base n
 runWithOptions (MoveBookmark dir marks dest) = do
   base <- fromMaybeBaseDir dir
   destIsDir <-
-    withCurrentDirectory base . doesDirectoryExist $ normalizePath dest
+    withCurrentDirectory base . doesDirectoryExist $ toRelativeFilePath dest
   if destIsDir
     then forM_ marks $ \mark -> moveBookmark base mark dest
     else case marks of

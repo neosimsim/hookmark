@@ -1,8 +1,10 @@
 module Data.Path
-  ( normalizePath
+  ( toRelativeFilePath
   ) where
 
 import           System.FilePath
 
-normalizePath :: FilePath -> FilePath
-normalizePath = dropTrailingPathSeparator . snd . splitDrive
+toRelativeFilePath :: FilePath -> FilePath
+toRelativeFilePath "/" = "."
+toRelativeFilePath filePath =
+  dropTrailingPathSeparator . snd $ splitDrive filePath
