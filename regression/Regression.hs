@@ -127,6 +127,10 @@ main =
           ( ExitSuccess
           , $(embedFile "regression/testmarks/haskell/hoogle")
           , mempty)
+      it "should list directories" $ \cmd ->
+        withTempHookmarks "hookmark_test" $ \_ _ ->
+          (proc cmd . words $ "show haskell") `shouldExit`
+          (ExitSuccess, $(embedFile "regression/show_haskell.out"), mempty)
       it "should return not successful if bookmark not found" $ \cmd ->
         withTempHookmarks "hookmark_test" $ \_ _ ->
           (proc cmd . words $ "show missing/bookmark") `shouldExit`
