@@ -21,6 +21,6 @@ deploy:
     - build/hookmark
     - build/hookmark-web
   on:
-    tag: true
+    tags: true
     condition:
       - $TRAVIS_HASKELL_VERSION = 8.6.5
