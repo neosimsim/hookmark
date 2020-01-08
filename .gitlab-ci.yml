@@ -37,7 +37,7 @@ stack-14.6:
   - cabal v2-build -f pedantic
   - cabal v2-test -f pedantic test
   - cabal v2-install --help
-  - cabal v2-install -f pedantic --installdir build exe:hookmark
+  - cabal v2-install -f pedantic --installdir build --install-method copy exe:hookmark
   - cabal v2-test -f pedantic regression
   after_script:
   - mkdir -p .cache/cabal
@@ -51,6 +51,9 @@ cabal-latest:
 cabal-8.8.1:
   <<: *cabal_job
   image: haskell:8.8.1
+  artifacts:
+    paths:
+      - build/*
 
 cabal-8.6.5:
   <<: *cabal_job
