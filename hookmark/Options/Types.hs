@@ -2,8 +2,7 @@ module Options.Types
   ( Options(..)
   ) where
 
-import           Data.Text       (Text)
-import           System.FilePath (FilePath)
+import           Data.Text (Text)
 
 data Options
   = Version

@@ -12,7 +12,7 @@ module Hookmark.Web
   ) where
 
 import           Control.Monad     (when)
-import           Data.Maybe        (catMaybes, maybe)
+import           Data.Maybe        (catMaybes)
 import qualified Data.NonEmptyText as NonEmptyText (fromText, toText)
 import           Data.Text         (Text)
 import qualified Data.Text         as Text (pack, unpack)

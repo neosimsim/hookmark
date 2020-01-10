@@ -5,7 +5,7 @@ import           Hookmark.IO              (BookmarkCriteria (..),
                                            matchesCriteria)
 import           Hookmark.Parser
 import           Hookmark.Types
-import           Hookmark.Types.Arbitrary (BookmarkEntry)
+import           Hookmark.Types.Arbitrary ()
 import           System.FilePath          (dropDrive, (</>))
 import           Test.Hspec
 import           Test.QuickCheck
