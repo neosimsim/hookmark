@@ -21,13 +21,6 @@ stack-latest:
   script:
   - make STACK_ARGS='--resolver lts' all
 
-stack-nightly:
-  <<: *stack_build
-  image: fpco/stack-build-small:latest
-  allow_failure: true
-  script:
-  - make STACK_ARGS='--resolver nightly' all
-
 stack-14.6:
   <<: *stack_build
   image: fpco/stack-build-small:lts-14.6
