@@ -28,6 +28,11 @@ flag static
   manual:      True
   default:     False
 
+flag pedantic
+  description: Build with -Wall -Werror
+  manual:      True
+  default:     False
+
 library
   exposed-modules:
     Data.Path
@@ -46,6 +51,10 @@ library
     System.Directory.Extra
 
   hs-source-dirs:   src
+
+  if flag(pedantic)
+    ghc-options: -Wall -Werror
+
   build-depends:
       base              >=4.7 && <5
     , bytestring
@@ -75,6 +84,10 @@ executable hookmark
 
   hs-source-dirs:   hookmark
   ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+
+  if flag(pedantic)
+    ghc-options: -Wall -Werror
+
   build-depends:
       base                  >=4.7 && <5
     , bytestring
@@ -99,6 +112,10 @@ executable hookmark-web
   other-modules:    Paths_hookmark
   hs-source-dirs:   hookmark-web
   ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+
+  if flag(pedantic)
+    ghc-options: -Wall -Werror
+
   build-depends:
       base      >=4.7 && <5
     , filepath
@@ -122,6 +139,10 @@ test-suite regression
 
   hs-source-dirs:   regression
   ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+
+  if flag(pedantic)
+    ghc-options: -Wall -Werror
+
   build-depends:
       base                >=4.7 && <5
     , bytestring
@@ -159,6 +180,10 @@ test-suite test
 
   hs-source-dirs:   test
   ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+
+  if flag(pedantic)
+    ghc-options: -Wall -Werror
+
   build-depends:
       base              >=4.7 && <5
     , bytestring
