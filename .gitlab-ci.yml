@@ -33,7 +33,7 @@ stack-14.6:
   - mkdir -p "$HOME/.cabal"
   - (test -d .cache/cabal && cp -r .cache/cabal/* "$HOME/.cabal") || true
   script:
-  - cabal v2-update -f pedantic
+  - cabal v2-update
   - cabal v2-build -f pedantic
   - cabal v2-test -f pedantic test
   - cabal v2-install --help
@@ -56,7 +56,7 @@ cabal-8.6.5:
   <<: *cabal_job
   image: haskell:8.6.5
   script:
-  - cabal v2-update -f pedantic
+  - cabal v2-update
   - cabal v2-build -f pedantic
   - cabal v2-test -f pedantic test
   - cabal v2-install -f pedantic --symlink-bindir build exe:hookmark
