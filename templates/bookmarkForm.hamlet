@@ -6,7 +6,14 @@
     Url
     ^{fvInput urlView}
   <p>
+    Tags
+    ^{fvInput tagsView}
+  <p>
+    <button type=submit name=command value=addtag>
+      Add tag
+  <p>
     Description
   <p>
     ^{fvInput descriptionView}
-<input type=submit value=Save>
+<button type=submit name=command value=save>
+  Save

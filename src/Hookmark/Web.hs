@@ -12,6 +12,7 @@ module Hookmark.Web
   ) where
 
 import           Control.Monad     (when)
+import           Data.List         (sort)
 import           Data.Maybe        (catMaybes)
 import qualified Data.NonEmptyText as NonEmptyText (fromText, toText)
 import           Data.Text         (Text)
@@ -70,7 +71,7 @@ data BookmarkFormData =
   BookmarkFormData
     { bookmarkFormName        :: Text
     , bookmarkFormUrl         :: Text
-    , bookmarkFormTags        :: [Tag]
+    , bookmarkFormTags        :: [Text]
     , bookmarkFormDescription :: Maybe Textarea
     }
   deriving (Show)
@@ -89,7 +90,7 @@ bookmarkToFormData (name, BookmarkEntry {..}) =
   BookmarkFormData
     { bookmarkFormName = Text.pack name
     , bookmarkFormUrl = url
-    , bookmarkFormTags = tags
+    , bookmarkFormTags = NonEmptyText.toText <$> tags
     , bookmarkFormDescription = Just (Textarea description)
     }
 
@@ -98,7 +99,7 @@ formDataToBookmark BookmarkFormData {..} =
   ( Text.unpack bookmarkFormName
   , BookmarkEntry
       { url = bookmarkFormUrl
-      , tags = bookmarkFormTags
+      , tags = catMaybes $ NonEmptyText.fromText <$> bookmarkFormTags
       , description = maybe "" unTextarea bookmarkFormDescription
       })
 
@@ -166,15 +167,25 @@ postEditR paths = do
   ((result, _), _) <- runFormPostNoToken $ bookmarkForm emptyBookmarkFormData
   case result of
     FormSuccess bookmarkData -> do
-      liftIO $ print bookmarkData
-      let newBookmark@(newName, _) = formDataToBookmark bookmarkData
-      let oldName = FilePath.joinPath paths
-      liftIO $ print oldName
-      when
-        (not (null oldName) && oldName /= newName)
-        (liftIO $ renameBookmark hookmarkWebBaseDir oldName newName)
-      liftIO $ saveBookmark hookmarkWebBaseDir newBookmark
-      redirect . ViewR $ splitDirectories newName
+      formCommand <- lookupPostParam "command"
+      case formCommand of
+        Just "addtag" -> do
+          let bookmarkDataWithNewTag =
+                bookmarkData
+                  {bookmarkFormTags = "" : bookmarkFormTags bookmarkData}
+          (formWidget, enctype) <-
+            generateFormPost $ bookmarkForm bookmarkDataWithNewTag
+          defaultLayout $ editBookmarkWidget formWidget enctype
+        _ -> do
+          liftIO $ print bookmarkData
+          let newBookmark@(newName, _) = formDataToBookmark bookmarkData
+          let oldName = FilePath.joinPath paths
+          liftIO $ print oldName
+          when
+            (not (null oldName) && oldName /= newName)
+            (liftIO $ renameBookmark hookmarkWebBaseDir oldName newName)
+          liftIO $ saveBookmark hookmarkWebBaseDir newBookmark
+          redirect . ViewR $ splitDirectories newName
     FormFailure msgs ->
       defaultLayout
         [whamlet|
@@ -213,9 +224,33 @@ bookmarkForm ::
 bookmarkForm BookmarkFormData {..} _ = do
   (nameRes, nameView) <- mreq textField "Name" (Just bookmarkFormName)
   (urlRes, urlView) <- mreq urlField "Url" (Just bookmarkFormUrl)
+  (tagsRes, tagsView) <- mreq tagsField "Tags" (Just bookmarkFormTags)
   (descriptionRes, descriptionView) <-
     mopt textareaField "Description" (Just bookmarkFormDescription)
   let bookmarkRes =
-        BookmarkFormData <$> nameRes <*> urlRes <*> pure [] <*> descriptionRes
+        BookmarkFormData <$> nameRes <*> urlRes <*> tagsRes <*> descriptionRes
   let widget = $(whamletFile "templates/bookmarkForm.hamlet")
   return (bookmarkRes, widget)
+
+tagsField :: Field Handler [Text]
+tagsField =
+  Field
+    { fieldParse = \rawVals _ -> return $ Right $ Just rawVals
+    , fieldView =
+        \idAttr nameAttr otherAttrs eResult _ ->
+          case eResult of
+            Left invalid ->
+              [whamlet|
+                <p>Invalid input, let's try again.
+                #{invalid}
+              |]
+            Right tagsResult ->
+              [whamlet|
+                $forall (i, tag) <- withIndex $ sort tagsResult
+                  <input id=#{idAttr}#{i} name=#{nameAttr} *{otherAttrs} type=text value=#{tag}>
+              |]
+    , fieldEnctype = UrlEncoded
+    }
+  where
+    withIndex :: [a] -> [(Int, a)]
+    withIndex = zip [0,1 ..]

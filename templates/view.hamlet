@@ -4,7 +4,7 @@ $doctype 5
   $with BookmarkEntry { .. } <- snd bookmark
     <a href=#{url}>#{url}
     <p>
-      $forall tag <- tags
+      $forall tag <- sort tags
         $with tagText <- NonEmptyText.toText tag
           <a href=@?{(ListR [], [("tag", tagText)])}>#{tagText}
     <p>
