@@ -177,10 +177,8 @@ postEditR paths = do
             generateFormPost $ bookmarkForm bookmarkDataWithNewTag
           defaultLayout $ editBookmarkWidget formWidget enctype
         _ -> do
-          liftIO $ print bookmarkData
           let newBookmark@(newName, _) = formDataToBookmark bookmarkData
           let oldName = FilePath.joinPath paths
-          liftIO $ print oldName
           when
             (not (null oldName) && oldName /= newName)
             (liftIO $ renameBookmark hookmarkWebBaseDir oldName newName)
