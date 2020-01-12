@@ -43,6 +43,7 @@ library
     Hookmark.Types
     Hookmark.Web
     System.Editor
+    System.FilePath.Extra
 
   other-modules:
     Control.Monad.Extra

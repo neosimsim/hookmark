@@ -11,17 +11,18 @@ module Hookmark.Web
   , resourcesHookmarkWeb
   ) where
 
-import           Control.Monad     (when)
-import           Data.List         (sort)
-import           Data.Maybe        (catMaybes)
-import qualified Data.NonEmptyText as NonEmptyText (fromText, toText)
-import           Data.Text         (Text)
-import qualified Data.Text         as Text (pack, unpack)
-import           Data.Version      (showVersion)
+import           Control.Monad         (when)
+import           Data.List             (sort)
+import           Data.Maybe            (catMaybes)
+import qualified Data.NonEmptyText     as NonEmptyText (fromText, toText)
+import           Data.Text             (Text)
+import qualified Data.Text             as Text (pack, unpack)
+import           Data.Version          (showVersion)
 import           Hookmark.IO
 import           Hookmark.Types
-import           Paths_hookmark    (version)
-import           System.FilePath   as FilePath (joinPath, splitDirectories)
+import           Paths_hookmark        (version)
+import           System.FilePath       as FilePath (joinPath, splitDirectories)
+import           System.FilePath.Extra as FilePath (breadcrumbs)
 import           Text.Hamlet
 import           Yesod
 

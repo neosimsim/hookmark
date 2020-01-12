@@ -1,4 +1,10 @@
 <ul>
   $forall path <- filePaths
     <li>
-      <a href="@{ViewR $ splitDirectories path}">#{path}
+      $with crumbs <- FilePath.breadcrumbs $ splitDirectories path
+        $forall crumb <- init crumbs
+          <a href="@{ListR crumb}">#{last crumb}
+          <span>
+            >
+        $with lastCrumb <- last crumbs
+          <a href="@{ViewR lastCrumb}">#{last lastCrumb}
