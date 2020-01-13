@@ -1,0 +1,10 @@
+hookmark web — browser independent bookmarking
+
+Usage: hookmark-web [-p PORT] [-b BASEDIR]
+  Store, edit and search bookmarks.
+
+Available options:
+  -p PORT                  Port to listen to.
+  -b BASEDIR               Base directory to lookup bookmarks in. Defaults to
+                           $HOOKMARKHOME and then to $HOME/.hookmarks.
+  -h,--help                Show this help text

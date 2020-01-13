@@ -110,7 +110,10 @@ executable hookmark
 
 executable hookmark-web
   main-is:          Main.hs
-  other-modules:    Paths_hookmark
+  other-modules:
+    Options
+    Paths_hookmark
+
   hs-source-dirs:   hookmark-web
   ghc-options:      -threaded -rtsopts -with-rtsopts=-N
 
@@ -118,9 +121,10 @@ executable hookmark-web
     ghc-options: -Wall -Werror
 
   build-depends:
-      base      >=4.7 && <5
+      base                  >=4.7 && <5
     , filepath
     , hookmark
+    , optparse-applicative
     , yesod
 
   if flag(static)
