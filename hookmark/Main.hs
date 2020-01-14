@@ -25,7 +25,8 @@ import           Hookmark.IO          (BookmarkCriteria (..),
                                        moveBookmark, removeBookmark,
                                        renameBookmark, saveBookmark)
 import           Hookmark.Types       (BookmarkEntry (..), renderBookmarkEntry)
-import           Options              (Options (..), parseOptions)
+import           Options              (Options (..), SubCommand (..),
+                                       parseOptions)
 import           Paths_hookmark       (version)
 import           System.Directory     (doesDirectoryExist, getHomeDirectory,
                                        withCurrentDirectory)
@@ -55,7 +56,8 @@ programVersion =
 
 runWithOptions :: Options -> IO ()
 runWithOptions Version = putStrLn programVersion
-runWithOptions (AddBookmark dir t promptDesc n u) = do
+runWithOptions (Options _ VersionBookmark) = putStrLn programVersion
+runWithOptions (Options dir (AddBookmark t promptDesc n u)) = do
   d <-
     if promptDesc
       then Text.getContents
@@ -64,7 +66,7 @@ runWithOptions (AddBookmark dir t promptDesc n u) = do
   let bookmark =
         (n, BookmarkEntry u (fmap (fromJust . NonEmptyText.fromText) t) d)
   saveBookmark base bookmark
-runWithOptions (ShowBookmark dir t n') = do
+runWithOptions (Options dir (ShowBookmark t n')) = do
   base <- fromMaybeBaseDir dir
   let n = toRelativeFilePath <$> n'
   let criteria =
@@ -86,7 +88,7 @@ runWithOptions (ShowBookmark dir t n') = do
       exitWith $ ExitFailure 1
     [(_, entry)] -> BS.putStr . Text.encodeUtf8 $ renderBookmarkEntry entry
     _ -> mapM_ putStrLn . sort $ fst <$> lu
-runWithOptions (EditBookmark base fileName') = do
+runWithOptions (Options base (EditBookmark fileName')) = do
   baseDir <- fromMaybeBaseDir base
   let fileName = toRelativeFilePath fileName'
   bookmark <- loadBookmark baseDir fileName
@@ -97,11 +99,11 @@ runWithOptions (EditBookmark base fileName') = do
         editFile fileName
         loadBookmark "." fileName
   saveBookmark baseDir bookmark'
-runWithOptions (RemoveBookmark dir n') = do
+runWithOptions (Options dir (RemoveBookmark n')) = do
   let n = toRelativeFilePath n'
   base <- fromMaybeBaseDir dir
   removeBookmark base n
-runWithOptions (MoveBookmark dir marks dest) = do
+runWithOptions (Options dir (MoveBookmark marks dest)) = do
   base <- fromMaybeBaseDir dir
   destIsDir <-
     withCurrentDirectory base . doesDirectoryExist $ toRelativeFilePath dest
@@ -113,7 +115,7 @@ runWithOptions (MoveBookmark dir marks dest) = do
              Text.hPutStrLn stderr $
                Text.pack dest `mappend` " is not a directory"
              exitWith $ ExitFailure 1
-runWithOptions (ExecBookmark dir cmd args) = do
+runWithOptions (Options dir (ExecBookmark cmd args)) = do
   base <- fromMaybeBaseDir dir
   withCurrentDirectory base $ do
     code <- runProcess $ proc cmd args

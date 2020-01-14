@@ -1,39 +1,41 @@
 module Options.Types
   ( Options(..)
+  , SubCommand(..)
   ) where
 
 import           Data.Text (Text)
 
 data Options
   = Version
+  | Options
+      { optionsBaseDir :: Maybe FilePath
+      , subCommand     :: SubCommand
+      }
+
+data SubCommand
+  = VersionBookmark
   | AddBookmark
-      { addBaseDir     :: Maybe FilePath
-      , addTags        :: [Text]
-      , addDescription :: Bool
-      , addName        :: FilePath
-      , addUrl         :: Text
+      { optBookmarkTags      :: [Text]
+      , optPromptDescription :: Bool
+      , optBookmarkName      :: FilePath
+      , optUrl               :: Text
       }
   | ShowBookmark
-      { showBaseDir :: Maybe FilePath
-      , showTags    :: [Text]
-      , showName    :: Maybe FilePath
+      { optBookmarkTags       :: [Text]
+      , optBookmarkLookupName :: Maybe FilePath
       }
   | EditBookmark
-      { editBaseDir :: Maybe FilePath
-      , editName    :: FilePath
+      { optBookmarkName :: FilePath
       }
   | RemoveBookmark
-      { removeBaseDir :: Maybe FilePath
-      , removeName    :: FilePath
+      { optBookmarkName :: FilePath
       }
   | MoveBookmark
-      { moveBaseDir     :: Maybe FilePath
-      , moveSources     :: [FilePath] -- TODO NonEmptyList
+      { moveSources     :: [FilePath] -- TODO NonEmptyList
       , moveDestination :: FilePath
       }
   | ExecBookmark
-      { execBaseDir    :: Maybe FilePath
-      , execCmdSources :: String
+      { execCmdSources :: String
       , execArgs       :: [String]
       }
   deriving (Show)

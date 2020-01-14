@@ -1,9 +1,7 @@
-Usage: hookmark add [-b ARG] [-t|--tag ARG] [-d] name url
+Usage: hookmark add [-t|--tag ARG] [-d] name url
   Add bookmark
 
 Available options:
-  -b ARG                   Base directory to store bookmarks in. Default
-                           $HOOKMARKHOME or $HOME/.hookmarkhome if unset
   -t,--tag ARG             Bookmark tag, can be used multiple times
   -d                       Prompt for description
   name                     Name of the bookmark, can contain '/' to build

@@ -1,7 +1,5 @@
-Usage: hookmark mv [-b ARG] source... dest
+Usage: hookmark mv source... dest
   Move bookmark
 
 Available options:
-  -b ARG                   Base directory to lookup bookmarks in. Default
-                           $HOOKMARKHOME or $HOME/.hookmarkhome if unset
   -h,--help                Show this help text

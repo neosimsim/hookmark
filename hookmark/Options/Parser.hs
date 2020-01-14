@@ -8,7 +8,7 @@ module Options.Parser
 import           Options.Applicative
 import           Options.Applicative.Help  hiding (fullDesc)
 import           Options.Applicative.Types
-import           Options.Types             (Options (..))
+import           Options.Types             (Options (..), SubCommand (..))
 import           System.Environment        (getArgs)
 import           Text.RawString.QQ         (r)
 
@@ -28,6 +28,7 @@ optionsParser :: Parser Options
 optionsParser =
   Version <$
   switch (long "version" <> short 'v' <> help "Show version" <> hidden) <|>
+  Options <$> baseDirParser <*>
   hsubparser
     (command "add" (info addParser (progDesc "Add bookmark")) <>
      command "show" (info showParser (progDesc "Show or search bookmark")) <>
@@ -48,16 +49,20 @@ optionsParser =
               "and" .$.
               indent 2 "hookmark git -- commit -m 'initial commit'" .$.
               "hookmark will automatically track changes to bookmarks using git."))) <>
-     command "version" (info (pure Version) (progDesc "Show version")))
+     command "version" (info (pure VersionBookmark) (progDesc "Show version")))
 
-addParser :: Parser Options
-addParser =
-  AddBookmark <$>
+baseDirParser :: Parser (Maybe FilePath)
+baseDirParser =
   optional
     (strOption
        (short 'b' <>
+        metavar "BASEDIR" <>
         help
-          "Base directory to store bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
+          "Base directory to store bookmarks in. Overwrites $HOOKMARKHOME. Defaults to $HOME/.hookmarks"))
+
+addParser :: Parser SubCommand
+addParser =
+  AddBookmark <$>
   many
     (strOption
        (long "tag" <>
@@ -68,14 +73,9 @@ addParser =
      help "Name of the bookmark, can contain '/' to build hierarchies") <*>
   strArgument (metavar "url" <> help "URL of the bookmark")
 
-showParser :: Parser Options
+showParser :: Parser SubCommand
 showParser =
   ShowBookmark <$>
-  optional
-    (strOption
-       (short 'b' <>
-        help
-          "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
   many
     (strOption
        (long "tag" <>
@@ -85,49 +85,27 @@ showParser =
        (metavar "name" <>
         help "Name of the bookmark, can contain '/' to build hierarchies"))
 
-editParser :: Parser Options
+editParser :: Parser SubCommand
 editParser =
   EditBookmark <$>
-  optional
-    (strOption
-       (short 'b' <>
-        help
-          "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
   strArgument
     (metavar "name" <>
      help "Name of the bookmark to edit, can contain '/' to build hierarchies")
 
-removeParser :: Parser Options
+removeParser :: Parser SubCommand
 removeParser =
   RemoveBookmark <$>
-  optional
-    (strOption
-       (short 'b' <>
-        help
-          "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
   strArgument (metavar "name" <> help "Name of the bookmark to delete")
 
-moveParser :: Parser Options
+moveParser :: Parser SubCommand
 moveParser = applyInit <$> p <*> some (strArgument (metavar "source... dest"))
   where
-    p :: Parser ([String] -> String -> Options)
-    p =
-      MoveBookmark <$>
-      optional
-        (strOption
-           (short 'b' <>
-            help
-              "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"))
+    p :: Parser ([String] -> String -> SubCommand)
+    p = pure MoveBookmark
 
-gitParser :: Parser Options
+gitParser :: Parser SubCommand
 gitParser =
-  ExecBookmark <$>
-  optional
-    (strOption
-       (short 'b' <>
-        help
-          "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset")) <*>
-  pure "git" <*>
+  ExecBookmark <$> pure "git" <*>
   ((:) <$> strArgument (metavar "GITCMD" <> help "git subcommand to invoke") <*>
    many
      (strArgument (metavar "GITARGS" <> help "Arguments to be passed to GITCMD")))
@@ -144,7 +122,7 @@ eP pinfo = wrapper pinfo <$> getArgs >>= handleParseResult
 wrapper :: ParserInfo Options -> [String] -> ParserResult Options
 wrapper pinfo args = do
   cmd <- execParserPure defaultPrefs pinfo args
-  case cmd of
+  case subCommand cmd of
     MoveBookmark {moveSources = sources} ->
       if null sources
         then Failure $

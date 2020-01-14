@@ -1,10 +1,12 @@
 hookmark — browser independent bookmarking
 
-Usage: hookmark [COMMAND]
+Usage: hookmark [-b BASEDIR] [COMMAND]
   Store, edit and search bookmarks.
 
 Available options:
   -v,--version             Show version
+  -b BASEDIR               Base directory to store bookmarks in. Overwrites
+                           $HOOKMARKHOME. Defaults to $HOME/.hookmarks
   -h,--help                Show this help text
 
 Available commands:
