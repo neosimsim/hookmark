@@ -1,8 +1,2 @@
-with (import <nixpkgs> {});
-derivation {
-  name = "hookmark";
-  src = ./.;
-  builder = "${cabal-install}/bin/cabal";
-  args = ["install" "--prefix" "$out"];
-  system = builtins.currentSystem;
-}
+{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc881" }:
+nixpkgs.pkgs.haskell.packages.${compiler}.callPackage ./hookmark.nix { }
