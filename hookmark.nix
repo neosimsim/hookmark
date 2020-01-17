@@ -4,6 +4,7 @@
 , optparse-applicative, process, QuickCheck, raw-strings-qq
 , shakespeare, stdenv, template-haskell, temporary, text
 , typed-process, unix, unliftio, utf8-string, yesod
+, pkgs
 }:
 mkDerivation {
   pname = "hookmark";
@@ -26,6 +27,15 @@ mkDerivation {
     hspec-contrib hspec-expectations HUnit megaparsec nicify-lib
     non-empty-text process QuickCheck template-haskell text
     typed-process unix unliftio utf8-string
+  ];
+  configureFlags = [
+    "--ghc-option=-optl-static"
+    "--ghc-option=-optl-pthread"
+    "--ghc-option=-optl=-L${pkgs.gmp6.override { withStatic = true; }}/lib"
+    "--ghc-option=-optl=-L${pkgs.zlib.static}/lib"
+    "--ghc-option=-optl=-L${pkgs.glibc.static}/lib"
+    "--ghc-option=-optl=-L${pkgs.libffi.overrideAttrs (old: { dontDisableStatic = true; })}/lib"
+    "--ghc-option=-fPIC"
   ];
   homepage = "https://gitlab.com/neosimsim/hookmark";
   description = "Browser independent bookmark manager";
