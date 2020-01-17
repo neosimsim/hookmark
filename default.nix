@@ -1,2 +1,2 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc881" }:
-nixpkgs.pkgs.haskell.packages.${compiler}.callPackage ./hookmark.nix { }
+{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc865" }:
+with nixpkgs.pkgs.haskell; lib.justStaticExecutables (packages.${compiler}.callPackage ./hookmark.nix { } )
