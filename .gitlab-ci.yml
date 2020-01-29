@@ -9,6 +9,27 @@ cache:
   paths:
   - .cache
 
+linux-x86_64:
+  stage: build
+  image: neosimsim/ghc:8.8.2
+  before_script:
+  - mkdir -p "$HOME/.cabal"
+  - (test -d .cache/cabal && cp -r .cache/cabal/* "$HOME/.cabal") || true
+  - cabal v2-update
+  - cabal configure --constraint 'cryptonite -integer-gmp' --constraint 'hashable -integer-gmp' --constraint 'scientific +integer-simple' --constraint 'integer-logarithms -integer-gmp'
+  script:
+  - make CABAL_BUILD_ARGS='-f static' all
+  after_script:
+  - mv build linux-x86_64
+  - mkdir -p .cache/cabal
+  - cp -r "$HOME/.cabal/"* .cache/cabal
+  artifacts:
+    name: "hookmark-$CI_COMMIT_SHORT_SHA-linux-x86_64"
+    paths:
+    - linux-x86_64/hookmark
+    - linux-x86_64/hookmark-web
+    expire_in: 1 week
+
 .cabal: &cabal_job
   stage: build
   before_script:

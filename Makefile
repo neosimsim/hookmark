@@ -23,7 +23,7 @@ test: phony
 
 regression: phony
 	cabal v2-install -f pedantic --installdir build --install-method copy $(CABAL_BUILD_ARGS)
-	cabal v2-run -f pedantic regression $(CABAL_BUILD_ARGS) -- $(HSPEC_ARGS)
+	cabal v2-run -f pedantic $(CABAL_BUILD_ARGS) regression -- $(HSPEC_ARGS)
 
 yesod: phony tools/yesod
 	tools/yesod devel
