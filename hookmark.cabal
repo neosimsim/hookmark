@@ -108,7 +108,8 @@ executable hookmark
     , typed-process
 
   if flag(static)
-    ld-options: -static -pthread
+    ld-options:  -pthread -static
+    ghc-options: -static
 
   default-language: Haskell2010
 
@@ -132,7 +133,8 @@ executable hookmark-web
     , yesod
 
   if flag(static)
-    ld-options: -static -pthread
+    ld-options:  -pthread -static
+    ghc-options: -static
 
   default-language: Haskell2010
 
