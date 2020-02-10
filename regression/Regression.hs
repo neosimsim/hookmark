@@ -70,9 +70,9 @@ main =
               doesDirectoryExist baseDir `shouldReturn` False
               proc
                 cmd
-                [ "add"
-                , "-b"
+                [ "-b"
                 , baseDir
+                , "add"
                 , "--tag"
                 , "haskell"
                 , "haskell/hoogle"
@@ -87,9 +87,9 @@ main =
                 doesDirectoryExist baseDir `shouldReturn` False
                 proc
                   cmd
-                  [ "add"
-                  , "-b"
+                  [ "-b"
                   , tmpDir
+                  , "add"
                   , "--tag"
                   , "haskell"
                   , "haskell/hoogle"
