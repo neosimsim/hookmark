@@ -1,6 +1,6 @@
 hookmark — browser independent bookmarking
 
-Usage: hookmark [-b BASEDIR] [COMMAND]
+Usage: hookmark [[-b BASEDIR] COMMAND]
   Store, edit and search bookmarks.
 
 Available options:
