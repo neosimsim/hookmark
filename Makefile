@@ -1,37 +1,52 @@
 .POSIX:
 
-STACK_ARGS=
+CABAL_ARGS=
 
 all:
 	$(MAKE) build
-	$(MAKE) check
 	$(MAKE) test
 	$(MAKE) regression
 
-check: phony
-	stack $(STACK_ARGS) --stack-yaml stack-build.yaml exec --package cabal-fmt -- cabal-fmt hookmark.cabal | diff hookmark.cabal -
-	stack $(STACK_ARGS) --stack-yaml stack-build.yaml exec --package hfmt -- hfmt
+check: phony tools/cabal-fmt tools/hfmt
+	tools/cabal-fmt hookmark.cabal | diff hookmark.cabal -
+	tools/hfmt
 
-checkApply: phony
-	stack $(STACK_ARGS) --stack-yaml stack-build.yaml exec --package cabal-fmt -- cabal-fmt -i hookmark.cabal
-	stack $(STACK_ARGS) --stack-yaml stack-build.yaml exec --package hfmt -- hfmt -w
+check-apply: phony tools
+	tools/cabal-fmt -i hookmark.cabal
+	tools/hfmt -w
 
 build: phony
-	stack $(STACK_ARGS) build --pedantic
+	cabal v2-build -f pedantic $(CABAL_BUILD_ARGS)
 
 test: phony
-	stack $(STACK_ARGS) test --ta '$(HUNIT_ARGS)' --pedantic :test
+	cabal v2-run -f pedantic test -- $(HSPEC_ARGS)
 
 regression: phony
-	stack $(STACK_ARGS) --local-bin-path build --verbosity silent install
-	stack $(STACK_ARGS) test --ta '$(HUNIT_ARGS)' --pedantic :regression
+	cabal v2-install -f pedantic --installdir build --install-method copy $(CABAL_BUILD_ARGS)
+	cabal v2-run -f pedantic regression -- $(HSPEC_ARGS)
 
-yesod:
-	stack exec --package yesod-bin yesod -- devel
+yesod: phony tools/yesod
+	tools/yesod devel
+
+tools: tools/hfmt tools/cabal-fmt tools/yesod
+
+tools/hfmt:
+	# Unable to install with GHC 8.6.5 cabal: 2.4.1.0 because of haskell-src-exts 1.22 update #562
+	# https://github.com/chrisdone/hindent/issues/562
+	mkdir -p tools
+	cd tools && cabal v2-install -w ghc-8.6.5 --installdir . --install-method copy --constraint 'haskell-src-exts < 1.22' hfmt-0.2.3.1
+
+tools/cabal-fmt:
+	mkdir -p tools
+	cd tools && cabal v2-install -w ghc-8.6.5 --installdir . --install-method copy cabal-fmt-0.1.2
+
+tools/yesod:
+	mkdir -p tools
+	cd tools && cabal v2-install --installdir . --install-method copy yesod-bin
 
 clean: phony
-	rm -rf build
-	stack $(STACK_ARGS) clean
+	rm -rf build tools
+	cabal v2-clean
 
 phony: this_file_should_not_exists
 

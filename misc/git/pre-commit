@@ -51,4 +51,5 @@ then
 	exit 1
 fi
 
-make -j4 all
+make check
+make all

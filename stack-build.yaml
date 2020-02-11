@@ -1,8 +1,0 @@
-resolver: lts-14.6
-
-extra-deps:
-# needed by hfmt
-- hindent-5.3.1@sha256:23dc3d423820a1de4a11f54eb87992f2c9fa1b686b2230bb06d1af46edc85c4b,3452
-- stylish-haskell-0.9.2.2@sha256:7852ea649b83f899888fdc2559d25495d0959d832cb9ca9da53bae78df66dc0e,4581
-# needed by cabal-fmt
-- Cabal-3.0.0.0@sha256:1ba37b8d80e89213b17db7b8b9ea0108da55ca65f8c0cbb7433881a284c5cf67,26027

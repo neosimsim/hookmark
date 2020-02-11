@@ -9,36 +9,14 @@ cache:
   paths:
   - .cache
 
-.stack: &stack_build
-  stage: build
-  script:
-  - make all
-
-stack-latest:
-  <<: *stack_build
-  image: fpco/stack-build-small:lts
-  allow_failure: true
-  script:
-  - make STACK_ARGS='--resolver lts' all
-
-stack-14.6:
-  <<: *stack_build
-  image: fpco/stack-build-small:lts-14.6
-  variables:
-    STACK_YAML: stack-lts-14.6.yaml
-
 .cabal: &cabal_job
   stage: build
   before_script:
   - mkdir -p "$HOME/.cabal"
   - (test -d .cache/cabal && cp -r .cache/cabal/* "$HOME/.cabal") || true
-  script:
   - cabal v2-update
-  - cabal v2-build -f pedantic
-  - cabal v2-test -f pedantic test
-  - cabal v2-install --help
-  - cabal v2-install -f pedantic --installdir build exe:hookmark
-  - cabal v2-test -f pedantic regression
+  script:
+  - make all
   after_script:
   - mkdir -p .cache/cabal
   - cp -r "$HOME/.cabal/"* .cache/cabal
@@ -56,8 +34,17 @@ cabal-8.6.5:
   <<: *cabal_job
   image: haskell:8.6.5
   script:
-  - cabal v2-update
   - cabal v2-build -f pedantic
   - cabal v2-test -f pedantic test
   - cabal v2-install -f pedantic --symlink-bindir build exe:hookmark
   - cabal v2-test -f pedantic regression
+
+check:
+  <<: *cabal_job
+  image: haskell:8.6.5
+  script:
+  - mkdir -p tools
+  # haskell:8.6.5 comes with cabal-2.4.1.0, therefore we cannot use `make tools`
+  - (cd tools && cabal v2-install --symlink-bindir . --constraint 'haskell-src-exts < 1.22' hfmt-0.2.3.1)
+  - (cd tools && cabal v2-install --symlink-bindir . cabal-fmt-0.1.2)
+  - make check
