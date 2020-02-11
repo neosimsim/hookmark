@@ -19,6 +19,4 @@ arbitraryLine = Text.pack . filter (/= '\n') <$> arbitrary
 arbitraryNonEmptyLine :: Gen NonEmptyText
 arbitraryNonEmptyLine = do
   t <- arbitraryLine
-  case NonEmptyText.fromText t of
-    Just t' -> return t'
-    Nothing -> arbitraryNonEmptyLine
+  maybe arbitraryNonEmptyLine return (NonEmptyText.fromText t)
