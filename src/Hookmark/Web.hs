@@ -70,6 +70,7 @@ myLayout widget = do
                 <head>
                     <title>#{pageTitle pc}
                     <meta charset=utf-8>
+                    <link rel=icon href=@{AssetsR favicon_svg}/>
                     ^{pageHead pc}
                 <body>
                     ^{header}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="7.7107372mm"
+   height="7.7278104mm"
+   version="1.1"
+   viewBox="0 0 7.7107369 7.72781"
+   id="svg4860"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   inkscape:export-filename="/home/neosimsim/src/hookmark/assets/favicon.png"
+   inkscape:export-xdpi="1071.1725"
+   inkscape:export-ydpi="1071.1725">
+  <defs
+     id="defs4864" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="745"
+     id="namedview4862"
+     showgrid="false"
+     inkscape:zoom="10.50169"
+     inkscape:cx="18.393265"
+     inkscape:cy="17.658526"
+     inkscape:window-x="0"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg4860" />
+  <metadata
+     id="metadata4852">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-4.5119097,-91.85599)"
+     id="g4858">
+    <path
+       d="m 9.2858,91.856 v 0.53071 c 0.73045,0.6725 0.80357,2.4114 0,2.8029 H 9.01502 v 0.86816 H 9.2858 c 0.79327,0.39148 0.87168,2.456 0,3.0143 v 0.49919 h 0.98392 V 99.1191 c 0.73472,-0.53148 0.61265,-2.6961 0,-3.5197 0.6697,-0.98645 0.57092,-2.5686 0,-3.2127 v -0.53071 z"
+       id="path4854"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 5.9387,91.869 v 7.7148 h 0.98444 v -3.5135 h 1.3694 v -0.86764 h -1.3694 v -3.3336 z"
+       id="path4856"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
