@@ -1,3 +1,4 @@
-<h1>Hookmark Web
+<h1>
+  <img src=@{AssetsR banner_svg} alt=Hookmark/>
 <a href=@{ListR []}>Home
 <a href=@{EditR []}>New

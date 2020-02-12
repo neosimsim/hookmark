@@ -11,25 +11,35 @@ module Hookmark.Web
   , resourcesHookmarkWeb
   ) where
 
-import           Control.Monad         (when)
-import           Data.List             (sort)
-import           Data.Maybe            (catMaybes)
-import qualified Data.NonEmptyText     as NonEmptyText (fromText, toText)
-import           Data.Text             (Text)
-import qualified Data.Text             as Text (pack, unpack)
-import           Data.Version          (showVersion)
+import           Control.Monad                   (when)
+import           Data.List                       (sort)
+import           Data.Maybe                      (catMaybes)
+import qualified Data.NonEmptyText               as NonEmptyText (fromText,
+                                                                  toText)
+import           Data.Text                       (Text)
+import qualified Data.Text                       as Text (pack, unpack)
+import           Data.Version                    (showVersion)
 import           Hookmark.IO
 import           Hookmark.Types
-import           Paths_hookmark        (version)
-import           System.FilePath       as FilePath (joinPath, splitDirectories)
-import           System.FilePath.Extra as FilePath (breadcrumbs)
+import           Paths_hookmark                  (version)
+import           System.FilePath                 as FilePath (joinPath,
+                                                              splitDirectories)
+import           System.FilePath.Extra           as FilePath (breadcrumbs)
 import           Text.Hamlet
 import           Yesod
+import           Yesod.EmbeddedStatic            (EmbeddedStatic,
+                                                  mkEmbeddedStatic)
+import           Yesod.EmbeddedStatic.Generators (embedDir)
+
+mkEmbeddedStatic False "assets" [embedDir "assets"]
 
 newtype HookmarkWeb =
   HookmarkWeb
     { hookmarkWebBaseDir :: FilePath
     }
+
+getAssets :: HookmarkWeb -> EmbeddedStatic
+getAssets _ = assets
 
 mkYesod
   "HookmarkWeb"
@@ -38,6 +48,7 @@ mkYesod
 /view/+[FilePath] ViewR GET
 /list/+[FilePath] ListR GET
 /edit/+[FilePath] EditR GET POST
+/assets AssetsR EmbeddedStatic getAssets
 |]
 
 instance Yesod HookmarkWeb where
