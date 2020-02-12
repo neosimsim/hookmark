@@ -70,12 +70,14 @@ myLayout widget = do
                 <head>
                     <title>#{pageTitle pc}
                     <meta charset=utf-8>
-                    <link rel=icon href=@{AssetsR favicon_svg}/>
+                    <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1">
+                    <link rel=icon type=image/svg href=@{AssetsR favicon_svg}>
+                    <link rel=stylesheet type=text/css href=@{AssetsR style_css}>
                     ^{pageHead pc}
                 <body>
                     ^{header}
                     <article>
-                        ^{pageBody pc}
+                      ^{pageBody pc}
                     ^{footer (showVersion version)}
         |]
 

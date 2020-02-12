@@ -1,4 +1,7 @@
-<h1>
-  <img src=@{AssetsR banner_svg} alt=Hookmark/>
-<a href=@{ListR []}>Home
-<a href=@{EditR []}>New
+<header>
+  <h1>
+    <img .banner src=@{AssetsR banner_svg} alt=Hookmark style="max-width: 95%;"/>
+  <nav>
+    <a .visiting href=@{ListR []}>Home
+    <a href=@{EditR []}>New
+

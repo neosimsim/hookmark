@@ -1,4 +1,6 @@
 $doctype 5
+<p style="text-align: right">
+  <a .button href=@{EditR $ splitDirectories (bookmarkName bookmark)}>edit
 <p>
   <h2> #{bookmarkName bookmark}
   $with BookmarkEntry { .. } <- snd bookmark
@@ -6,8 +8,6 @@ $doctype 5
     <p>
       $forall tag <- sort tags
         $with tagText <- NonEmptyText.toText tag
-          <a href=@?{(ListR [], [("tag", tagText)])}>#{tagText}
+          <a .button href=@?{(ListR [], [("tag", tagText)])}>#{tagText}
     <p>
       #{description}
-<p>
- <a href=@{EditR $ splitDirectories (bookmarkName bookmark)}>edit

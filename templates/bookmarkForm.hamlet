@@ -1,19 +1,32 @@
+<p style="text-align: right">
+  <button type=submit name=command value=save>
+    Save
 <p>
-  <p>
-    Name
-    ^{fvInput nameView}
-  <p>
-    Url
-    ^{fvInput urlView}
-  <p>
-    Tags
-    ^{fvInput tagsView}
-  <p>
-    <button type=submit name=command value=addtag>
-      Add tag
-  <p>
-    Description
-  <p>
-    ^{fvInput descriptionView}
-<button type=submit name=command value=save>
-  Save
+  <div .row>
+    <div .col-2>
+      Name
+    <div .col-10>
+      ^{fvInput nameView}
+  <div .row>
+    <div .col-2>
+      Url
+    <div .col-10>
+      ^{fvInput urlView}
+  <div .row>
+    <div .col-3>
+      <div .row>
+        <div .col-6>
+          <span style="margin-bottom: 15px;">
+            Tags
+        <div .col-6 style="text-align: right;">
+          <button type=submit name=command value=addtag>
+            Add Tag
+      <div .row>
+        <div .col-12 .input-list>
+          ^{fvInput tagsView}
+    <div .col-1>
+    <div .col-8>
+      <span style="margin-bottom: 15px;">
+        Description
+      <p>
+        ^{fvInput descriptionView}

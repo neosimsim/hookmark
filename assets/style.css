@@ -1,0 +1,82 @@
+html {
+	font-family: sans-serif;
+}
+
+body {
+	margin: 0 auto 0 auto;
+	max-width: 800px;
+	padding: 0 5px 0 5px;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+nav, footer {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-align: center;
+}
+
+.banner {
+	display: block;
+	margin: 0 auto 0 auto;
+	height: 80px;
+}
+
+textarea, input, button, .button {
+	background-color: inherit;
+	border: 1px solid #6e00ae;
+	border-radius: 2px;
+	font-size: 14px;
+	padding: 5px;
+	min-width: 36px;
+	box-sizing: border-box;
+}
+
+button, .button {
+	color: #6e00ae;
+}
+
+button:hover, .button:hover {
+	cursor: pointer;
+	background: #6e00ae;
+	color: #fff;
+}
+
+input, textarea {
+	width: 100%;
+}
+
+.input-list > input {
+	margin-top: 5px;
+}
+
+.row::after {
+	content: "";
+	clear: both;
+	display: table;
+}
+.col-1 {width: 8%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+[class*="col-"] {
+	float: left;
+	padding: 5px 0 5px 0;
+}
+@media only screen and (max-width: 700px) {
+	/* For mobile phones: */
+	[class*="col-"] {
+		width: 100%;
+	}
+}
