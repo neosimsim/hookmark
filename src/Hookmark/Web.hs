@@ -70,7 +70,6 @@ myLayout widget = do
                 <head>
                     <title>#{pageTitle pc}
                     <meta charset=utf-8>
-                    <style>body { font-family: verdana }
                     ^{pageHead pc}
                 <body>
                     ^{header}
