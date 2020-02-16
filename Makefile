@@ -1,6 +1,6 @@
 .POSIX:
 
-CABAL_ARGS=
+CABAL_BUILD_ARGS=
 
 all:
 	$(MAKE) build
@@ -19,11 +19,11 @@ build: phony
 	cabal v2-build -f pedantic $(CABAL_BUILD_ARGS)
 
 test: phony
-	cabal v2-run -f pedantic test -- $(HSPEC_ARGS)
+	cabal v2-run -f pedantic $(CABAL_BUILD_ARGS) test -- $(HSPEC_ARGS)
 
 regression: phony
 	cabal v2-install -f pedantic --installdir build --install-method copy $(CABAL_BUILD_ARGS)
-	cabal v2-run -f pedantic regression -- $(HSPEC_ARGS)
+	cabal v2-run -f pedantic regression $(CABAL_BUILD_ARGS) -- $(HSPEC_ARGS)
 
 yesod: phony tools/yesod
 	tools/yesod devel
