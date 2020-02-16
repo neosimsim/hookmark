@@ -7,3 +7,4 @@ dist-newstyle/
 dist/
 yesod-devel/
 tools/
+*.local
