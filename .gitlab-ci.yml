@@ -1,5 +1,6 @@
 stages:
 - build
+- deploy
 
 variables:
   STACK_ROOT: "$CI_PROJECT_DIR/.cache/stack"
@@ -69,3 +70,15 @@ check:
   - (cd tools && cabal v2-install --symlink-bindir . --constraint 'haskell-src-exts < 1.22' hfmt-0.2.3.1)
   - (cd tools && cabal v2-install --symlink-bindir . cabal-fmt-0.1.2)
   - make check
+
+release:
+  stage: deploy
+  only:
+  - tags
+  script:
+  - echo "scripts can't be empty"
+  artifacts:
+    name: "hookmark-$CI_COMMIT_REF_NAME"
+    paths:
+    - linux-x86_64/hookmark
+    - linux-x86_64/hookmark-web
