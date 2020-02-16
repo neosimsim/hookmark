@@ -4,7 +4,7 @@ Usage: hookmark-web [-p PORT] [-b BASEDIR]
   Store, edit and search bookmarks.
 
 Available options:
-  -p PORT                  Port to listen to.
+  -p PORT                  Port to listen to. (default: 8080)
   -b BASEDIR               Base directory to lookup bookmarks in. Defaults to
                            $HOOKMARKHOME and then to $HOME/.hookmarks.
   -h,--help                Show this help text

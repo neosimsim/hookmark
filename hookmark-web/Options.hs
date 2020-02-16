@@ -6,7 +6,7 @@ module Options
 import           Options.Applicative (Parser, auto, execParser, fullDesc,
                                       header, help, helper, info, metavar,
                                       option, optional, progDesc, short,
-                                      strOption, value, (<**>))
+                                      showDefault, strOption, value, (<**>))
 
 data Options =
   Options
@@ -28,7 +28,8 @@ optionsParser =
   Options <$>
   option
     auto
-    (short 'p' <> value 8080 <> metavar "PORT" <> help "Port to listen to.") <*>
+    (short 'p' <>
+     value 8080 <> showDefault <> metavar "PORT" <> help "Port to listen to.") <*>
   optional
     (strOption
        (short 'b' <>
