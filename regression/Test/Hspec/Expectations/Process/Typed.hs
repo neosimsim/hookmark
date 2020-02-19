@@ -2,6 +2,7 @@
 
 module Test.Hspec.Expectations.Process.Typed
   ( shouldExit
+  , shouldExitSuccessfully
   ) where
 
 import           Control.Monad
@@ -24,6 +25,12 @@ shouldExit p expectations = do
   results <- readProcess' p
   unless (expectations == results) . expectationFailure $
     (diff `on` nicify . prettyProcessResult) results expectations
+
+shouldExitSuccessfully ::
+     HasCallStack
+  => ProcessConfig stdin stdoutIgnored stderrIgnored
+  -> Expectation
+shouldExitSuccessfully p = p `shouldExit` (ExitSuccess, mempty, mempty)
 
 prettyProcessResult :: (ExitCode, BS.ByteString, BS.ByteString) -> String
 prettyProcessResult (code, out, err) =

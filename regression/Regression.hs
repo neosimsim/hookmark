@@ -153,6 +153,12 @@ main =
               ( ExitFailure 1
               , mempty
               , $(embedFile "regression/show_not_found.out"))
+          it "should show bookmarks with name as prefix of another" $ \cmd ->
+            withTempHookmarks "hookmark_test" $ \_ _ ->
+              (proc cmd . words $ "show haskell/packages/yesod") `shouldExit`
+              ( ExitSuccess
+              , $(embedFile "regression/testmarks/haskell/packages/yesod")
+              , mempty)
         describe "edit" $ do
           it "should edit correct file" $ \cmd ->
             withTempHookmarks "hookmark_test" $ \baseDir _ -> do
@@ -177,10 +183,14 @@ main =
                 False
           it "should remove file empty folders" $ \cmd ->
             withTempHookmarks "testmarks" $ \baseDir _ -> do
-              (proc cmd . words $ "rm haskell/packages/warp") `shouldExit`
-                (ExitSuccess, mempty, mempty)
-              (proc cmd . words $ "rm haskell/packages/base64-bytestring") `shouldExit`
-                (ExitSuccess, mempty, mempty)
+              shouldExitSuccessfully
+                (proc cmd . words $ "rm haskell/packages/base64-bytestring")
+              shouldExitSuccessfully
+                (proc cmd . words $ "rm haskell/packages/warp")
+              shouldExitSuccessfully
+                (proc cmd . words $ "rm haskell/packages/yesod")
+              shouldExitSuccessfully
+                (proc cmd . words $ "rm haskell/packages/yesod-core")
               doesPathExist (baseDir </> "haskell/packages") `shouldReturn`
                 False
           it "should not remove empty base" $ \cmd ->
@@ -195,9 +205,13 @@ main =
                 (ExitSuccess, mempty, mempty)
               (proc cmd . words $ "rm haskell/hoogle") `shouldExit`
                 (ExitSuccess, mempty, mempty)
+              (proc cmd . words $ "rm haskell/packages/base64-bytestring") `shouldExit`
+                (ExitSuccess, mempty, mempty)
               (proc cmd . words $ "rm haskell/packages/warp") `shouldExit`
                 (ExitSuccess, mempty, mempty)
-              (proc cmd . words $ "rm haskell/packages/base64-bytestring") `shouldExit`
+              (proc cmd . words $ "rm haskell/packages/yesod") `shouldExit`
+                (ExitSuccess, mempty, mempty)
+              (proc cmd . words $ "rm haskell/packages/yesod-core") `shouldExit`
                 (ExitSuccess, mempty, mempty)
               doesPathExist baseDir `shouldReturn` True
               listDirectory baseDir `shouldReturn` []
@@ -241,10 +255,14 @@ main =
                 $(embedFile "regression/testmarks/haskell/packages/warp")
           it "shall remove empty folder" $ \cmd ->
             withTempHookmarks "testmarks" $ \baseDir _ -> do
-              (proc cmd . words $ "mv haskell/packages/warp haskell") `shouldExit`
-                (ExitSuccess, mempty, mempty)
               (proc cmd . words $
                "mv haskell/packages/base64-bytestring haskell") `shouldExit`
+                (ExitSuccess, mempty, mempty)
+              (proc cmd . words $ "mv haskell/packages/warp haskell") `shouldExit`
+                (ExitSuccess, mempty, mempty)
+              (proc cmd . words $ "mv haskell/packages/yesod haskell") `shouldExit`
+                (ExitSuccess, mempty, mempty)
+              (proc cmd . words $ "mv haskell/packages/yesod-core haskell") `shouldExit`
                 (ExitSuccess, mempty, mempty)
               doesPathExist (baseDir </> "haskell/packages") `shouldReturn`
                 False
@@ -277,7 +295,9 @@ main =
               (proc cmd . words $
                "mv haskell/packages/warp haskell/packages/base64-bytestring /") `shouldExit`
                 (ExitSuccess, mempty, mempty)
-              doesPathExist (baseDir </> "haskell/packages") `shouldReturn`
+              doesPathExist (baseDir </> "haskell/packages/warp") `shouldReturn`
+                False
+              doesPathExist (baseDir </> "haskell/packages/base64-bytestring") `shouldReturn`
                 False
               doesPathExist (baseDir </> "warp") `shouldReturn` True
               doesPathExist (baseDir </> "base64-bytestring") `shouldReturn`

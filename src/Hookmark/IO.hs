@@ -17,6 +17,7 @@ module Hookmark.IO
 
 import           Control.Exception      (Exception (..), throw)
 import           Control.Monad.Extra    (ifM, whenM)
+import           Data.Function          (on)
 import           Data.List              (isPrefixOf)
 import           Data.Path              (toRelativeFilePath)
 import qualified Data.Text              as Text (unpack)
@@ -31,7 +32,8 @@ import           System.Directory       (createDirectoryIfMissing,
                                          removeFile, renamePath,
                                          withCurrentDirectory)
 import           System.Directory.Extra (cleanDirectory, listDirectories)
-import           System.FilePath        (takeDirectory, takeFileName, (</>))
+import           System.FilePath        (splitDirectories, takeDirectory,
+                                         takeFileName, (</>))
 
 -- | Save the given bookmark. Existing bookmarks will be overwritten
 saveBookmark :: FilePath -> Bookmark -> IO ()
@@ -74,7 +76,9 @@ matchesCriteria BookmarkCriteria {..} (name, BookmarkEntry {..}) =
     nameMatches =
       case criteriaBookmarkName of
         Nothing -> True
-        Just x  -> x `isPrefixOf` name
+        Just x ->
+          let isPathPrefixOf = isPrefixOf `on` splitDirectories
+           in x `isPathPrefixOf` name
     tagsMatches :: Bool
     tagsMatches =
       case criteriaTags of

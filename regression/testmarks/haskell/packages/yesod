@@ -1,0 +1,5 @@
+https://hackage.haskell.org/package/yesod
+haskell
+development
+
+The yesod package groups together the various Yesod related packages into one cohesive whole. This is the “battery loaded” version of Yesod, whereas most of the core code lives in yesod-core.

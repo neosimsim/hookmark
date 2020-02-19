@@ -71,7 +71,7 @@ main =
         property prop_bookmarkMatchesItself
       it "bookmarks should match sublist of tags" $
         property prop_bookmarkMatchesTags
-      it "bookmarks should match patch prefix" $
+      it "bookmarks should match path prefix" $
         property prop_bookmarkMatchesPathPrefix
     describe "System.FilePath.Extra.breadcrumbs" $ do
       it "contain only prefixes" $ property prop_breadcrumbsContainOnlyPrefixes
