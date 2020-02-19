@@ -11,7 +11,6 @@ module Hookmark.Web
   , resourcesHookmarkWeb
   ) where
 
-import           Control.Monad                   (when)
 import           Data.List                       (sort)
 import           Data.Maybe                      (catMaybes)
 import qualified Data.NonEmptyText               as NonEmptyText (fromText,
@@ -193,10 +192,9 @@ postEditR paths = do
         _ -> do
           let newBookmark@(newName, _) = formDataToBookmark bookmarkData
           let oldName = FilePath.joinPath paths
-          when
-            (not (null oldName) && oldName /= newName)
-            (liftIO $ renameBookmark hookmarkWebBaseDir oldName newName)
-          liftIO $ saveBookmark hookmarkWebBaseDir newBookmark
+          if not (null oldName) && oldName /= newName
+            then liftIO $ renameBookmark hookmarkWebBaseDir oldName newName
+            else liftIO $ saveBookmark hookmarkWebBaseDir newBookmark
           redirect . ViewR $ splitDirectories newName
     FormFailure msgs ->
       defaultLayout
