@@ -11,7 +11,7 @@ check: phony tools/cabal-fmt tools/hfmt
 	tools/cabal-fmt hookmark.cabal | diff hookmark.cabal -
 	tools/hfmt
 
-check-apply: phony tools
+check-apply: phony tools/cabal-fmt tools/hfmt
 	tools/cabal-fmt -i hookmark.cabal
 	tools/hfmt -w
 
