@@ -1,5 +1,5 @@
 <ul>
-  $forall path <- filePaths
+  $forall path <- sort filePaths
     <li>
       $with crumbs <- FilePath.breadcrumbs $ splitDirectories path
         $forall crumb <- init crumbs
