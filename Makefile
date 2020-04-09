@@ -1,6 +1,7 @@
 .POSIX:
 
 CABAL_BUILD_ARGS=
+TOOL_GHC=ghc-8.6.5
 
 all:
 	$(MAKE) build
@@ -31,19 +32,19 @@ yesod: phony tools/yesod
 tools: tools/hfmt tools/cabal-fmt tools/yesod
 
 tools/hfmt:
-	# Unable to install with haskell-src-exts 1.22
+	# Unable to install hfmt with haskell-src-exts 1.22
 	# https://github.com/chrisdone/hindent/issues/562
 	# Also not installable with ghc >8.6.5.
 	mkdir -p tools
-	cd tools && cabal v2-install -w ghc-8.6.5 --installdir . --install-method copy --constraint 'haskell-src-exts < 1.22' hfmt-0.2.3.1
+	cd tools && cabal v2-install -w $(TOOL_GHC) --installdir . --install-method copy --constraint 'haskell-src-exts < 1.22' hfmt-0.2.3.1
 
 tools/cabal-fmt:
 	mkdir -p tools
-	cd tools && cabal v2-install --installdir . --install-method copy cabal-fmt-0.1.2
+	cd tools && cabal v2-install -w $(TOOL_GHC) --installdir . --install-method copy cabal-fmt-0.1.2
 
 tools/yesod:
 	mkdir -p tools
-	cd tools && cabal v2-install --installdir . --install-method copy yesod-bin
+	cd tools && cabal v2-install -w $(TOOL_GHC) --installdir . --install-method copy yesod-bin
 
 clean: phony
 	rm -rf build tools
