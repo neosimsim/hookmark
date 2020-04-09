@@ -20,11 +20,14 @@ import qualified Data.Text                       as Text (pack, unpack)
 import           Data.Version                    (showVersion)
 import           Hookmark.IO
 import           Hookmark.Types
+import           Network.HTTP.Types.Status       (unauthorized401)
 import           Paths_hookmark                  (version)
 import           System.FilePath                 as FilePath (joinPath,
                                                               splitDirectories)
 import           System.FilePath.Extra           as FilePath (breadcrumbs)
 import           Text.Hamlet
+import           Web.Cookie                      (SetCookie (..), def,
+                                                  sameSiteStrict)
 import           Yesod
 import           Yesod.EmbeddedStatic            (EmbeddedStatic,
                                                   mkEmbeddedStatic)
@@ -164,6 +167,12 @@ getListR paths = do
 
 getEditR :: [FilePath] -> Handler Html
 getEditR paths = do
+  setCookie $
+    def
+      { setCookieName = "HOOKMARK-EDIT"
+      , setCookieValue = "yes"
+      , setCookieSameSite = Just sameSiteStrict
+      }
   let path = FilePath.joinPath paths
   bookmarkFormData <-
     if null path
@@ -176,35 +185,43 @@ getEditR paths = do
 
 postEditR :: [FilePath] -> Handler Html
 postEditR paths = do
-  HookmarkWeb {..} <- getYesod
-  ((result, _), _) <- runFormPostNoToken $ bookmarkForm emptyBookmarkFormData
-  case result of
-    FormSuccess bookmarkData -> do
-      formCommand <- lookupPostParam "command"
-      case formCommand of
-        Just "addtag" -> do
-          let bookmarkDataWithNewTag =
-                bookmarkData
-                  {bookmarkFormTags = "" : bookmarkFormTags bookmarkData}
-          (formWidget, enctype) <-
-            generateFormPost $ bookmarkForm bookmarkDataWithNewTag
-          defaultLayout $ editBookmarkWidget formWidget enctype
-        _ -> do
-          let newBookmark@(newName, _) = formDataToBookmark bookmarkData
-          let oldName = FilePath.joinPath paths
-          if not (null oldName) && oldName /= newName
-            then liftIO $ renameBookmark hookmarkWebBaseDir oldName newName
-            else liftIO $ saveBookmark hookmarkWebBaseDir newBookmark
-          redirect . ViewR $ splitDirectories newName
-    FormFailure msgs ->
-      defaultLayout
-        [whamlet|
-      <p>Invalid input, let's try again.
-      $forall msg <- msgs
-        #{msg}
-    |]
-    FormMissing ->
-      defaultLayout [whamlet| <p>Invalid input, let's try again.  |]
+  editCookie <- lookupCookie "HOOKMARK-EDIT"
+  case editCookie of
+    Nothing ->
+      sendResponseStatus
+        unauthorized401
+        ("missing cookie: cross-site request forgery detected" :: Text)
+    Just _ -> do
+      HookmarkWeb {..} <- getYesod
+      ((result, _), _) <-
+        runFormPostNoToken $ bookmarkForm emptyBookmarkFormData
+      case result of
+        FormSuccess bookmarkData -> do
+          formCommand <- lookupPostParam "command"
+          case formCommand of
+            Just "addtag" -> do
+              let bookmarkDataWithNewTag =
+                    bookmarkData
+                      {bookmarkFormTags = "" : bookmarkFormTags bookmarkData}
+              (formWidget, enctype) <-
+                generateFormPost $ bookmarkForm bookmarkDataWithNewTag
+              defaultLayout $ editBookmarkWidget formWidget enctype
+            _ -> do
+              let newBookmark@(newName, _) = formDataToBookmark bookmarkData
+              let oldName = FilePath.joinPath paths
+              if not (null oldName) && oldName /= newName
+                then liftIO $ renameBookmark hookmarkWebBaseDir oldName newName
+                else liftIO $ saveBookmark hookmarkWebBaseDir newBookmark
+              redirect . ViewR $ splitDirectories newName
+        FormFailure msgs ->
+          defaultLayout
+            [whamlet|
+          <p>Invalid input, let's try again.
+          $forall msg <- msgs
+            #{msg}
+        |]
+        FormMissing ->
+          defaultLayout [whamlet| <p>Invalid input, let's try again.  |]
 
 viewFilePathsWidget :: [FilePath] -> Widget
 viewFilePathsWidget filePaths = do

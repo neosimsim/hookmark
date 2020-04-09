@@ -62,9 +62,11 @@ library
       base              >=4.7 && <5
     , bytestring
     , containers
+    , cookie
     , directory
     , either
     , filepath
+    , http-types
     , megaparsec
     , non-empty-text
     , process
