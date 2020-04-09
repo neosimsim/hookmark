@@ -17,7 +17,7 @@ linux-x86_64:
   - mkdir -p "$HOME/.cabal"
   - (test -d .cache/cabal && cp -r .cache/cabal/* "$HOME/.cabal") || true
   - cabal v2-update
-  - cabal configure --constraint 'cryptonite -integer-gmp' --constraint 'hashable -integer-gmp' --constraint 'scientific +integer-simple' --constraint 'integer-logarithms -integer-gmp'
+  - cabal v2-configure --constraint 'cryptonite -integer-gmp' --constraint 'hashable -integer-gmp' --constraint 'scientific +integer-simple' --constraint 'integer-logarithms -integer-gmp'
   script:
   - make CABAL_BUILD_ARGS='-f static' all
   after_script:
@@ -37,6 +37,7 @@ linux-x86_64:
   - mkdir -p "$HOME/.cabal"
   - (test -d .cache/cabal && cp -r .cache/cabal/* "$HOME/.cabal") || true
   - cabal v2-update
+  - cabal v2-configure --constraint 'cryptonite -integer-gmp' --constraint 'hashable -integer-gmp' --constraint 'scientific +integer-simple' --constraint 'integer-logarithms -integer-gmp'
   script:
   - make all
   after_script:
@@ -45,16 +46,16 @@ linux-x86_64:
 
 cabal-ghc-latest:
   <<: *cabal_job
-  image: haskell:latest
+  image: neosimsim/ghc:latest
   allow_failure: true
 
 cabal-ghc-8.8.1:
   <<: *cabal_job
-  image: haskell:8.8.1
+  image: neosimsim/ghc:8.8.1
 
 cabal-ghc-8.6.5:
   <<: *cabal_job
-  image: haskell:8.6.5
+  image: neosimsim/ghc:8.6.5
   script:
   - cabal v2-build -f pedantic
   - cabal v2-test -f pedantic test
@@ -63,12 +64,11 @@ cabal-ghc-8.6.5:
 
 check:
   <<: *cabal_job
-  image: haskell:8.6.5
+  image: neosimsim/ghc:8.6.5
   script:
-  - mkdir -p tools
-  # haskell:8.6.5 comes with cabal-2.4.1.0, therefore we cannot use `make tools`
-  - (cd tools && cabal v2-install --symlink-bindir . --constraint 'haskell-src-exts < 1.22' hfmt-0.2.3.1)
-  - (cd tools && cabal v2-install --symlink-bindir . cabal-fmt-0.1.2)
+  - mkdir tools
+  # manually install tools because of different cabal version
+  - cabal v2-install --symlink-bindir tools --constraint 'haskell-src-exts < 1.22' cabal-fmt-0.1.2 hfmt-0.2.3.1
   - make check
 
 release:
