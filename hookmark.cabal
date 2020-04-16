@@ -10,7 +10,7 @@ homepage:           https://gitlab.com/neosimsim/hookmark
 bug-reports:        https://gitlab.com/neosimsim/hookmark/issues
 author:             Alexander Ben Nasrallah
 maintainer:         me@abn.sh
-copyright:          2019 © Alexander Ben Nasrallah
+copyright:          2019,2020 © Alexander Ben Nasrallah
 license:            BSD3
 license-file:       LICENSE
 build-type:         Simple
