@@ -9,6 +9,7 @@ all:
 	$(MAKE) regression
 
 check: phony tools/cabal-fmt tools/hfmt
+	cabal check
 	tools/cabal-fmt hookmark.cabal | diff hookmark.cabal -
 	tools/hfmt
 
