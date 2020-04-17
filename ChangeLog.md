@@ -1,5 +1,11 @@
 # Changelog for stack-template
 
+## v1.3
+Prevent cross-site request forgery.
+
+## v1.2
+Add web-frontend to list, view and edit bookmarks
+
 ## v1.1
 
 Remove git output from auto commit.
