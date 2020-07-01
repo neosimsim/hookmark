@@ -64,11 +64,8 @@ cabal-ghc-8.6.5:
 
 check:
   <<: *cabal_job
-  image: neosimsim/ghc:8.6.5
+  image: neosimsim/ghc:8.8.3
   script:
-  - mkdir tools
-  # manually install tools because of different cabal version
-  - cabal v2-install --symlink-bindir tools --constraint 'haskell-src-exts < 1.22' cabal-fmt-0.1.2 hfmt-0.2.3.1
   - make check
 
 release:

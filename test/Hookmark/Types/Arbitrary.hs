@@ -2,15 +2,21 @@
 
 module Hookmark.Types.Arbitrary
   ( BookmarkEntry
-  ) where
+  )
+where
 
-import           Hookmark.Types            (BookmarkEntry (..))
-import           Test.QuickCheck           (Arbitrary (..), listOf)
-import           Test.QuickCheck.Gen.Extra (arbitraryLine,
-                                            arbitraryNonEmptyLine,
-                                            arbitraryText)
+import           Hookmark.Types                 ( BookmarkEntry(..) )
+import           Test.QuickCheck                ( Arbitrary(..)
+                                                , listOf
+                                                )
+import           Test.QuickCheck.Gen.Extra      ( arbitraryLine
+                                                , arbitraryNonEmptyLine
+                                                , arbitraryText
+                                                )
 
 instance Arbitrary BookmarkEntry where
   arbitrary =
-    BookmarkEntry <$> arbitraryLine <*> listOf arbitraryNonEmptyLine <*>
-    arbitraryText
+    BookmarkEntry
+      <$> arbitraryLine
+      <*> listOf arbitraryNonEmptyLine
+      <*> arbitraryText

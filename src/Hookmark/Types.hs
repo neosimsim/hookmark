@@ -5,11 +5,12 @@ module Hookmark.Types
   , bookmarkName
   , BookmarkName
   , renderBookmarkEntry
-  ) where
+  )
+where
 
 import           Data.NonEmptyText
-import           Data.Text         (Text)
-import qualified Data.Text         as T
+import           Data.Text                      ( Text )
+import qualified Data.Text                     as T
 
 type Tag = NonEmptyText
 
@@ -29,6 +30,5 @@ data BookmarkEntry =
   deriving (Show, Eq)
 
 renderBookmarkEntry :: BookmarkEntry -> Text
-renderBookmarkEntry bm =
-  T.concat
-    [T.unlines ([url bm] ++ fmap toText (tags bm) ++ [mempty]), description bm]
+renderBookmarkEntry bm = T.concat
+  [T.unlines ([url bm] ++ fmap toText (tags bm) ++ [mempty]), description bm]

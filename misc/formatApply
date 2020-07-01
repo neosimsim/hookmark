@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+hsfiles=`find "$@" -name '*.hs' -or -name '*.lhs'`
+
+for hsfile in $hsfiles
+do
+	stylish-haskell -i $hsfile
+	brittany --write-mode=inplace $hsfile
+done
+

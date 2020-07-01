@@ -1,7 +1,8 @@
 module System.FilePath.Extra
   ( breadcrumbs
-  ) where
+  )
+where
 
 breadcrumbs :: [FilePath] -> [[FilePath]]
-breadcrumbs []     = []
-breadcrumbs (x:xs) = [x] : ((x :) <$> breadcrumbs xs)
+breadcrumbs []       = []
+breadcrumbs (x : xs) = [x] : ((x :) <$> breadcrumbs xs)

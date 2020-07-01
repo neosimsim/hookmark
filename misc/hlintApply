@@ -1,0 +1,8 @@
+#!/bin/sh
+
+hsfiles=`find "$@" -name '*.hs' -or -name '*.lhs'`
+
+for hsfile in $hsfiles
+do
+	hlint --cross -j --refactor --refactor-options -i $hsfile
+done
