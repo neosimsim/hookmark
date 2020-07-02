@@ -76,8 +76,7 @@ type HookmarkWebRoute = Route HookmarkWeb
 
 myLayout :: Widget -> Handler Html
 myLayout widget = do
-  pc               <- widgetToPageContent widget
-  HookmarkWeb {..} <- getYesod
+  pc <- widgetToPageContent widget
   withUrlRenderer [hamlet|
             $doctype 5
             <html>

@@ -76,9 +76,10 @@ main = do
     exitWith $ ExitFailure 1
 
 programVersion :: String
-programVersion = case $(compileAbbrHash) of
+programVersion = case hash of
   Nothing      -> showVersion version
   Just gitHash -> showVersion version ++ "-" ++ gitHash
+  where hash = $(compileAbbrHash)
 
 runWithOptions :: Options -> IO ()
 runWithOptions Version                            = putStrLn programVersion
