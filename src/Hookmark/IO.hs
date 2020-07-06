@@ -80,11 +80,11 @@ removeBookmark baseDir name = withCurrentDirectory baseDir $ do
   cleanDirectory $ takeDirectory name
   whenM (isGitRepo ".git") (commitAll $ "remove " ++ name)
 
-data BookmarkCriteria =
-  BookmarkCriteria
-    { criteriaBookmarkName :: Maybe FilePath -- ^ name of a bookmark or subtree
-    , criteriaTags         :: Maybe [Tag]
-    }
+data BookmarkCriteria
+  = BookmarkCriteria
+      { criteriaBookmarkName :: Maybe FilePath -- ^ name of a bookmark or subtree
+      , criteriaTags         :: Maybe [Tag]
+      }
   deriving (Show)
 
 matchesCriteria :: BookmarkCriteria -> Bookmark -> Bool

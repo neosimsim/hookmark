@@ -94,13 +94,13 @@ myLayout widget = do
                     ^{footer (showVersion version)}
         |]
 
-data BookmarkFormData =
-  BookmarkFormData
-    { bookmarkFormName        :: Text
-    , bookmarkFormUrl         :: Text
-    , bookmarkFormTags        :: [Text]
-    , bookmarkFormDescription :: Maybe Textarea
-    }
+data BookmarkFormData
+  = BookmarkFormData
+      { bookmarkFormName        :: Text
+      , bookmarkFormUrl         :: Text
+      , bookmarkFormTags        :: [Text]
+      , bookmarkFormDescription :: Maybe Textarea
+      }
   deriving (Show)
 
 emptyBookmarkFormData :: BookmarkFormData

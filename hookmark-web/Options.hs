@@ -23,11 +23,11 @@ import           Options.Applicative            ( Parser
                                                 , (<**>)
                                                 )
 
-data Options =
-  Options
-    { hookmarkWebPort    :: Int
-    , hookmarkWebBaseDir :: Maybe FilePath
-    }
+data Options
+  = Options
+      { hookmarkWebPort    :: Int
+      , hookmarkWebBaseDir :: Maybe FilePath
+      }
 
 parseOptions :: IO Options
 parseOptions = execParser $ info

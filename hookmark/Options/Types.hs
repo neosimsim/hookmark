@@ -29,6 +29,7 @@ data Options
       }
   | MoveBookmark
       { moveBaseDir     :: Maybe FilePath
+        -- TODO NonEmptyList
       , moveSources     :: [FilePath] -- TODO NonEmptyList
       , moveDestination :: FilePath
       }
