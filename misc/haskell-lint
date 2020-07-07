@@ -1,0 +1,28 @@
+#!/bin/sh
+
+hlintArgs='--cross -j'
+
+check() {
+	exec hlint $hlintArgs "$@"
+}
+
+apply() {
+	hsfiles=`find "$@" -name '*.hs' -or -name '*.lhs'`
+
+	for hsfile in $hsfiles
+	do
+		hlint $hlintArgs --refactor --refactor-options -i $hsfile
+	done
+}
+
+case $# in
+	0) cmd="check" ;;
+	*)
+		cmd=$1
+		shift 1
+		;;
+esac
+case $cmd in
+	apply) apply "$@" ;;
+	*) check "$@" ;;
+esac
