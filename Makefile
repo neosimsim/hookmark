@@ -12,12 +12,12 @@ check: phony tools/cabal-fmt tools/brittany tools/stylish-haskell tools/hlint to
 	cabal check
 	tools/cabal-fmt hookmark.cabal | diff hookmark.cabal -
 	PATH=tools:$$PATH ./misc/hlintCheck src test hookmark hookmark-web
-	PATH=tools:$$PATH ./misc/formatCheck src test hookmark hookmark-web
+	PATH=tools:$$PATH ./misc/haskell-fmt check src test hookmark hookmark-web
 
 check-apply: phony tools/cabal-fmt tools/brittany tools/stylish-haskell tools/hlint tools/refactor
 	tools/cabal-fmt -i hookmark.cabal
 	PATH=tools:$$PATH ./misc/hlintApply src test hookmark hookmark-web
-	PATH=tools:$$PATH ./misc/formatApply src test hookmark hookmark-web
+	PATH=tools:$$PATH ./misc/haskell-fmt apply src test hookmark hookmark-web
 
 build: phony
 	cabal v2-build -f pedantic $(CABAL_BUILD_ARGS)

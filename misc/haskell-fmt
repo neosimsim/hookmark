@@ -1,0 +1,76 @@
+#!/bin/sh -e
+
+die() {
+	echo "$@"
+	exit 1
+}
+
+format() {
+    # brittany is used to
+    # - format code, e.g. long appicative style lines
+    # stylish-haskell is used to
+    # - format and order language pragmas
+    # - formats records
+    # - sorts imports
+    # Both format imports, but brittany shall win, so it's applied last.
+	stylish-haskell "$1" | brittany
+}
+
+overwrite() {
+	outputFile="$1"
+	shift
+	tmp=`mktemp /tmp/overwrite-XXXX`
+	trap "rm $tmp" 1 2 3 6 9
+	eval "$@" >$tmp
+	cat $tmp > "$outputFile"
+	rm $tmp
+}
+
+apply() {
+	hsfiles=`find "$@" -name '*.hs' -or -name '*.lhs'`
+
+	for hsfile in $hsfiles
+	do
+		# brittany --write-mode=inplace $hsfile
+		# stylish-haskell -i $hsfile
+		overwrite $hsfile format $hsfile
+	done
+}
+
+check() {
+	hsfiles=`find "$@" -name '*.hs' -or -name '*.lhs'`
+	unformattedFiles=
+
+	for hsfile in $hsfiles
+	do
+		if ! format $hsfile | diff $hsfile -
+		then
+			unformattedFiles="$unformattedFiles $hsfile"
+		fi
+	done
+
+	[ -z "$unformattedFiles" ] && exit 0
+
+	echo "please format these files:"
+	for file in $unformattedFiles
+	do
+		echo $file
+	done
+
+	exit 1
+}
+
+case $# in
+	0) cmd="format" ;;
+	*)
+		cmd=$1
+		shift 1
+		;;
+esac
+
+case $cmd in
+	format) format "$@" ;;
+	check) check "$@" ;;
+	apply) apply "$@" ;;
+	*) die 'unknown command' ;;
+esac
