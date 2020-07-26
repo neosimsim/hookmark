@@ -3,17 +3,22 @@ module System.Editor
   )
 where
 
-import           Data.Maybe                     ( fromMaybe )
-import           System.Environment             ( lookupEnv )
-import           System.Exit                    ( ExitCode(..)
-                                                , exitWith
-                                                )
-import           System.IO                      ( hPutStrLn
-                                                , stderr
-                                                )
-import           System.Process.Typed           ( proc
-                                                , runProcess
-                                                )
+import           Data.Maybe
+                 ( fromMaybe )
+import           System.Environment
+                 ( lookupEnv )
+import           System.Exit
+                 ( ExitCode(..)
+                 , exitWith
+                 )
+import           System.IO
+                 ( hPutStrLn
+                 , stderr
+                 )
+import           System.Process.Typed
+                 ( proc
+                 , runProcess
+                 )
 
 -- | Opens the given file in an editor.
 -- The editor is read from the environment variable EDITOR.

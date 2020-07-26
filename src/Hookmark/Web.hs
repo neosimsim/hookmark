@@ -12,39 +12,51 @@ module Hookmark.Web
   )
 where
 
-import           Data.List                      ( sort )
-import           Data.Maybe                     ( catMaybes )
-import qualified Data.NonEmptyText             as NonEmptyText
-                                                ( fromText
-                                                , toText
-                                                )
-import           Data.Text                      ( Text )
-import qualified Data.Text                     as Text
-                                                ( pack
-                                                , unpack
-                                                )
-import           Data.Version                   ( showVersion )
+import           Data.List
+                 ( sort )
+import           Data.Maybe
+                 ( catMaybes )
+import qualified Data.NonEmptyText
+              as NonEmptyText
+                 ( fromText
+                 , toText
+                 )
+import           Data.Text
+                 ( Text )
+import qualified Data.Text
+              as Text
+                 ( pack
+                 , unpack
+                 )
+import           Data.Version
+                 ( showVersion )
 import           Hookmark.IO
 import           Hookmark.Types
-import           Network.HTTP.Types.Status      ( unauthorized401 )
-import           Paths_hookmark                 ( version )
-import           System.FilePath               as FilePath
-                                                ( joinPath
-                                                , splitDirectories
-                                                )
-import           System.FilePath.Extra         as FilePath
-                                                ( breadcrumbs )
+import           Network.HTTP.Types.Status
+                 ( unauthorized401 )
+import           Paths_hookmark
+                 ( version )
+import           System.FilePath
+              as FilePath
+                 ( joinPath
+                 , splitDirectories
+                 )
+import           System.FilePath.Extra
+              as FilePath
+                 ( breadcrumbs )
 import           Text.Hamlet
-import           Web.Cookie                     ( SetCookie(..)
-                                                , def
-                                                , sameSiteStrict
-                                                )
+import           Web.Cookie
+                 ( SetCookie(..)
+                 , def
+                 , sameSiteStrict
+                 )
 import           Yesod
-import           Yesod.EmbeddedStatic           ( EmbeddedStatic
-                                                , mkEmbeddedStatic
-                                                )
+import           Yesod.EmbeddedStatic
+                 ( EmbeddedStatic
+                 , mkEmbeddedStatic
+                 )
 import           Yesod.EmbeddedStatic.Generators
-                                                ( embedDir )
+                 ( embedDir )
 
 mkEmbeddedStatic False "assets" [embedDir "assets"]
 

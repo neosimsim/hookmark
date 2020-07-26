@@ -7,63 +7,88 @@ module Main
   )
 where
 
-import           Control.Applicative            ( (<|>) )
+import           Control.Applicative
+                 ( (<|>) )
 
-import           Control.Exception              ( catch )
-import           Control.Monad                  ( forM_ )
-import qualified Data.ByteString               as BS
-                                                ( putStr )
-import           Data.List                      ( sort )
-import           Data.Maybe                     ( fromJust
-                                                , fromMaybe
-                                                )
-import qualified Data.NonEmptyText             as NonEmptyText
-                                                ( fromText )
-import           Data.Path                      ( toRelativeFilePath )
-import qualified Data.Text                     as Text
-                                                ( pack )
-import qualified Data.Text.Encoding            as Text
-                                                ( encodeUtf8 )
-import qualified Data.Text.IO                  as Text
-                                                ( getContents
-                                                , hPutStrLn
-                                                )
-import           Data.Version                   ( showVersion )
-import           Distribution.Git               ( compileAbbrHash )
-import           Hookmark.IO                    ( BookmarkCriteria(..)
-                                                , HookmarkException(..)
-                                                , loadBookmark
-                                                , loadBookmarks
-                                                , matchesCriteria
-                                                , moveBookmark
-                                                , removeBookmark
-                                                , renameBookmark
-                                                , saveBookmark
-                                                )
-import           Hookmark.Types                 ( BookmarkEntry(..)
-                                                , renderBookmarkEntry
-                                                )
-import           Options                        ( Options(..)
-                                                , parseOptions
-                                                )
-import           Paths_hookmark                 ( version )
-import           System.Directory               ( doesDirectoryExist
-                                                , getHomeDirectory
-                                                , withCurrentDirectory
-                                                )
-import           System.Editor                  ( editFile )
-import           System.Environment             ( lookupEnv )
-import           System.Exit                    ( ExitCode(..)
-                                                , exitWith
-                                                )
-import           System.FilePath                ( joinPath )
-import           System.IO                      ( hPutStrLn
-                                                , stderr
-                                                )
-import           System.IO.Temp                 ( withSystemTempDirectory )
-import           System.Process.Typed           ( proc
-                                                , runProcess
-                                                )
+import           Control.Exception
+                 ( catch )
+import           Control.Monad
+                 ( forM_ )
+import qualified Data.ByteString
+              as BS
+                 ( putStr )
+import           Data.List
+                 ( sort )
+import           Data.Maybe
+                 ( fromJust
+                 , fromMaybe
+                 )
+import qualified Data.NonEmptyText
+              as NonEmptyText
+                 ( fromText )
+import           Data.Path
+                 ( toRelativeFilePath )
+import qualified Data.Text
+              as Text
+                 ( pack )
+import qualified Data.Text.Encoding
+              as Text
+                 ( encodeUtf8 )
+import qualified Data.Text.IO
+              as Text
+                 ( getContents
+                 , hPutStrLn
+                 )
+import           Data.Version
+                 ( showVersion )
+import           Distribution.Git
+                 ( compileAbbrHash )
+import           Hookmark.IO
+                 ( BookmarkCriteria(..)
+                 , HookmarkException(..)
+                 , loadBookmark
+                 , loadBookmarks
+                 , matchesCriteria
+                 , moveBookmark
+                 , removeBookmark
+                 , renameBookmark
+                 , saveBookmark
+                 )
+import           Hookmark.Types
+                 ( BookmarkEntry(..)
+                 , renderBookmarkEntry
+                 )
+import           Options
+                 ( Options(..)
+                 , parseOptions
+                 )
+import           Paths_hookmark
+                 ( version )
+import           System.Directory
+                 ( doesDirectoryExist
+                 , getHomeDirectory
+                 , withCurrentDirectory
+                 )
+import           System.Editor
+                 ( editFile )
+import           System.Environment
+                 ( lookupEnv )
+import           System.Exit
+                 ( ExitCode(..)
+                 , exitWith
+                 )
+import           System.FilePath
+                 ( joinPath )
+import           System.IO
+                 ( hPutStrLn
+                 , stderr
+                 )
+import           System.IO.Temp
+                 ( withSystemTempDirectory )
+import           System.Process.Typed
+                 ( proc
+                 , runProcess
+                 )
 
 main :: IO ()
 main = do

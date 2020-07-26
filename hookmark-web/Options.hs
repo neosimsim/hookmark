@@ -4,24 +4,25 @@ module Options
   )
 where
 
-import           Options.Applicative            ( Parser
-                                                , auto
-                                                , execParser
-                                                , fullDesc
-                                                , header
-                                                , help
-                                                , helper
-                                                , info
-                                                , metavar
-                                                , option
-                                                , optional
-                                                , progDesc
-                                                , short
-                                                , showDefault
-                                                , strOption
-                                                , value
-                                                , (<**>)
-                                                )
+import           Options.Applicative
+                 ( Parser
+                 , auto
+                 , execParser
+                 , fullDesc
+                 , header
+                 , help
+                 , helper
+                 , info
+                 , metavar
+                 , option
+                 , optional
+                 , progDesc
+                 , short
+                 , showDefault
+                 , strOption
+                 , value
+                 , (<**>)
+                 )
 
 data Options
   = Options

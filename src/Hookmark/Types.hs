@@ -9,8 +9,10 @@ module Hookmark.Types
 where
 
 import           Data.NonEmptyText
-import           Data.Text                      ( Text )
-import qualified Data.Text                     as T
+import           Data.Text
+                 ( Text )
+import qualified Data.Text
+              as T
 
 type Tag = NonEmptyText
 

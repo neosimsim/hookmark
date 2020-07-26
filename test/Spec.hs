@@ -1,19 +1,24 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings  #-}
 
-import           Data.List                      ( isPrefixOf
-                                                , sort
-                                                )
-import           Hookmark.IO                    ( BookmarkCriteria(..)
-                                                , matchesCriteria
-                                                )
+import           Data.List
+                 ( isPrefixOf
+                 , sort
+                 )
+import           Hookmark.IO
+                 ( BookmarkCriteria(..)
+                 , matchesCriteria
+                 )
 import           Hookmark.Parser
 import           Hookmark.Types
-import           Hookmark.Types.Arbitrary       ( )
-import           System.FilePath                ( dropDrive
-                                                , (</>)
-                                                )
-import           System.FilePath.Extra          ( breadcrumbs )
+import           Hookmark.Types.Arbitrary
+                 ( )
+import           System.FilePath
+                 ( dropDrive
+                 , (</>)
+                 )
+import           System.FilePath.Extra
+                 ( breadcrumbs )
 import           Test.Hspec
 import           Test.QuickCheck
 

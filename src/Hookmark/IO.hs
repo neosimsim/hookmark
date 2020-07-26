@@ -16,47 +16,60 @@ module Hookmark.IO
   )
 where
 
-import           Control.Exception              ( Exception(..)
-                                                , throw
-                                                )
-import           Control.Monad.Extra            ( ifM
-                                                , whenM
-                                                )
-import           Data.Function                  ( on )
-import           Data.List                      ( isPrefixOf )
-import           Data.Path                      ( toRelativeFilePath )
-import qualified Data.Text                     as Text
-                                                ( unpack )
-import qualified Data.Text.IO                  as Text
-                                                ( readFile
-                                                , writeFile
-                                                )
-import           Git                            ( commitAll
-                                                , isGitRepo
-                                                )
-import           Hookmark.Parser                ( parseBookmarkEntry )
-import           Hookmark.Types                 ( Bookmark
-                                                , BookmarkEntry(..)
-                                                , BookmarkName
-                                                , Tag
-                                                , bookmarkName
-                                                , renderBookmarkEntry
-                                                )
-import           System.Directory               ( createDirectoryIfMissing
-                                                , doesDirectoryExist
-                                                , doesPathExist
-                                                , removeFile
-                                                , renamePath
-                                                , withCurrentDirectory
-                                                )
-import           System.Directory.Extra         ( cleanDirectory
-                                                , listDirectories
-                                                )
-import           System.FilePath                ( splitDirectories
-                                                , takeDirectory
-                                                , takeFileName
-                                                , (</>)
-                                                )
+import           Control.Exception
+                 ( Exception(..)
+                 , throw
+                 )
+import           Control.Monad.Extra
+                 ( ifM
+                 , whenM
+                 )
+import           Data.Function
+                 ( on )
+import           Data.List
+                 ( isPrefixOf )
+import           Data.Path
+                 ( toRelativeFilePath )
+import qualified Data.Text
+              as Text
+                 ( unpack )
+import qualified Data.Text.IO
+              as Text
+                 ( readFile
+                 , writeFile
+                 )
+import           Git
+                 ( commitAll
+                 , isGitRepo
+                 )
+import           Hookmark.Parser
+                 ( parseBookmarkEntry )
+import           Hookmark.Types
+                 ( Bookmark
+                 , BookmarkEntry(..)
+                 , BookmarkName
+                 , Tag
+                 , bookmarkName
+                 , renderBookmarkEntry
+                 )
+import           System.Directory
+                 ( createDirectoryIfMissing
+                 , doesDirectoryExist
+                 , doesPathExist
+                 , removeFile
+                 , renamePath
+                 , withCurrentDirectory
+                 )
+import           System.Directory.Extra
+                 ( cleanDirectory
+                 , listDirectories
+                 )
+import           System.FilePath
+                 ( splitDirectories
+                 , takeDirectory
+                 , takeFileName
+                 , (</>)
+                 )
 
 -- | Save the given bookmark. Existing bookmarks will be overwritten
 saveBookmark :: FilePath -> Bookmark -> IO ()

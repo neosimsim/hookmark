@@ -4,7 +4,8 @@ module Control.Monad.Extra
   )
 where
 
-import           Control.Monad                  ( when )
+import           Control.Monad
+                 ( when )
 
 -- | Monadic version if @if@
 ifM :: (Monad m) => m Bool -> m a -> m a -> m a

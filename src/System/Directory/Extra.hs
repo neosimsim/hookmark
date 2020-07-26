@@ -4,16 +4,20 @@ module System.Directory.Extra
   )
 where
 
-import           Control.Monad                  ( join )
-import           Control.Monad.Extra            ( whenM )
-import           System.Directory               ( doesDirectoryExist
-                                                , doesPathExist
-                                                , listDirectory
-                                                , removeDirectory
-                                                )
-import           System.FilePath                ( joinPath
-                                                , takeDirectory
-                                                )
+import           Control.Monad
+                 ( join )
+import           Control.Monad.Extra
+                 ( whenM )
+import           System.Directory
+                 ( doesDirectoryExist
+                 , doesPathExist
+                 , listDirectory
+                 , removeDirectory
+                 )
+import           System.FilePath
+                 ( joinPath
+                 , takeDirectory
+                 )
 
 cleanDirectory :: FilePath -> IO ()
 cleanDirectory "." = return ()

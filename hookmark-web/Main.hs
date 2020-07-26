@@ -5,16 +5,22 @@ module Main
   )
 where
 
-import           Control.Applicative            ( (<|>) )
-import           Data.Maybe                     ( fromMaybe )
-import           Hookmark.Web                  as Web
-import           Options                        ( Options(..)
-                                                , parseOptions
-                                                )
-import           System.Environment             ( getEnv
-                                                , lookupEnv
-                                                )
-import           System.FilePath                ( (</>) )
+import           Control.Applicative
+                 ( (<|>) )
+import           Data.Maybe
+                 ( fromMaybe )
+import           Hookmark.Web
+              as Web
+import           Options
+                 ( Options(..)
+                 , parseOptions
+                 )
+import           System.Environment
+                 ( getEnv
+                 , lookupEnv
+                 )
+import           System.FilePath
+                 ( (</>) )
 import           Yesod
 
 main :: IO ()

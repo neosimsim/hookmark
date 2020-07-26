@@ -3,7 +3,8 @@ module Options.Types
   )
 where
 
-import           Data.Text                      ( Text )
+import           Data.Text
+                 ( Text )
 
 data Options
   = Version

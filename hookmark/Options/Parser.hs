@@ -8,11 +8,14 @@ where
 
 import           Options.Applicative
 import           Options.Applicative.Help
-                                         hiding ( fullDesc )
+          hiding ( fullDesc )
 import           Options.Applicative.Types
-import           Options.Types                  ( Options(..) )
-import           System.Environment             ( getArgs )
-import           Text.RawString.QQ              ( r )
+import           Options.Types
+                 ( Options(..) )
+import           System.Environment
+                 ( getArgs )
+import           Text.RawString.QQ
+                 ( r )
 
 programDescription :: String
 programDescription = [r|Store, edit and search bookmarks.|]

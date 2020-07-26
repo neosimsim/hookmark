@@ -5,13 +5,18 @@ where
 
 import           Control.Monad
 import           Data.Either.Combinators
-import qualified Data.NonEmptyText             as T
-import           Data.Text                      ( Text )
-import qualified Data.Text                     as T
+import qualified Data.NonEmptyText
+              as T
+import           Data.Text
+                 ( Text )
+import qualified Data.Text
+              as T
 import           Data.Void
 import           Hookmark.Types
-import           Text.Megaparsec               as MP
-import           Text.Megaparsec.Char          as MP
+import           Text.Megaparsec
+              as MP
+import           Text.Megaparsec.Char
+              as MP
 
 parseBookmarkEntry :: Text -> Either Text BookmarkEntry
 parseBookmarkEntry =
