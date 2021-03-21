@@ -17,10 +17,10 @@ import Test.Hspec.Expectations.Process.Typed
 import UnliftIO.Temporary (withSystemTempDirectory)
 
 lookupExecutable :: IO FilePath
-lookupExecutable = return "build/hookmark"
+lookupExecutable = return "dist/build/hookmark/hookmark"
 
 lookupExecutableWeb :: IO FilePath
-lookupExecutableWeb = return "build/hookmark-web"
+lookupExecutableWeb = return "dist/build/hookmark-web/hookmark-web"
 
 main :: IO ()
 main =

@@ -63,7 +63,9 @@ cabal-ghc-8.6.5:
   script:
   - cabal v2-build -f pedantic
   - cabal v2-test -f pedantic test
-  - cabal v2-install -f pedantic --symlink-bindir build exe:hookmark
+  - mkdir -p dist/build
+  - cabal v2-install -f pedantic --symlink-bindir dist/build/hookmark exe:hookmark
+  - cabal v2-install -f pedantic --symlink-bindir dist/build/hookmark-web exe:hookmark-web
   - cabal v2-test -f pedantic regression
 
 check:

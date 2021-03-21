@@ -26,7 +26,9 @@ test: phony
 	cabal v2-run -f pedantic $(CABAL_BUILD_ARGS) test -- $(HSPEC_ARGS)
 
 regression: phony
-	cabal v2-install -f pedantic --installdir build --install-method copy --overwrite-policy always $(CABAL_BUILD_ARGS)
+	mkdir -p dist/build
+	cabal v2-install -f pedantic --installdir dist/build/hookmark --install-method copy --overwrite-policy always $(CABAL_BUILD_ARGS) exe:hookmark
+	cabal v2-install -f pedantic --installdir dist/build/hookmark-web --install-method copy --overwrite-policy always $(CABAL_BUILD_ARGS) exe:hookmark-web
 	cabal v2-run -f pedantic $(CABAL_BUILD_ARGS) regression -- $(HSPEC_ARGS)
 
 yesod: phony tools/yesod
