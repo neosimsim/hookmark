@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE TemplateHaskell   #-}
+{-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 
 module Main
   ( main
