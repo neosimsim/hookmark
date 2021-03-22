@@ -1,7 +1,7 @@
 .POSIX:
 
 CABAL_BUILD_ARGS=
-TOOL_GHC=ghc-8.8.3
+TOOL_GHC=ghc-8.10.4
 
 all:
 	$(MAKE) build
@@ -36,7 +36,7 @@ tools: tools/cabal-fmt tools/yesod tools/stylish-haskell tools/brittany tools/hl
 
 tools/cabal-fmt:
 	mkdir -p tools
-	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy cabal-fmt-0.1.2
+	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy cabal-fmt-0.1.5.1
 
 tools/yesod:
 	mkdir -p tools
@@ -44,19 +44,19 @@ tools/yesod:
 
 tools/stylish-haskell:
 	mkdir -p tools
-	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy stylish-haskell-0.11.0.0
+	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy stylish-haskell-0.12.2.0
 
 tools/brittany:
 	mkdir -p tools
-	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy brittany-0.12.1.1
+	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy brittany-0.13.1.0
 
 tools/hlint:
 	mkdir -p tools
-	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy hlint-3.1.6
+	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy hlint-3.3
 
 tools/refactor:
 	mkdir -p tools
-	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy apply-refact-0.8.1.0
+	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy apply-refact-0.9.2.0
 
 clean: phony
 	rm -rf build tools

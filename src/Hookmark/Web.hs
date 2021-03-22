@@ -9,8 +9,7 @@
 module Hookmark.Web
   ( HookmarkWeb(..)
   , resourcesHookmarkWeb
-  )
-where
+  ) where
 
 import           Data.List                      ( sort )
 import           Data.Maybe                     ( catMaybes )
@@ -94,14 +93,13 @@ myLayout widget = do
                     ^{footer (showVersion version)}
         |]
 
-data BookmarkFormData =
-  BookmarkFormData
-    { bookmarkFormName        :: Text
-    , bookmarkFormUrl         :: Text
-    , bookmarkFormTags        :: [Text]
-    , bookmarkFormDescription :: Maybe Textarea
-    }
-  deriving (Show)
+data BookmarkFormData = BookmarkFormData
+  { bookmarkFormName        :: Text
+  , bookmarkFormUrl         :: Text
+  , bookmarkFormTags        :: [Text]
+  , bookmarkFormDescription :: Maybe Textarea
+  }
+  deriving Show
 
 emptyBookmarkFormData :: BookmarkFormData
 emptyBookmarkFormData = BookmarkFormData { bookmarkFormName        = ""

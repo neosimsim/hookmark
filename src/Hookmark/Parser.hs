@@ -1,7 +1,6 @@
 module Hookmark.Parser
   ( parseBookmarkEntry
-  )
-where
+  ) where
 
 import           Control.Monad
 import           Data.Either.Combinators

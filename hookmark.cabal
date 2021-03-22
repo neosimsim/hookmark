@@ -15,11 +15,11 @@ license:            BSD3
 license-file:       LICENSE
 build-type:         Simple
 extra-source-files:
-  README.md
-  ChangeLog.md
-  templates/*.hamlet
   assets/*.svg
   assets/style.css
+  ChangeLog.md
+  README.md
+  templates/*.hamlet
 
 source-repository head
   type:     git

@@ -1,7 +1,6 @@
 module Options.Types
   ( Options(..)
-  )
-where
+  ) where
 
 import           Data.Text                      ( Text )
 

@@ -5,8 +5,7 @@ module Hookmark.Types
   , bookmarkName
   , BookmarkName
   , renderBookmarkEntry
-  )
-where
+  ) where
 
 import           Data.NonEmptyText
 import           Data.Text                      ( Text )
@@ -21,12 +20,11 @@ type Bookmark = (FilePath, BookmarkEntry)
 bookmarkName :: Bookmark -> FilePath
 bookmarkName = fst
 
-data BookmarkEntry =
-  BookmarkEntry
-    { url         :: Text
-    , tags        :: [Tag]
-    , description :: Text
-    }
+data BookmarkEntry = BookmarkEntry
+  { url         :: Text
+  , tags        :: [Tag]
+  , description :: Text
+  }
   deriving (Show, Eq)
 
 renderBookmarkEntry :: BookmarkEntry -> Text

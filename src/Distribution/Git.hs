@@ -2,8 +2,7 @@
 
 module Distribution.Git
   ( compileAbbrHash
-  )
-where
+  ) where
 
 import           Control.Exception
 import           Git

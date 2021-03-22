@@ -1,8 +1,7 @@
 module Control.Monad.Extra
   ( ifM
   , whenM
-  )
-where
+  ) where
 
 import           Control.Monad                  ( when )
 

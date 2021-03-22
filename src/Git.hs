@@ -1,8 +1,7 @@
 module Git
   ( isGitRepo
   , commitAll
-  )
-where
+  ) where
 
 import qualified Data.ByteString.Lazy.UTF8     as BLU
 import qualified Data.Text                     as Text

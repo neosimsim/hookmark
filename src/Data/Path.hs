@@ -1,7 +1,6 @@
 module Data.Path
   ( toRelativeFilePath
-  )
-where
+  ) where
 
 import           System.FilePath
 

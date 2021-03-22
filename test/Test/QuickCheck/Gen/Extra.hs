@@ -2,8 +2,7 @@ module Test.QuickCheck.Gen.Extra
   ( arbitraryText
   , arbitraryLine
   , arbitraryNonEmptyLine
-  )
-where
+  ) where
 
 import           Data.NonEmptyText              ( NonEmptyText )
 import qualified Data.NonEmptyText             as NonEmptyText

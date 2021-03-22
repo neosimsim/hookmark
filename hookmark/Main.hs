@@ -4,8 +4,7 @@
 
 module Main
   ( main
-  )
-where
+  ) where
 
 import           Control.Applicative            ( (<|>) )
 

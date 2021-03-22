@@ -2,8 +2,7 @@
 
 module Hookmark.IO.Arbitrary
   ( BookmarkCriteria
-  )
-where
+  ) where
 
 import           Hookmark.IO                    ( BookmarkCriteria(..) )
 import           Test.QuickCheck.Gen.Extra      ( arbitraryNonEmptyLine )

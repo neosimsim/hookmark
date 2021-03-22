@@ -1,8 +1,7 @@
 module System.Directory.Extra
   ( listDirectories
   , cleanDirectory
-  )
-where
+  ) where
 
 import           Control.Monad                  ( join )
 import           Control.Monad.Extra            ( whenM )

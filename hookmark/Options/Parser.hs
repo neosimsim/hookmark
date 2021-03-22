@@ -3,8 +3,7 @@
 
 module Options.Parser
   ( parseOptions
-  )
-where
+  ) where
 
 import           Options.Applicative
 import           Options.Applicative.Help

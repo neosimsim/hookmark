@@ -1,7 +1,6 @@
 module System.Editor
   ( editFile
-  )
-where
+  ) where
 
 import           Data.Maybe                     ( fromMaybe )
 import           System.Environment             ( lookupEnv )

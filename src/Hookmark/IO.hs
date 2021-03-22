@@ -13,8 +13,7 @@ module Hookmark.IO
   , renameBookmark
   , loadBookmarks
   , HookmarkException(..)
-  )
-where
+  ) where
 
 import           Control.Exception              ( Exception(..)
                                                 , throw
@@ -52,10 +51,10 @@ import           System.Directory               ( createDirectoryIfMissing
 import           System.Directory.Extra         ( cleanDirectory
                                                 , listDirectories
                                                 )
-import           System.FilePath                ( splitDirectories
+import           System.FilePath                ( (</>)
+                                                , splitDirectories
                                                 , takeDirectory
                                                 , takeFileName
-                                                , (</>)
                                                 )
 
 -- | Save the given bookmark. Existing bookmarks will be overwritten
@@ -80,12 +79,11 @@ removeBookmark baseDir name = withCurrentDirectory baseDir $ do
   cleanDirectory $ takeDirectory name
   whenM (isGitRepo ".git") (commitAll $ "remove " ++ name)
 
-data BookmarkCriteria =
-  BookmarkCriteria
-    { criteriaBookmarkName :: Maybe FilePath -- ^ name of a bookmark or subtree
-    , criteriaTags         :: Maybe [Tag]
-    }
-  deriving (Show)
+data BookmarkCriteria = BookmarkCriteria
+  { criteriaBookmarkName :: Maybe FilePath -- ^ name of a bookmark or subtree
+  , criteriaTags         :: Maybe [Tag]
+  }
+  deriving Show
 
 matchesCriteria :: BookmarkCriteria -> Bookmark -> Bool
 matchesCriteria BookmarkCriteria {..} (name, BookmarkEntry {..}) =

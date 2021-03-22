@@ -1,10 +1,10 @@
 module Options
   ( Options(..)
   , parseOptions
-  )
-where
+  ) where
 
-import           Options.Applicative            ( Parser
+import           Options.Applicative            ( (<**>)
+                                                , Parser
                                                 , auto
                                                 , execParser
                                                 , fullDesc
@@ -20,14 +20,12 @@ import           Options.Applicative            ( Parser
                                                 , showDefault
                                                 , strOption
                                                 , value
-                                                , (<**>)
                                                 )
 
-data Options =
-  Options
-    { hookmarkWebPort    :: Int
-    , hookmarkWebBaseDir :: Maybe FilePath
-    }
+data Options = Options
+  { hookmarkWebPort    :: Int
+  , hookmarkWebBaseDir :: Maybe FilePath
+  }
 
 parseOptions :: IO Options
 parseOptions = execParser $ info

@@ -2,8 +2,7 @@
 
 module Hookmark.Types.Arbitrary
   ( BookmarkEntry
-  )
-where
+  ) where
 
 import           Hookmark.Types                 ( BookmarkEntry(..) )
 import           Test.QuickCheck                ( Arbitrary(..)

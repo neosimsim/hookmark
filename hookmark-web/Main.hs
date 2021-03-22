@@ -2,8 +2,7 @@
 
 module Main
   ( main
-  )
-where
+  ) where
 
 import           Control.Applicative            ( (<|>) )
 import           Data.Maybe                     ( fromMaybe )
