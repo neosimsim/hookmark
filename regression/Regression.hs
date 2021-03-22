@@ -399,7 +399,7 @@ withTempHookmarks nameTemplate action =
     Env.setEnv "HOOKMARKHOME" testmarksPath
     createPhonyGitRepo testmarksPath
     cwd <- getCurrentDirectory
-    Env.setEnv "PATH" $ (cwd </> "regression") ++ ":/bin:/usr/bin"
+    Env.getEnv "PATH" >>= Env.setEnv "PATH" . ((cwd </> "regression:") ++)
     let gitlog = baseDir </> "git.log"
     Env.setEnv "GITLOG" gitlog
     Env.setEnv "EDITOR" "tee"
