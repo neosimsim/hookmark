@@ -76,12 +76,6 @@ cabal-ghc-8.6.5:
   - cabal v2-install -f pedantic --symlink-bindir dist/build/hookmark-web exe:hookmark-web
   - cabal v2-test -f pedantic regression
 
-check:
-  <<: *cabal_job
-  image: neosimsim/ghc:8.8.3
-  script:
-  - make check
-
 release:
   stage: deploy
   only:
