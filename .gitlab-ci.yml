@@ -31,6 +31,14 @@ linux-x86_64:
     - linux-x86_64/hookmark-web
     expire_in: 1 week
 
+image: nixos/nix:latest
+
+nix:
+  stage: build
+  image: nixos/nix:latest
+  script:
+  - nix-build default.nix
+
 .cabal: &cabal_job
   stage: build
   before_script:
