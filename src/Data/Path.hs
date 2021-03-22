@@ -1,8 +1,9 @@
 module Data.Path
-  ( toRelativeFilePath
-  ) where
+  ( toRelativeFilePath,
+  )
+where
 
-import           System.FilePath
+import System.FilePath
 
 toRelativeFilePath :: FilePath -> FilePath
 toRelativeFilePath "/" = "."

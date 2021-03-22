@@ -1,17 +1,17 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PackageImports    #-}
+{-# LANGUAGE PackageImports #-}
 
-import           Control.Concurrent                   (threadDelay)
-import           Control.Concurrent.Async             (race_)
-import           "hookmark" Hookmark.Web              (HookmarkWeb (..))
-import           Network.HTTP.Types
-import           Network.Wai
-import           Network.Wai.Handler.Warp
-import           Network.Wai.Middleware.RequestLogger
-import           System.Directory                     (doesFileExist)
-import           System.Environment
-import           System.FilePath
-import           Yesod
+import Control.Concurrent (threadDelay)
+import Control.Concurrent.Async (race_)
+import "hookmark" Hookmark.Web (HookmarkWeb (..))
+import Network.HTTP.Types
+import Network.Wai
+import Network.Wai.Handler.Warp
+import Network.Wai.Middleware.RequestLogger
+import System.Directory (doesFileExist)
+import System.Environment
+import System.FilePath
+import Yesod
 
 main :: IO ()
 main = develMain

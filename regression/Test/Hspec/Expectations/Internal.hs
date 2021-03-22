@@ -1,13 +1,14 @@
 module Test.Hspec.Expectations.Internal
-  ( diff
-  ) where
+  ( diff,
+  )
+where
 
-import           Data.Algorithm.Diff
-import           Data.Function       (on)
+import Data.Algorithm.Diff
+import Data.Function (on)
 
 diff :: String -> String -> String
 diff x y = unlines $ addSign <$> (getDiff `on` lines) x y
   where
     addSign (Both _ s) = "   " ++ s
-    addSign (First s)  = "---" ++ s
+    addSign (First s) = "---" ++ s
     addSign (Second s) = "+++" ++ s

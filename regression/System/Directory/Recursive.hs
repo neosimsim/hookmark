@@ -1,11 +1,12 @@
 module System.Directory.Recursive
-  ( copyDir
-  ) where
+  ( copyDir,
+  )
+where
 
-import           Control.Exception (throw)
-import           Control.Monad     (forM_, when)
-import           System.Directory
-import           System.FilePath   ((</>))
+import Control.Exception (throw)
+import Control.Monad (forM_, when)
+import System.Directory
+import System.FilePath ((</>))
 
 copyDir :: FilePath -> FilePath -> IO ()
 copyDir src dst = do

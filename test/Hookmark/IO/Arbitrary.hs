@@ -1,16 +1,17 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Hookmark.IO.Arbitrary
-  ( BookmarkCriteria
-  ) where
+  ( BookmarkCriteria,
+  )
+where
 
-import           Hookmark.IO                    ( BookmarkCriteria(..) )
-import           Test.QuickCheck.Gen.Extra      ( arbitraryNonEmptyLine )
-
-import           Test.QuickCheck                ( Arbitrary(..)
-                                                , listOf
-                                                , oneof
-                                                )
+import Hookmark.IO (BookmarkCriteria (..))
+import Test.QuickCheck
+  ( Arbitrary (..),
+    listOf,
+    oneof,
+  )
+import Test.QuickCheck.Gen.Extra (arbitraryNonEmptyLine)
 
 instance Arbitrary BookmarkCriteria where
   arbitrary = do

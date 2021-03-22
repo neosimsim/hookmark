@@ -1,7 +1,8 @@
 module Options
-  ( module Options.Types
-  , module Options.Parser
-  ) where
+  ( module Options.Types,
+    module Options.Parser,
+  )
+where
 
-import           Options.Parser
-import           Options.Types
+import Options.Parser
+import Options.Types

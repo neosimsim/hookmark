@@ -1,9 +1,10 @@
 module Control.Monad.Extra
-  ( ifM
-  , whenM
-  ) where
+  ( ifM,
+    whenM,
+  )
+where
 
-import           Control.Monad                  ( when )
+import Control.Monad (when)
 
 -- | Monadic version if @if@
 ifM :: (Monad m) => m Bool -> m a -> m a -> m a

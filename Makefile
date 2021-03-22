@@ -8,13 +8,13 @@ all:
 	$(MAKE) test
 	$(MAKE) regression
 
-check: phony tools/cabal-fmt tools/brittany tools/stylish-haskell tools/hlint tools/refactor
+check: phony tools/cabal-fmt tools/ormolu tools/hlint tools/refactor
 	cabal check
 	tools/cabal-fmt hookmark.cabal | diff hookmark.cabal -
 	PATH=tools:$$PATH ./misc/hlintCheck src test hookmark hookmark-web
 	PATH=tools:$$PATH ./misc/formatCheck src test hookmark hookmark-web
 
-check-apply: phony tools/cabal-fmt tools/brittany tools/stylish-haskell tools/hlint tools/refactor
+check-apply: phony tools/cabal-fmt tools/ormolu tools/hlint tools/refactor
 	tools/cabal-fmt -i hookmark.cabal
 	PATH=tools:$$PATH ./misc/hlintApply src test hookmark hookmark-web
 	PATH=tools:$$PATH ./misc/formatApply src test hookmark hookmark-web
@@ -32,7 +32,7 @@ regression: phony
 yesod: phony tools/yesod
 	tools/yesod devel
 
-tools: tools/cabal-fmt tools/yesod tools/stylish-haskell tools/brittany tools/hlint tools/refactor
+tools: tools/cabal-fmt tools/yesod tools/ormolu tools/hlint tools/refactor
 
 tools/cabal-fmt:
 	mkdir -p tools
@@ -42,13 +42,9 @@ tools/yesod:
 	mkdir -p tools
 	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy yesod-bin
 
-tools/stylish-haskell:
+tools/ormolu:
 	mkdir -p tools
-	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy stylish-haskell-0.12.2.0
-
-tools/brittany:
-	mkdir -p tools
-	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy brittany-0.13.1.0
+	cd tools && cabal v2-install --ghc-options -j6 -w $(TOOL_GHC) --installdir . --install-method copy ormolu-0.1.4.1
 
 tools/hlint:
 	mkdir -p tools

@@ -1,61 +1,70 @@
-{-# LANGUAGE DerivingStrategies         #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE RecordWildCards            #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Hookmark.IO
-  ( BookmarkCriteria(..)
-  , saveBookmark
-  , removeBookmark
-  , loadBookmark
-  , matchesCriteria
-  , moveBookmark
-  , renameBookmark
-  , loadBookmarks
-  , HookmarkException(..)
-  ) where
+  ( BookmarkCriteria (..),
+    saveBookmark,
+    removeBookmark,
+    loadBookmark,
+    matchesCriteria,
+    moveBookmark,
+    renameBookmark,
+    loadBookmarks,
+    HookmarkException (..),
+  )
+where
 
-import           Control.Exception              ( Exception(..)
-                                                , throw
-                                                )
-import           Control.Monad.Extra            ( ifM
-                                                , whenM
-                                                )
-import           Data.Function                  ( on )
-import           Data.List                      ( isPrefixOf )
-import           Data.Path                      ( toRelativeFilePath )
-import qualified Data.Text                     as Text
-                                                ( unpack )
-import qualified Data.Text.IO                  as Text
-                                                ( readFile
-                                                , writeFile
-                                                )
-import           Git                            ( commitAll
-                                                , isGitRepo
-                                                )
-import           Hookmark.Parser                ( parseBookmarkEntry )
-import           Hookmark.Types                 ( Bookmark
-                                                , BookmarkEntry(..)
-                                                , BookmarkName
-                                                , Tag
-                                                , bookmarkName
-                                                , renderBookmarkEntry
-                                                )
-import           System.Directory               ( createDirectoryIfMissing
-                                                , doesDirectoryExist
-                                                , doesPathExist
-                                                , removeFile
-                                                , renamePath
-                                                , withCurrentDirectory
-                                                )
-import           System.Directory.Extra         ( cleanDirectory
-                                                , listDirectories
-                                                )
-import           System.FilePath                ( (</>)
-                                                , splitDirectories
-                                                , takeDirectory
-                                                , takeFileName
-                                                )
+import Control.Exception
+  ( Exception (..),
+    throw,
+  )
+import Control.Monad.Extra
+  ( ifM,
+    whenM,
+  )
+import Data.Function (on)
+import Data.List (isPrefixOf)
+import Data.Path (toRelativeFilePath)
+import qualified Data.Text as Text
+  ( unpack,
+  )
+import qualified Data.Text.IO as Text
+  ( readFile,
+    writeFile,
+  )
+import Git
+  ( commitAll,
+    isGitRepo,
+  )
+import Hookmark.Parser (parseBookmarkEntry)
+import Hookmark.Types
+  ( Bookmark,
+    BookmarkEntry (..),
+    BookmarkName,
+    Tag,
+    bookmarkName,
+    renderBookmarkEntry,
+  )
+import System.Directory
+  ( createDirectoryIfMissing,
+    doesDirectoryExist,
+    doesPathExist,
+    removeFile,
+    renamePath,
+    withCurrentDirectory,
+  )
+import System.Directory.Extra
+  ( cleanDirectory,
+    listDirectories,
+  )
+import System.FilePath
+  ( splitDirectories,
+    takeDirectory,
+    takeFileName,
+    (</>),
+  )
 
 -- | Save the given bookmark. Existing bookmarks will be overwritten
 saveBookmark :: FilePath -> Bookmark -> IO ()
@@ -68,9 +77,9 @@ saveBookmark baseDir bookmark = do
     Text.writeFile path . renderBookmarkEntry $ snd bookmark
     whenM
       (isGitRepo ".git")
-      (  commitAll
-      $  (if bookmarksExists then "edit " else "add ")
-      ++ bookmarkName bookmark
+      ( commitAll $
+          (if bookmarksExists then "edit " else "add ")
+            ++ bookmarkName bookmark
       )
 
 removeBookmark :: FilePath -> BookmarkName -> IO ()
@@ -80,27 +89,28 @@ removeBookmark baseDir name = withCurrentDirectory baseDir $ do
   whenM (isGitRepo ".git") (commitAll $ "remove " ++ name)
 
 data BookmarkCriteria = BookmarkCriteria
-  { criteriaBookmarkName :: Maybe FilePath -- ^ name of a bookmark or subtree
-  , criteriaTags         :: Maybe [Tag]
+  { -- | name of a bookmark or subtree
+    criteriaBookmarkName :: Maybe FilePath,
+    criteriaTags :: Maybe [Tag]
   }
-  deriving Show
+  deriving (Show)
 
 matchesCriteria :: BookmarkCriteria -> Bookmark -> Bool
 matchesCriteria BookmarkCriteria {..} (name, BookmarkEntry {..}) =
   nameMatches && tagsMatches
- where
-  sublist :: (Traversable t, Eq a) => t a -> t a -> Bool
-  sublist xs ys = all (`elem` ys) xs
-  nameMatches :: Bool
-  nameMatches = case criteriaBookmarkName of
-    Nothing -> True
-    Just x ->
-      let isPathPrefixOf = isPrefixOf `on` splitDirectories
-      in  x `isPathPrefixOf` name
-  tagsMatches :: Bool
-  tagsMatches = case criteriaTags of
-    Nothing -> True
-    Just x  -> x `sublist` tags
+  where
+    sublist :: (Traversable t, Eq a) => t a -> t a -> Bool
+    sublist xs ys = all (`elem` ys) xs
+    nameMatches :: Bool
+    nameMatches = case criteriaBookmarkName of
+      Nothing -> True
+      Just x ->
+        let isPathPrefixOf = isPrefixOf `on` splitDirectories
+         in x `isPathPrefixOf` name
+    tagsMatches :: Bool
+    tagsMatches = case criteriaTags of
+      Nothing -> True
+      Just x -> x `sublist` tags
 
 -- | Rename a bookmark. Overwrites exist destination. The destination
 -- path will be created if not present.
@@ -110,78 +120,85 @@ renameBookmark baseDir oldName' newName' = do
   let newName = toRelativeFilePath newName'
   withCurrentDirectory baseDir $
     -- TODO error message if destination is an existing directory
-                                 do
-    createParent newName
-    renamePath oldName newName
-    cleanDirectory $ takeDirectory oldName
-    whenM (isGitRepo ".git")
-          (commitAll $ "move " ++ oldName ++ " to " ++ newName)
-  where createParent = createDirectoryIfMissing True . takeDirectory
+    do
+      createParent newName
+      renamePath oldName newName
+      cleanDirectory $ takeDirectory oldName
+      whenM
+        (isGitRepo ".git")
+        (commitAll $ "move " ++ oldName ++ " to " ++ newName)
+  where
+    createParent = createDirectoryIfMissing True . takeDirectory
 
 -- cannot just remove and add again, because of the history
+
 -- | Move a bookmark into a bookmark directory. The directory
 -- will be created if not present already.
 moveBookmark :: FilePath -> BookmarkName -> BookmarkName -> IO ()
 moveBookmark baseDir oldName' newParent' = do
-  let oldName   = toRelativeFilePath oldName'
+  let oldName = toRelativeFilePath oldName'
   let newParent = toRelativeFilePath newParent'
   withCurrentDirectory baseDir $ do
-    whenM (not <$> doesPathExist oldName)
-      $ throw (HookmarkException $ "not found " ++ oldName)
+    whenM (not <$> doesPathExist oldName) $
+      throw (HookmarkException $ "not found " ++ oldName)
     -- TODO error message if destination is an existing file
     createDirectoryIfMissing True newParent
     movePath oldName newParent
     cleanDirectory $ takeDirectory oldName
-    whenM (isGitRepo ".git")
-          (commitAll $ "move " ++ oldName ++ " to " ++ newParent)
+    whenM
+      (isGitRepo ".git")
+      (commitAll $ "move " ++ oldName ++ " to " ++ newParent)
 
 movePath :: FilePath -> FilePath -> IO ()
 movePath oldName' directory' = do
-  let oldName   = toRelativeFilePath oldName'
+  let oldName = toRelativeFilePath oldName'
   let directory = toRelativeFilePath directory'
-  ifM (not <$> doesDirectoryExist directory)
-      (fail $ directory ++ " is no directory")
-      (renamePath oldName (directory </> takeFileName oldName))
+  ifM
+    (not <$> doesDirectoryExist directory)
+    (fail $ directory ++ " is no directory")
+    (renamePath oldName (directory </> takeFileName oldName))
 
 loadBookmarks :: FilePath -> IO [Bookmark]
-loadBookmarks baseDir = ifM
-  (doesDirectoryExist baseDir)
-  (   withCurrentDirectory baseDir
-  $   listDirectories "."
-  >>= mapM readBookmark
-  .   sanitizePathList
-  )
-  (return [])
- where
-  readBookmark :: FilePath -> IO Bookmark
-  readBookmark name = do
-    parsed <- parseBookmarkEntry <$> Text.readFile name
-    case parsed of
-      Right entry -> return (name, entry)
-      Left  err   -> fail $ Text.unpack err
-  sanitizePathList :: [FilePath] -> [FilePath]
-  sanitizePathList = dropGitDir . dropCurrentPathPrefix
-  -- | drop "./"
-  dropCurrentPathPrefix :: [FilePath] -> [FilePath]
-  dropCurrentPathPrefix = fmap (drop 2)
-  dropGitDir :: [FilePath] -> [FilePath]
-  dropGitDir = filter $ (/= ".git") . take 4
+loadBookmarks baseDir =
+  ifM
+    (doesDirectoryExist baseDir)
+    ( withCurrentDirectory baseDir $
+        listDirectories "."
+          >>= mapM readBookmark
+            . sanitizePathList
+    )
+    (return [])
+  where
+    readBookmark :: FilePath -> IO Bookmark
+    readBookmark name = do
+      parsed <- parseBookmarkEntry <$> Text.readFile name
+      case parsed of
+        Right entry -> return (name, entry)
+        Left err -> fail $ Text.unpack err
+    sanitizePathList :: [FilePath] -> [FilePath]
+    sanitizePathList = dropGitDir . dropCurrentPathPrefix
+
+    dropCurrentPathPrefix :: [FilePath] -> [FilePath]
+    dropCurrentPathPrefix = fmap (drop 2)
+    dropGitDir :: [FilePath] -> [FilePath]
+    dropGitDir = filter $ (/= ".git") . take 4
 
 loadBookmark :: FilePath -> BookmarkName -> IO Bookmark
 loadBookmark baseDir name' = do
   let name = toRelativeFilePath name'
-  let criteria = BookmarkCriteria { criteriaBookmarkName = Just name
-                                  , criteriaTags         = Nothing
-                                  }
+  let criteria =
+        BookmarkCriteria
+          { criteriaBookmarkName = Just name,
+            criteriaTags = Nothing
+          }
   bookmarks <- filter (matchesCriteria criteria) <$> loadBookmarks baseDir
   case bookmarks of
     [bookmark] -> return bookmark
-    _          -> throw $ HookmarkException $ name ++ " not found"
+    _ -> throw $ HookmarkException $ name ++ " not found"
 
-newtype HookmarkException =
-  HookmarkException
-    { fromHookmarkException :: String
-    }
+newtype HookmarkException = HookmarkException
+  { fromHookmarkException :: String
+  }
   deriving newtype (Show)
 
 instance Exception HookmarkException
