@@ -1,8 +1,8 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "default" }:
+{ nixpkgs ? import <nixpkgs> {}, ghc ? "default" }:
 let
-  hsPkgs = with nixpkgs.pkgs; if compiler == "default" then haskellPackages else haskell.packages.${compiler};
+  hsPkgs = with nixpkgs.pkgs; if ghc == "default" then haskellPackages else haskell.packages.${ghc};
 in
-  (hsPkgs.callCabal2nix "hookmark" ./. {}).overrideAttrs (oldAttr: {
+  (hsPkgs.callCabal2nixWithOptions "hookmark" ./. "-fpedantic" {}).overrideAttrs (oldAttr: {
     checkInputs = with nixpkgs.haskellPackages; [
       cabal-fmt
       cabal-install
