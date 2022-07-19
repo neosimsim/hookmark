@@ -1,11 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
+import Control.Monad (filterM)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.UTF8 as BU
 import Data.FileEmbed
+import Data.Function
+import Data.Functor
 import qualified Data.String as String (fromString)
 import System.Directory
+import System.Directory.Extra (listFilesRecursive)
 import System.Directory.Recursive
 import System.Environment as Env
 import System.Exit
@@ -16,17 +20,28 @@ import Test.Hspec.Expectations.Diff
 import Test.Hspec.Expectations.Process.Typed
 import UnliftIO.Temporary (withSystemTempDirectory)
 
-lookupExecutable :: IO FilePath
-lookupExecutable = return "dist/build/hookmark/hookmark"
+isExecutable :: FilePath -> IO Bool
+isExecutable filePath = filePath & getPermissions <&> executable
+
+lookupExecutable :: FilePath -> IO FilePath
+lookupExecutable name = do
+  executables <-
+    listFilesRecursive "."
+      >>= filterM isExecutable
+      <&> filter ((==) name . takeBaseName)
+  case executables of
+    [executable] -> return executable
+    [] -> error $ "no executable found:" ++ name
+    _ -> error $ "ambigious executable:" ++ unwords executables
 
 lookupExecutableWeb :: IO FilePath
-lookupExecutableWeb = return "dist/build/hookmark-web/hookmark-web"
+lookupExecutableWeb = return "dist-newstyle/build/aarch64-osx/ghc-9.0.2/hookmark-1.4/x/hookmark-web/build/hookmark-web/hookmark-web"
 
 main :: IO ()
 main =
   hspec $ do
     describe "hookmark" $
-      beforeAll lookupExecutable $ do
+      beforeAll (lookupExecutable "hookmark") $ do
         describe "help" $ do
           it "should print expected output" $ \cmd ->
             proc cmd ["--help"]
@@ -404,7 +419,7 @@ main =
               (proc cmd . words $ "show")
                 `shouldExit` (ExitSuccess, $(embedFile "regression/git_show.out"), "")
     describe "hookmark-web" $
-      beforeAll lookupExecutableWeb $
+      beforeAll (lookupExecutable "hookmark-web") $
         describe "help" $
           it "should print expected output" $ \cmd ->
             proc cmd ["--help"]
