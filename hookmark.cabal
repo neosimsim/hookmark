@@ -162,6 +162,7 @@ test-suite regression
     , Diff
     , directory
     , either
+    , extra
     , file-embed
     , filepath
     , hspec
