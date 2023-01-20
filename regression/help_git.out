@@ -1,4 +1,5 @@
 Usage: hookmark git [-b ARG] GITCMD [GITARGS]
+
   Invoke git within hookmark directory
 
 Available options:

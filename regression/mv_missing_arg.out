@@ -1,4 +1,5 @@
 Missing: source... dest
 
 Usage: hookmark mv [-b ARG] source... dest
+
   Move bookmark

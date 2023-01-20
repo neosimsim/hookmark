@@ -1,4 +1,5 @@
 Usage: hookmark show [-b ARG] [-t|--tag ARG] [name]
+
   Show or search bookmark
 
 Available options:

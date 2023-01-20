@@ -1,4 +1,5 @@
 Usage: hookmark add [-b ARG] [-t|--tag ARG] [-d] name url
+
   Add bookmark
 
 Available options:

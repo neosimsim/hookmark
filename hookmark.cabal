@@ -1,6 +1,6 @@
 cabal-version:      1.12
 name:               hookmark
-version:            1.4
+version:            1.4.0.1
 synopsis:           Browser independent bookmark manager
 description:
   Please see the README on GitHub at <https://github.com/neosimsim/hookmark#readme>

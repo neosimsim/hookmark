@@ -1,4 +1,5 @@
 Usage: hookmark mv [-b ARG] source... dest
+
   Move bookmark
 
 Available options:

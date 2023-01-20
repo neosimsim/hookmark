@@ -1,6 +1,7 @@
 hookmark web — browser independent bookmarking
 
 Usage: hookmark-web [-p PORT] [-b BASEDIR]
+
   Store, edit and search bookmarks.
 
 Available options:

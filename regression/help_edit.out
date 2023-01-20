@@ -1,4 +1,5 @@
 Usage: hookmark edit [-b ARG] name
+
   Edit bookmark
 
 Available options:

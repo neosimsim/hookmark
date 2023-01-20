@@ -8,7 +8,7 @@
 }:
 mkDerivation {
   pname = "hookmark";
-  version = "1.4";
+  version = "1.4.0.1";
   src = ./.;
   isLibrary = true;
   isExecutable = true;

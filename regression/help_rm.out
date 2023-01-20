@@ -1,4 +1,5 @@
 Usage: hookmark rm [-b ARG] name
+
   Remove bookmark
 
 Available options:

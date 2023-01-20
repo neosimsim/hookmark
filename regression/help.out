@@ -1,6 +1,7 @@
 hookmark — browser independent bookmarking
 
 Usage: hookmark [COMMAND]
+
   Store, edit and search bookmarks.
 
 Available options:
