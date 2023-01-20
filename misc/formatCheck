@@ -1,15 +1,14 @@
 #!/bin/sh -e
 
-format() {
-	ormolu
-}
+set -o pipefail
 
 hsfiles=`find "$@" -name '*.hs' -or -name '*.lhs'`
 unformattedFiles=
 
 for hsfile in $hsfiles
 do
-	if ! cat $hsfile | format | diff $hsfile -
+        # use `diff` instead of `ormolu check` because ormolu does exit 0 any case
+	if ! ormolu $hsfile | diff $hsfile -
 	then
 		unformattedFiles="$unformattedFiles $hsfile"
 	fi
