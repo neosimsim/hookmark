@@ -3,7 +3,7 @@ Usage: hookmark git [-b ARG] GITCMD [GITARGS]
 
 Available options:
   -b ARG                   Base directory to lookup bookmarks in. Default
-                           $HOOKMARKHOME or $HOME/.hookmarkhome if unset
+                           $HOOKMARKHOME or $HOME/.hookmarks if unset
   GITCMD                   git subcommand to invoke
   GITARGS                  Arguments to be passed to GITCMD
   -h,--help                Show this help text

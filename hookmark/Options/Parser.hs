@@ -12,6 +12,10 @@ import Options.Applicative.Help hiding
   )
 import Options.Applicative.Types
 import Options.Types (Options (..))
+import System.Directory.Extra
+  ( listFilesRecursive,
+    withCurrentDirectory,
+  )
 import System.Environment (getArgs)
 import Text.RawString.QQ (r)
 
@@ -67,7 +71,7 @@ addParser =
       ( strOption
           ( short 'b'
               <> help
-                "Base directory to store bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"
+                "Base directory to store bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarks if unset"
           )
       )
     <*> many
@@ -92,7 +96,7 @@ showParser =
       ( strOption
           ( short 'b'
               <> help
-                "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"
+                "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarks if unset"
           )
       )
     <*> many
@@ -107,6 +111,8 @@ showParser =
           ( metavar "name"
               <> help
                 "Name of the bookmark, can contain '/' to build hierarchies"
+              --              <> completer (listIOCompleter $ catch (listDirectory "/home/neosimsim/.hookmarks") (\_ -> return []))
+              <> completer (listIOCompleter . withCurrentDirectory "/home/neosimsim/.hookmarks" $ drop 2 <$> listFilesRecursive ".")
           )
       )
 
@@ -117,7 +123,7 @@ editParser =
       ( strOption
           ( short 'b'
               <> help
-                "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"
+                "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarks if unset"
           )
       )
     <*> strArgument
@@ -133,7 +139,7 @@ removeParser =
       ( strOption
           ( short 'b'
               <> help
-                "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"
+                "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarks if unset"
           )
       )
     <*> strArgument (metavar "name" <> help "Name of the bookmark to delete")
@@ -148,7 +154,7 @@ moveParser = applyInit <$> p <*> some (strArgument (metavar "source... dest"))
           ( strOption
               ( short 'b'
                   <> help
-                    "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"
+                    "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarks if unset"
               )
           )
 
@@ -159,7 +165,7 @@ gitParser =
       ( strOption
           ( short 'b'
               <> help
-                "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarkhome if unset"
+                "Base directory to lookup bookmarks in. Default $HOOKMARKHOME or $HOME/.hookmarks if unset"
           )
       )
     <*> pure "git"

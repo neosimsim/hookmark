@@ -3,7 +3,7 @@ Usage: hookmark show [-b ARG] [-t|--tag ARG] [name]
 
 Available options:
   -b ARG                   Base directory to lookup bookmarks in. Default
-                           $HOOKMARKHOME or $HOME/.hookmarkhome if unset
+                           $HOOKMARKHOME or $HOME/.hookmarks if unset
   -t,--tag ARG             Bookmark tag, can be used multiple times
   name                     Name of the bookmark, can contain '/' to build
                            hierarchies

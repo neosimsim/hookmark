@@ -6,16 +6,8 @@ where
 
 import qualified Data.ByteString.Lazy.UTF8 as BLU
 import qualified Data.Text as Text
-  ( pack,
-  )
 import qualified Data.Text.IO as Text
-  ( hPutStrLn,
-  )
 import System.Directory
-  ( doesDirectoryExist,
-    doesFileExist,
-    withCurrentDirectory,
-  )
 import System.Exit
   ( ExitCode (..),
     exitWith,

@@ -3,5 +3,5 @@ Usage: hookmark mv [-b ARG] source... dest
 
 Available options:
   -b ARG                   Base directory to lookup bookmarks in. Default
-                           $HOOKMARKHOME or $HOME/.hookmarkhome if unset
+                           $HOOKMARKHOME or $HOME/.hookmarks if unset
   -h,--help                Show this help text

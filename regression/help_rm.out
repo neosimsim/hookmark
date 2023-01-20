@@ -3,6 +3,6 @@ Usage: hookmark rm [-b ARG] name
 
 Available options:
   -b ARG                   Base directory to lookup bookmarks in. Default
-                           $HOOKMARKHOME or $HOME/.hookmarkhome if unset
+                           $HOOKMARKHOME or $HOME/.hookmarks if unset
   name                     Name of the bookmark to delete
   -h,--help                Show this help text
