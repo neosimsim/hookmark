@@ -71,8 +71,8 @@ main :: IO ()
 main = hspec $ do
   describe
     "Hookmark.Parser.parseBookmarkEntry/Hookmark.Types.renderBookmarkEntry"
-    $ it "parses rendered data the same" $
-      property prop_renderAndParserAreInverse
+    $ it "parses rendered data the same"
+    $ property prop_renderAndParserAreInverse
   describe "Hookmark.IO.matchesCriteria" $ do
     it "bookmarks should match themselve" $ property prop_bookmarkMatchesItself
     it "bookmarks should match sublist of tags" $

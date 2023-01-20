@@ -23,7 +23,8 @@ parseOptions =
   eP $
     info
       (optionsParser <**> helper)
-      ( fullDesc <> progDesc programDescription
+      ( fullDesc
+          <> progDesc programDescription
           <> header
             "hookmark — browser independent bookmarking"
       )
@@ -72,7 +73,8 @@ addParser =
       )
     <*> many
       ( strOption
-          ( long "tag" <> short 't'
+          ( long "tag"
+              <> short 't'
               <> help
                 "Bookmark tag, can be used multiple times"
           )
@@ -97,7 +99,8 @@ showParser =
       )
     <*> many
       ( strOption
-          ( long "tag" <> short 't'
+          ( long "tag"
+              <> short 't'
               <> help
                 "Bookmark tag, can be used multiple times"
           )

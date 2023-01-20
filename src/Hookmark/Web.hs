@@ -13,7 +13,7 @@ module Hookmark.Web
 where
 
 import Data.List (sort)
-import Data.Maybe (catMaybes)
+import Data.Maybe (catMaybes, mapMaybe)
 import qualified Data.NonEmptyText as NonEmptyText
   ( fromText,
     toText,
@@ -129,7 +129,7 @@ formDataToBookmark BookmarkFormData {..} =
   ( Text.unpack bookmarkFormName,
     BookmarkEntry
       { url = bookmarkFormUrl,
-        tags = catMaybes $ NonEmptyText.fromText <$> bookmarkFormTags,
+        tags = mapMaybe NonEmptyText.fromText bookmarkFormTags,
         description = maybe "" unTextarea bookmarkFormDescription
       }
   )
@@ -159,10 +159,9 @@ getListR paths = do
   let path = FilePath.joinPath paths
   getParams <- reqGetParams <$> getRequest
   let tags =
-        catMaybes $
-          NonEmptyText.fromText
-            . snd
-            <$> filter ((== "tag") . fst) getParams
+        mapMaybe
+          (NonEmptyText.fromText . snd)
+          (filter ((== "tag") . fst) getParams)
   let criteria =
         BookmarkCriteria
           { criteriaBookmarkName = if null path then Nothing else Just path,

@@ -34,7 +34,8 @@ parseOptions =
   execParser $
     info
       (optionsParser <**> helper)
-      ( fullDesc <> progDesc "Store, edit and search bookmarks."
+      ( fullDesc
+          <> progDesc "Store, edit and search bookmarks."
           <> header
             "hookmark web — browser independent bookmarking"
       )
@@ -44,7 +45,10 @@ optionsParser =
   Options
     <$> option
       auto
-      ( short 'p' <> value 8080 <> showDefault <> metavar "PORT"
+      ( short 'p'
+          <> value 8080
+          <> showDefault
+          <> metavar "PORT"
           <> help
             "Port to listen to."
       )
