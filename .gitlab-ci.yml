@@ -1,89 +1,14 @@
 stages:
 - build
-- deploy
-
-variables:
-  STACK_ROOT: "$CI_PROJECT_DIR/.cache/stack"
-
-cache:
-  key: "$CI_JOB_NAME"
-  paths:
-  - .cache
-
-linux-x86_64:
-  stage: build
-  image: neosimsim/ghc:8.10.1
-  before_script:
-  - mkdir -p "$HOME/.cabal"
-  - (test -d .cache/cabal && cp -r .cache/cabal/* "$HOME/.cabal") || true
-  - cabal v2-update
-  - cabal v2-configure --constraint 'cryptonite -integer-gmp' --constraint 'hashable -integer-gmp' --constraint 'scientific +integer-simple' --constraint 'integer-logarithms -integer-gmp'
-  script:
-  - make CABAL_BUILD_ARGS='-f static' all
-  after_script:
-  - mv build linux-x86_64
-  - mkdir -p .cache/cabal
-  - cp -r "$HOME/.cabal/"* .cache/cabal
-  artifacts:
-    name: "hookmark-$CI_COMMIT_SHORT_SHA-linux-x86_64"
-    paths:
-    - linux-x86_64/hookmark
-    - linux-x86_64/hookmark-web
-    expire_in: 1 week
 
 image: nixos/nix:latest
 
-nix:
+build:
   stage: build
-  image: nixos/nix:latest
   script:
-  - nix-build default.nix
+  - nix build -L .#pedantic
 
-.cabal: &cabal_job
+ghc-8.10.1:
   stage: build
-  before_script:
-  - mkdir -p "$HOME/.cabal"
-  - (test -d .cache/cabal && cp -r .cache/cabal/* "$HOME/.cabal") || true
-  - cabal v2-update
-  - cabal v2-configure --constraint 'cryptonite -integer-gmp' --constraint 'hashable -integer-gmp' --constraint 'scientific +integer-simple' --constraint 'integer-logarithms -integer-gmp'
   script:
-  - make all
-  after_script:
-  - mkdir -p .cache/cabal
-  - cp -r "$HOME/.cabal/"* .cache/cabal
-
-cabal-ghc-latest:
-  <<: *cabal_job
-  image: neosimsim/ghc:latest
-  allow_failure: true
-
-cabal-ghc-8.10.1:
-  <<: *cabal_job
-  image: neosimsim/ghc:8.10.1
-
-cabal-ghc-8.8.1:
-  <<: *cabal_job
-  image: neosimsim/ghc:8.8.1
-
-cabal-ghc-8.6.5:
-  <<: *cabal_job
-  image: neosimsim/ghc:8.6.5
-  script:
-  - cabal v2-build -f pedantic
-  - cabal v2-test -f pedantic test
-  - mkdir -p dist/build
-  - cabal v2-install -f pedantic --symlink-bindir dist/build/hookmark exe:hookmark
-  - cabal v2-install -f pedantic --symlink-bindir dist/build/hookmark-web exe:hookmark-web
-  - cabal v2-test -f pedantic regression
-
-release:
-  stage: deploy
-  only:
-  - tags
-  script:
-  - echo "scripts can't be empty"
-  artifacts:
-    name: "hookmark-$CI_COMMIT_REF_NAME"
-    paths:
-    - linux-x86_64/hookmark
-    - linux-x86_64/hookmark-web
+  - nix build -L .#ghc_8101

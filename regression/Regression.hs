@@ -30,12 +30,9 @@ lookupExecutable name = do
       >>= filterM isExecutable
       <&> filter ((==) name . takeBaseName)
   case executables of
-    [executable] -> return executable
+    [exe] -> return exe
     [] -> error $ "no executable found: " ++ name
     _ -> error $ "ambigious executable: " ++ unwords executables
-
-lookupExecutableWeb :: IO FilePath
-lookupExecutableWeb = return "dist-newstyle/build/aarch64-osx/ghc-9.0.2/hookmark-1.4/x/hookmark-web/build/hookmark-web/hookmark-web"
 
 main :: IO ()
 main =

@@ -13,7 +13,7 @@ module Hookmark.Web
 where
 
 import Data.List (sort)
-import Data.Maybe (catMaybes, mapMaybe)
+import Data.Maybe (mapMaybe)
 import qualified Data.NonEmptyText as NonEmptyText
   ( fromText,
     toText,
