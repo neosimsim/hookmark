@@ -1,6 +1,7 @@
 {
 
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -35,11 +36,14 @@
               (finalHaskellPackages.callPackage ./cabal.nix { }).overrideAttrs (oldAttr: {
                 checkInputs = with finalHaskellPackages; [
                   cabal-fmt
-                  cabal-install
                   hlint
                   ormolu
                 ];
-                preCheck = ''make check'';
+                preCheck = ''
+                  cabal-fmt hookmark.cabal | diff hookmark.cabal -
+                  ./misc/hlintCheck src test hookmark hookmark-web
+                   ./misc/formatCheck src test hookmark hookmark-web
+                '';
               })
             ;
           });
