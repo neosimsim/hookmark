@@ -57,22 +57,22 @@
         haskellPackages = prev.haskellPackages.override {
           overrides = (finalHaskellPackages: prevHaskellPackages: {
             hookmark =
-              (finalHaskellPackages.callPackage ./cabal.nix { }).overrideAttrs (oldAttrs: {
-                checkInputs = with finalHaskellPackages; [
-                  cabal-fmt
-                  hlint
-                  ormolu
-                ];
-                checkPhase = ''
-                  ${oldAttrs.checkPhase}
+              finalHaskellPackages.generateOptparseApplicativeCompletions [ "hookmark" "hookmark-web" ]
+                ((finalHaskellPackages.callPackage ./cabal.nix { }).overrideAttrs (oldAttrs: {
+                  checkInputs = with finalHaskellPackages; [
+                    cabal-fmt
+                    hlint
+                    ormolu
+                  ];
+                  checkPhase = ''
+                    ${oldAttrs.checkPhase}
 
-                  ${finalHaskellPackages.cabal-install}/bin/cabal check
-                  cabal-fmt hookmark.cabal | diff hookmark.cabal -
-                  ./misc/hlintCheck src test hookmark hookmark-web
-                  ./misc/formatCheck src test hookmark hookmark-web
-                '';
-              })
-            ;
+                    ${finalHaskellPackages.cabal-install}/bin/cabal check
+                    cabal-fmt hookmark.cabal | diff hookmark.cabal -
+                    ./misc/hlintCheck src test hookmark hookmark-web
+                    ./misc/formatCheck src test hookmark hookmark-web
+                  '';
+                }));
           });
         };
       };
