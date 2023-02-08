@@ -31,25 +31,32 @@
               ];
             };
 
-          apps.checkApply = {
-            type = "app";
-            program =
-              let
-                bin = pkgs.writeShellApplication {
-                  name = "hookmark-check-apply";
-                  runtimeInputs = with pkgs.haskellPackages; [
-                    cabal-install
-                    hlint
-                    ormolu
-                  ];
-                  text = ''
-                    	cabal-fmt -i hookmark.cabal
-                    	./misc/hlintApply src test hookmark hookmark-web
-                    	./misc/formatApply src test hookmark hookmark-web
-                  '';
-                };
-              in
-              "${bin}/bin/hookmark-check-apply";
+          apps = {
+            default = {
+              type = "app";
+              program = "${self.packages.${system}.default}/bin/hookmark-web";
+            };
+
+            checkApply = {
+              type = "app";
+              program =
+                let
+                  bin = pkgs.writeShellApplication {
+                    name = "hookmark-check-apply";
+                    runtimeInputs = with pkgs.haskellPackages; [
+                      cabal-install
+                      hlint
+                      ormolu
+                    ];
+                    text = ''
+                      	cabal-fmt -i hookmark.cabal
+                      	./misc/hlintApply src test hookmark hookmark-web
+                      	./misc/formatApply src test hookmark hookmark-web
+                    '';
+                  };
+                in
+                "${bin}/bin/hookmark-check-apply";
+            };
           };
         })
     // {
