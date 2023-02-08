@@ -3,12 +3,10 @@ stages:
 
 image: nixos/nix:latest
 
+variables:
+  NIX_CONF_DIR: "$CI_PROJECT_DIR/ci"
+
 build:
   stage: build
   script:
   - nix build -L .#pedantic
-
-ghc-8.10.1:
-  stage: build
-  script:
-  - nix build -L .#ghc_8101
