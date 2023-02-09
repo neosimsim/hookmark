@@ -51,5 +51,4 @@ then
 	exit 1
 fi
 
-make check
-make all
+nix build
